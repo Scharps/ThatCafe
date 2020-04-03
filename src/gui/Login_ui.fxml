@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="549.0" prefWidth="684.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.LoginController">
+
+    <center>
+        <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+            <tabs>
+                <Tab text="Customer Login/Register">
+                    <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                            <children>
+                                <ScrollPane prefHeight="367.0" prefWidth="600.0" vbarPolicy="ALWAYS" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                    <content>
+                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="421.0" prefWidth="582.0">
+                                            <children>
+                                                <GridPane prefHeight="421.0" prefWidth="582.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                    <columnConstraints>
+                                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                    </columnConstraints>
+                                                    <rowConstraints>
+                                                        <RowConstraints maxHeight="421.0" minHeight="10.0" prefHeight="421.0" vgrow="SOMETIMES" />
+                                          <RowConstraints maxHeight="319.0" minHeight="0.0" prefHeight="0.0" vgrow="SOMETIMES" />
+                                                    </rowConstraints>
+                                                    <children>
+                                                        <VBox prefHeight="200.0" prefWidth="100.0" spacing="10.0">
+                                                            <children>
+                                                                <Label text="Login" />
+                                                                <TextField fx:id="customerusername" promptText="Username" />
+                                                                <PasswordField fx:id="customerpassword" promptText="Password" />
+                                                                <Button mnemonicParsing="false" onAction="#loginpushed" text="Login" />
+                                                                <TextField fx:id="customerloginerror" opacity="0.5" />
+                                                            </children>
+                                                            <padding>
+                                                                <Insets left="30.0" right="30.0" top="20.0" />
+                                                            </padding>
+                                                        </VBox>
+                                                        <VBox prefHeight="370.0" prefWidth="291.0" spacing="10.0" GridPane.columnIndex="1">
+                                                            <children>
+                                                                <Label text="Register" />
+                                                                <TextField fx:id="registerusername" promptText="Username" />
+                                                                <TextField fx:id="registername" promptText="First Name" />
+                                                                <TextField fx:id="registersurname" promptText="Surname" />
+                                                                <TextField fx:id="registeraddress" promptText="Address Line 1" />
+                                                <TextField fx:id="registercity" layoutX="40.0" layoutY="164.0" promptText="City" />
+                                                <TextField fx:id="registerpostcode" layoutX="40.0" layoutY="164.0" promptText="Postcode" />
+                                                                <PasswordField fx:id="registerpassword" promptText="Password" />
+                                                                <PasswordField fx:id="confirmpassword" promptText="Confirm Password" />
+                                                                <Button fx:id="register" mnemonicParsing="false" onAction="#registerPushed" text="Register" />
+                                                                <TextArea fx:id="registererror" editable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" opacity="0.5" prefHeight="100.0" prefWidth="231.0" />
+                                                            </children>
+                                                            <padding>
+                                                                <Insets left="30.0" right="30.0" top="20.0" />
+                                                            </padding>
+                                                        </VBox>
+                                                    </children>
+                                                </GridPane>
+                                            </children>
+                                        </AnchorPane>
+                                    </content>
+                                </ScrollPane>
+                            </children>
+                        </AnchorPane>
+                    </content>
+                </Tab>
+                <Tab text="Staff Login">
+                    <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                            <children>
+                                <VBox layoutX="292.0" layoutY="59.0" prefHeight="317.0" prefWidth="604.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                    <children>
+                                        <Label text="Staff Login" />
+                                        <TextField fx:id="stafflogin" promptText="Username" />
+                                        <PasswordField fx:id="staffpassword" promptText="Password" />
+                                        <Button mnemonicParsing="false" onAction="#staffLogin" text="Login" />
+                                        <TextField disable="true" opacity="0.5" />
+                                    </children>
+                                    <padding>
+                                        <Insets left="100.0" right="100.0" top="20.0" />
+                                    </padding>
+                                </VBox>
+                            </children>
+                        </AnchorPane>
+                    </content>
+                </Tab>
+            </tabs>
+        </TabPane>
+    </center>
+    <top>
+        <VBox alignment="CENTER" prefHeight="86.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+            <children>
+                <Label alignment="CENTER" text="Cafe Covid">
+                    <font>
+                        <Font size="37.0" />
+                    </font>
+                </Label>
+            </children>
+        </VBox>
+    </top>
+    <left>
+        <Pane prefHeight="350.0" prefWidth="40.0" BorderPane.alignment="CENTER" />
+    </left>
+    <right>
+        <Pane prefHeight="200.0" prefWidth="40.0" BorderPane.alignment="CENTER" />
+    </right>
+</BorderPane>
