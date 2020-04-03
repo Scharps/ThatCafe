@@ -59,7 +59,7 @@ public class LoginController {
                 st.setString(2, customerpassword.getText());
                 ResultSet rs = st.executeQuery();
                 if(rs.next()) {
-                    Parent customerParent = FXMLLoader.load(getClass().getResource("waiterUI.fxml"));
+                    Parent customerParent = FXMLLoader.load(getClass().getResource("/gui/WaiterUI.fxml"));
                     Scene customerScene = new Scene(customerParent);
                     Stage window = (Stage)((Node) event.getSource()).getScene().getWindow();
                     window.setScene(customerScene);
@@ -177,7 +177,7 @@ public class LoginController {
         String LOGIN = "Staff";
         String PASSWORD = "1234";
         if(stafflogin.getText().equals(LOGIN) && staffpassword.getText().equals(PASSWORD)){
-            Parent staffParent = FXMLLoader.load(getClass().getResource("staffProfiles.fxml"));
+            Parent staffParent = FXMLLoader.load(getClass().getResource("/gui/StaffProfiles.fxml"));
             Scene staffScene = new Scene(staffParent);
             Stage window = (Stage)((Node) event.getSource()).getScene().getWindow();
             window.setScene(staffScene);
