@@ -17,10 +17,8 @@ public class DatabaseService {
         return con;
     }
 
-    public static boolean customerLogin(String username, String password) {
-        Connection conn = null;
+    public static boolean customerLogin(Connection conn, String username, String password) {
         try {
-            conn = DatabaseService.getConnection(conn);
             PreparedStatement st = conn.prepareStatement("select * from Customers where Username = ? and Password = ?");
             st.setString(1, username);
             st.setString(2, password);
@@ -28,6 +26,18 @@ public class DatabaseService {
             return (rs.next());
         } catch (SQLException se) {
             return false;
+        }
+    }
+    public static int staffLogin(Connection conn, int staffID){
+        try{
+            PreparedStatement st = conn.prepareStatement("select Role from Staff where StaffID = ?");
+            st.setInt(1,staffID);
+            ResultSet rs = st.executeQuery();
+            if(rs.next()){
+                return rs.getInt(1);
+            } else return 0;
+        } catch (SQLException se){
+            return 0;
         }
     }
 }

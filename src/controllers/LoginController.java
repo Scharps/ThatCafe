@@ -51,19 +51,25 @@ public class LoginController {
         }
 
         else {
-            boolean confirmLogin = DatabaseService.customerLogin(customerusername.getText(), customerpassword.getText());
-            if(confirmLogin) {
-                Parent customerParent = FXMLLoader.load(getClass().getResource("/gui/WaiterUI.fxml"));
-                Scene customerScene = new Scene(customerParent);
-                Stage window = (Stage)((Node) event.getSource()).getScene().getWindow();
-                window.setScene(customerScene);
-                window.show();
+            try {
+                Connection conn = DatabaseService.getConnection(null);
+                boolean confirmLogin = DatabaseService.customerLogin(conn, customerusername.getText(), customerpassword.getText());
+                conn.close();
+                if(confirmLogin) {
+                    Parent customerParent = FXMLLoader.load(getClass().getResource("/gui/WaiterUI.fxml"));
+                    Scene customerScene = new Scene(customerParent);
+                    Stage window = (Stage)((Node) event.getSource()).getScene().getWindow();
+                    window.setScene(customerScene);
+                    window.show();
 
-            } else {
-                customerloginerror.setText("Username or Password incorrect");
-                customerusername.setStyle("-fx-border-color: red;");
-                customerpassword.setStyle("-fx-border-color: red;");
-            }
+                } else {
+                    customerloginerror.setText("Username or Password incorrect");
+                    customerusername.setStyle("-fx-border-color: red;");
+                    customerpassword.setStyle("-fx-border-color: red;");
+                }
+            } catch(SQLException se){
+                }
+
         }
     }
 

@@ -36,30 +36,24 @@ public class StaffController implements Initializable{
         int selected_id = Integer.parseInt(selected.split("\\:")[0]);
         try {
             Connection conn = DatabaseService.getConnection(null);
-            PreparedStatement st = conn.prepareStatement("select Role from Staff where StaffID = ?");
-            st.setInt(1, selected_id);
-            ResultSet set = st.executeQuery();
-
-            if(set.next()) {
-                int role = set.getInt(1);
-
-                if (role == 1) {
-                    //ToDO create managerUI
-
-                }
-                else if (role == 2) {
-                    Parent waiterParent = FXMLLoader.load(getClass().getResource("/gui/WaiterUI.fxml"));
-                    Scene waiterScene = new Scene(waiterParent);
-                    Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                    window.setScene(waiterScene);
-                    window.show();
-                } else if (role == 3) {
-                    //ToDo create ChefUI;
-                } else if (role == 4) {
-                    //ToDo create DriverUI;
-                }
-            }
+            int role = DatabaseService.staffLogin(conn, selected_id);
             conn.close();
+
+             if (role == 1) {
+                 //ToDO create managerUI
+             }
+             else if (role == 2) {
+                 Parent waiterParent = FXMLLoader.load(getClass().getResource("/gui/WaiterUI.fxml"));
+                 Scene waiterScene = new Scene(waiterParent);
+                 Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                 window.setScene(waiterScene);
+                 window.show();
+             } else if (role == 3) {
+                 //ToDo create ChefUI;
+             } else if (role == 4) {
+                 //ToDo create DriverUI;
+             }
+
         }
         catch(Exception se){
             se.printStackTrace();
