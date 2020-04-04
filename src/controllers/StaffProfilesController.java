@@ -18,7 +18,7 @@ import java.sql.*;
 import java.util.ResourceBundle;
 
 
-public class StaffController implements Initializable{
+public class StaffProfilesController implements Initializable{
     @FXML private ListView stProfiles;
     private ObservableList<String> items = FXCollections.observableArrayList();
 
