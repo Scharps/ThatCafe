@@ -68,7 +68,7 @@ public class LoginController {
                     customerpassword.setStyle("-fx-border-color: red;");
                 }
             } catch(SQLException se){
-                }
+            }
 
         }
     }
