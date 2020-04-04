@@ -14,17 +14,6 @@ public class Main extends Application {
         stage.show();
     }
 
-    public static Connection connect(Connection con){
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/Cafe94", "root", "CafeCovidCSCM94");
-        }
-        catch(Exception e){
-            System.out.println("error");
-        }
-        return con;
-    }
-
     public static void main(String[] args) {
         launch(args);
     }

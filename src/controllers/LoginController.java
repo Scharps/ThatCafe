@@ -51,29 +51,18 @@ public class LoginController {
         }
 
         else {
-            Connection conn = null;
-            try {
-                conn = DatabaseService.getConnection(conn);
-                PreparedStatement st = conn.prepareStatement("select * from Customers where Username = ? and Password = ?");
-                st.setString(1, customerusername.getText());
-                st.setString(2, customerpassword.getText());
-                ResultSet rs = st.executeQuery();
-                if(rs.next()) {
-                    Parent customerParent = FXMLLoader.load(getClass().getResource("/gui/WaiterUI.fxml"));
-                    Scene customerScene = new Scene(customerParent);
-                    Stage window = (Stage)((Node) event.getSource()).getScene().getWindow();
-                    window.setScene(customerScene);
-                    window.show();
+            boolean confirmLogin = DatabaseService.customerLogin(customerusername.getText(), customerpassword.getText());
+            if(confirmLogin) {
+                Parent customerParent = FXMLLoader.load(getClass().getResource("/gui/WaiterUI.fxml"));
+                Scene customerScene = new Scene(customerParent);
+                Stage window = (Stage)((Node) event.getSource()).getScene().getWindow();
+                window.setScene(customerScene);
+                window.show();
 
-                } else {
-                    customerloginerror.setText("Username or Password incorrect");
-                    customerusername.setStyle("-fx-border-color: red;");
-                    customerpassword.setStyle("-fx-border-color: red;");
-                }
-                conn.close();
-            }
-            catch(SQLException se){
-
+            } else {
+                customerloginerror.setText("Username or Password incorrect");
+                customerusername.setStyle("-fx-border-color: red;");
+                customerpassword.setStyle("-fx-border-color: red;");
             }
         }
     }
