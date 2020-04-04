@@ -12,6 +12,8 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import java.sql.*;
 import java.io.IOException;
+
+import models.Customer;
 import services.DatabaseService;
 
 
@@ -53,9 +55,9 @@ public class LoginController {
         else {
             try {
                 Connection conn = DatabaseService.getConnection(null);
-                boolean confirmLogin = DatabaseService.customerLogin(conn, customerusername.getText(), customerpassword.getText());
+                Customer confirmLogin = Customer.customerLogin(conn, customerusername.getText(), customerpassword.getText());
                 conn.close();
-                if(confirmLogin) {
+                if(confirmLogin != null) {
                     Parent customerParent = FXMLLoader.load(getClass().getResource("/gui/WaiterUI.fxml"));
                     Scene customerScene = new Scene(customerParent);
                     Stage window = (Stage)((Node) event.getSource()).getScene().getWindow();
@@ -133,7 +135,7 @@ public class LoginController {
         }
 
         if(check == true) {
-            String registersql = "insert into Customers values(?, ?, ?, ?, ?, ?, ?)";
+            String registersql = "insert into Customers (Username, Password, FName, Surname, Addressline1, City, Postcode)  values(?, ?, ?, ?, ?, ?, ?)";
             Connection conn = null;
             try {
                 conn = DatabaseService.getConnection(conn);

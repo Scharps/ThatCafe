@@ -16,18 +16,7 @@ public class DatabaseService {
         }
         return con;
     }
-
-    public static boolean customerLogin(Connection conn, String username, String password) {
-        try {
-            PreparedStatement st = conn.prepareStatement("select * from Customers where Username = ? and Password = ?");
-            st.setString(1, username);
-            st.setString(2, password);
-            ResultSet rs = st.executeQuery();
-            return (rs.next());
-        } catch (SQLException se) {
-            return false;
-        }
-    }
+    
     public static int profileSelect(Connection conn, int staffID){
         try{
             PreparedStatement st = conn.prepareStatement("select Role from Staff where StaffID = ?");

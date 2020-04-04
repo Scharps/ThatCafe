@@ -32,8 +32,10 @@ public class Address {
         return this.postCode;
     }
 
-    public static Address createAddress(String firstLine, String city, String postCode) {
-        throw new UnsupportedOperationException("createAddress() is not yet implemented");
+    public static Address createAddress(int id, String firstLine, String city, String postCode) {
+        Address address = new Address(id, firstLine, city, postCode);
+        return address;
+        //throw new UnsupportedOperationException("createAddress() is not yet implemented");
     }
 
     public static Address getAddress(int id) {
