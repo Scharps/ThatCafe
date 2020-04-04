@@ -28,7 +28,7 @@ public class DatabaseService {
             return false;
         }
     }
-    public static int staffLogin(Connection conn, int staffID){
+    public static int profileSelect(Connection conn, int staffID){
         try{
             PreparedStatement st = conn.prepareStatement("select Role from Staff where StaffID = ?");
             st.setInt(1,staffID);

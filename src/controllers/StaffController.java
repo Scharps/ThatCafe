@@ -30,13 +30,13 @@ public class StaffController implements Initializable{
         window.show();
     }
 
-    public void profileSelect(MouseEvent event) throws IOException {
+    public void profileSelect(MouseEvent event) {
         Object profileselected = stProfiles.getSelectionModel().getSelectedItem();
         String selected = (String) profileselected;
         int selected_id = Integer.parseInt(selected.split("\\:")[0]);
         try {
             Connection conn = DatabaseService.getConnection(null);
-            int role = DatabaseService.staffLogin(conn, selected_id);
+            int role = DatabaseService.profileSelect(conn, selected_id);
             conn.close();
 
              if (role == 1) {
