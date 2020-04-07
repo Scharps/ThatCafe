@@ -1,0 +1,109 @@
+CREATE TABLE Address( 
+    AddressId Integer auto_increment, 
+    1stLineOfAddress varchar(255) not null, 
+    CityOfAddress varchar(255) not null, 
+    PostCode varchar(255) not null,
+    Primary key(AddressId)
+);
+
+Create Table Customers (
+    CustomerId Integer auto_increment,  
+    Username varchar(255) not null unique,  
+    Password varchar(255) not null unique,  
+    FName varchar(255) not null,  
+    Surname varchar(255) not null,  
+    AddressId Integer not  null,  
+    Primary key (CustomerId),  
+    Foreign Key (AddressId) references Address(AddressId));
+
+
+
+
+ 
+Create Table Staff(
+    StaffId Integer auto_increment,
+    email varchar(255) not null,
+    Password varchar(255) not null,
+    FName varchar(255) not null,
+    LName varchar(255) not null,
+    Primary key(StaffId)
+);
+
+
+Create table CafeTables(
+    TableId Integer,
+    Seats Integer not null,
+    Primary Key(TableId));
+
+
+
+create table MenuItems(
+    ItemId integer auto_increment not null, 
+    ItemName varchar(255) not null, 
+    ItemType varchar(255) not null,
+    Price Decimal(2,2) not null, 
+    Nos_Sold Integer not null default 0, 
+    Primary key (ItemId)
+);
+
+Create Table Orders(
+    OrderId Integer auto_increment not null,    
+    OrderDate DATETIME not null, 
+    CustomerId Integer not null,  
+    Cooked Boolean not null default 0,  
+    Primary key (OrderId),  
+    Foreign Key (CustomerId) references Customers(CustomerId)
+);
+
+Create table OrderedItems(
+	OrderedItemID Integer auto_increment not null,
+	OrderID Integer not null,
+	ItemID Integer not null,
+	Primary Key (OrderedItemID),
+	Foreign Key (OrderID) references Orders(OrderID),
+	Foreign Key (ItemID) references MenuItems(ItemID)
+); 
+    
+ Create Table Bookings ( 
+    BookingId Integer auto_increment not null unique,  
+    TableId Integer not null, 
+    CustomerId Integer not null, 
+    BookingDate DATETIME not null,
+    Nos_Guests Integer not null, 
+    BooknConfirmed boolean not null default 0, 
+    Primary key(BookingId, BookingDate), 
+    Foreign Key (TableId) references CafeTables(TableId), 
+    Foreign Key (CustomerId) references Customers(CustomerId)
+);
+    
+    
+    
+create table EatinOrders(
+	OrderID Integer,
+	TableID Integer not null,
+	Primary Key (OrderId),
+	Foreign Key (OrderId) references Orders(OrderId),
+	Foreign Key (TableId) references CafeTables(TableId)
+	
+);
+
+create table TakeawayOrders(
+	OrderID Integer,
+	PickUpTime DATETIME not null,
+	Collected Boolean not null default 0,
+	Primary Key (OrderId),
+	Foreign Key (OrderId) references Orders(OrderId)
+);
+
+create table DeliveryOrders(
+	OrderId Integer,
+	Confirmed Boolean not null default 0,
+	DeliveryTime DATETIME not null,
+	DriverId Integer,
+	Delivered Boolean not null default 0,
+	Primary Key (OrderId),
+	Foreign Key (OrderId) references Orders(OrderId),
+	Foreign Key (DriverId) references Staff(StaffId)
+
+);
+    
