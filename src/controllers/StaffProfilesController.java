@@ -11,6 +11,8 @@ import javafx.scene.control.ListView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import services.DatabaseService;
+import models.StaffMember;
+import models.StaffPosition;
 
 import java.io.IOException;
 import java.net.URL;
@@ -30,6 +32,8 @@ public class StaffProfilesController implements Initializable{
         window.show();
     }
 
+    // TO FIX
+    /*
     public void profileSelect(MouseEvent event) {
         Object profileselected = stProfiles.getSelectionModel().getSelectedItem();
         String selected = (String) profileselected;
@@ -60,7 +64,7 @@ public class StaffProfilesController implements Initializable{
             System.out.println(se);
         }
     }
-
+*/
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 

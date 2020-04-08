@@ -22,10 +22,11 @@ Create Table Customers (
  
 Create Table Staff(
     StaffId Integer auto_increment,
-    email varchar(255) not null,
+    Username varchar(255) not null,
     Password varchar(255) not null,
     FName varchar(255) not null,
     LName varchar(255) not null,
+    StaffPos enum('Chef','Driver','Manager','Waiter') not null,
     Primary key(StaffId)
 );
 
