@@ -8,10 +8,10 @@ public class DatabaseService {
         Connection conn = null;
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/Cafe94", "root", "CafeCovidCSCM94");
+            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/Cafe94", "Cafe94", "Covid");
         }
         catch(Exception e){
-            System.out.println("error");
+            System.out.println(e);
         }
         return conn;
     }
