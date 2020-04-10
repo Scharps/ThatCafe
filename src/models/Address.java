@@ -1,6 +1,10 @@
 package models;
 
 import java.lang.UnsupportedOperationException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 
 public class Address {
@@ -31,6 +35,39 @@ public class Address {
     public String getPostCode() {
         return this.postCode;
     }
+
+    public static void registerAddress(Connection conn, String firstLine, String city, String postCode) {
+        try {
+            PreparedStatement st = conn.prepareStatement("INSERT INTO Address (FirstLine,City,PostCode) VALUES (?,?,?)");
+            st.setString(1, firstLine);
+            st.setString(2, city);
+            st.setString(3, postCode);
+            st.executeUpdate();
+
+        } catch (SQLException se) {
+            se.printStackTrace();
+            System.out.println(se);
+        }
+    }
+
+    public static int getAddressId(Connection conn, String firstLine, String city, String postCode) {
+        try{
+            PreparedStatement st = conn.prepareStatement("Select * from Address where FirstLine = ? && City = ? && PostCode = ? ");
+            st.setString(1, firstLine);
+            st.setString(2, city);
+            st.setString(3, postCode);
+            ResultSet rs = st.executeQuery();
+            if(rs.next()){
+                return rs.getInt(1);
+            }
+            else return 0;
+        } catch (SQLException se){
+            se.printStackTrace();
+            System.out.println(se);
+            return 0;
+        }
+    }
+
 
     public static Address createAddress(int id, String firstLine, String city, String postCode) {
         Address address = new Address(id, firstLine, city, postCode);

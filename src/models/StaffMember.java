@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class StaffMember extends User {
+
     private StaffPosition position;
 
     private StaffMember(int id, String firstName, String lastName, StaffPosition position) {
@@ -68,13 +69,21 @@ public class StaffMember extends User {
             return null;
         }
     }
-/*
+
     public static boolean deleteStaffMember(Connection conn, int id) throws SQLException {
         PreparedStatement st = conn.prepareStatement("DELETE FROM Staff WHERE StaffId = ?");
         st.setInt(1, id);
-        ResultSet rs = st.executeQuery();
+        st.executeUpdate();
+        PreparedStatement st2 = conn.prepareStatement("Select * FROM Staff WHERE StaffId = ?");
+        st.setInt(1, id);
+        ResultSet rs = st2.executeQuery();
+        if(!rs.next()){
+            return true;
+        } else {
+            return false;
+        }
     }
-*/
+
     public static boolean updateStaffMember(Connection conn, int id, String username, String password, String firstName,
                                             String lastName, StaffPosition position) throws SQLException  {
         throw new UnsupportedOperationException("updateStaffMember() is not yet implemented");
