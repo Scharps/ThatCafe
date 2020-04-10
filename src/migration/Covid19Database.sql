@@ -32,11 +32,12 @@ Create Table Staff(
 
 
 Create table CafeTables(
-    TableId Integer,
+    TableId Integer auto_increment,
     Capacity Integer not null,
     Primary Key(TableId)
 );
 
+INSERT INTO CafeTables(Capacity) values (2),(2),(2),(2),(4),(4),(4),(4),(8),(8),(10);
 
 
 create table MenuItems(
