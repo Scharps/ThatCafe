@@ -30,30 +30,35 @@ Create Table Staff(
     Primary key(StaffId)
 );
 
+INSERT INTO Staff(Password,FName,LName,StaffPos) values ("1234","Mr.","Manager","Manager");
 
 Create table CafeTables(
-    TableId Integer,
+    TableId Integer auto_increment,
     Capacity Integer not null,
     Primary Key(TableId)
 );
 
+INSERT INTO CafeTables(Capacity) values (2),(2),(2),(2),(4),(4),(4),(4),(8),(8),(10);
 
 
 create table MenuItems(
     ItemId integer auto_increment not null, 
     ItemName varchar(255) not null, 
     ItemType enum('Food', 'Drink') not null,
-    Price Decimal(2,2) not null, 
+    Price Decimal(4,2) not null, 
     Sold Integer not null default 0,
     SpecialSpecial BOOLEAN DEFAULT FALSE,
     Primary key (ItemId)
 );
 
+INSERT INTO MenuItems(ItemName,ItemType,Price) VALUES ("Pizza", 'Food', 11.99), ('Beef Burger','Food', 8.99), ("Cola", 'Drink', 1.99), ("Beer", "Drink", 3.25);
+
 Create Table Orders(
     OrderId Integer auto_increment not null,    
     Date DATETIME not null,
     CustomerId Integer not null,  
-    Cooked Boolean not null default 0,  
+    Cooked Boolean not null default 0,
+    OrderTotal Decimal(5,2) not null default 0,
     Primary key (OrderId),  
     Foreign Key (CustomerId) references Customers(CustomerId)
 );
