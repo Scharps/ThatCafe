@@ -54,7 +54,7 @@ public class LoginController {
 
         else {
             try {
-                Connection conn = DatabaseService.getConnection(null);
+                Connection conn = DatabaseService.getConnection();
                 Customer confirmLogin = Customer.customerLogin(conn, customerusername.getText(), customerpassword.getText());
                 conn.close();
                 if(confirmLogin != null) {
@@ -138,7 +138,7 @@ public class LoginController {
             String registersql = "insert into Customers (Username, Password, FName, Surname, Addressline1, City, Postcode)  values(?, ?, ?, ?, ?, ?, ?)";
             Connection conn = null;
             try {
-                conn = DatabaseService.getConnection(conn);
+                conn = DatabaseService.getConnection();
                 PreparedStatement st = conn.prepareStatement(registersql);
                 st.setString(1, registerusername.getText());
                 st.setString(2, registerpassword.getText());

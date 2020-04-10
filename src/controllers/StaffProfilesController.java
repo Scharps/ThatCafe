@@ -35,25 +35,28 @@ public class StaffProfilesController implements Initializable{
 
     public void profileSelect(MouseEvent event) {
         AppState appState = AppState.getAppState();
-        Object profileselected = stProfiles.getSelectionModel().getSelectedItem();
-        String selected = (String) profileselected;
+        Object profileSelected = stProfiles.getSelectionModel().getSelectedItem();
+        String selected = (String) profileSelected;
         int selected_id = Integer.parseInt(selected.split("\\:")[0]);
         try {
-            int role = DatabaseService.profileSelect(appState.getConn(), selected_id);
+            //Connection conn = null;
+            Connection conn = DatabaseService.getConnection();
+            StaffMember staff = StaffMember.getStaffMember(conn, selected_id);
             conn.close();
+            StaffPosition position = staff.getPosition();
 
-             if (role == 1) {
+             if (position == StaffPosition.Manager) {
                  //ToDO create managerUI
              }
-             else if (role == 2) {
+             else if (position == StaffPosition.Waiter) {
                  Parent waiterParent = FXMLLoader.load(getClass().getResource("/gui/WaiterUI.fxml"));
                  Scene waiterScene = new Scene(waiterParent);
                  Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
                  window.setScene(waiterScene);
                  window.show();
-             } else if (role == 3) {
+             } else if (position == StaffPosition.Chef) {
                  //ToDo create ChefUI;
-             } else if (role == 4) {
+             } else if (position == StaffPosition.Driver) {
                  //ToDo create DriverUI;
              }
 
@@ -69,9 +72,9 @@ public class StaffProfilesController implements Initializable{
 
         stProfiles.setItems(items);
         try {
-            Connection conn = DatabaseService.getConnection(null);
+            Connection conn = DatabaseService.getConnection();
             Statement st = conn.createStatement();
-            ResultSet set = st.executeQuery("SELECT StaffID, FName, Surname FROM Staff");
+            ResultSet set = st.executeQuery("SELECT StaffID, FName, LName FROM Staff");
             while(set.next()){
                 items.add(set.getInt(1) + ": " + set.getString(2) + " " + set.getString(3));
             }

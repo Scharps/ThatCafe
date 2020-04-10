@@ -24,11 +24,11 @@ public class Customer extends User {
 
     public String getUsername() { return this.username;}
 
-    /*public static Customer createCustomer(int id, String username, String firstName, String lastName, String addressline1, String city, String postcode) {
-        Customer customer = new Customer(id, username, firstName, lastName, addressline1, city, postcode);
+    public static Customer createCustomer(int id, String username, String firstName, String lastName, Address address) {
+        Customer customer = new Customer(id, username, firstName, lastName, address);
         return customer;
         //throw new UnsupportedOperationException("createCustomer() is not yet implemented");
-    }*/
+    }
     public static Customer customerLogin(Connection conn, String username, String password){
         try {
             PreparedStatement st = conn.prepareStatement("select * from Customers where Username = ? and Password = ?");

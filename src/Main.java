@@ -1,8 +1,16 @@
+import com.mysql.cj.jdbc.ha.ServerAffinityStrategy;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import models.StaffMember;
+import models.StaffPosition;
+import services.DatabaseService;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+
 public class Main extends Application {
 
     @Override
@@ -14,6 +22,17 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
-        //launch(args);
+        launch(args);
+/*
+        try {
+            Connection conn = DatabaseService.getConnection();
+            StaffMember.createStaffMember(conn, "1234", "ash", "f", StaffPosition.Waiter);
+            conn.close();
+        } catch(SQLException se){
+            se.printStackTrace();
+            System.out.println(se);
+        }
+
+ */
     }
 }
