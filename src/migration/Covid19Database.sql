@@ -30,6 +30,7 @@ Create Table Staff(
     Primary key(StaffId)
 );
 
+INSERT INTO Staff(Password,FName,LName,StaffPos) values ("1234","Mr.","Manager","Manager");
 
 Create table CafeTables(
     TableId Integer auto_increment,
