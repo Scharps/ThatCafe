@@ -1,8 +1,12 @@
-CREATE TABLE Address( 
+DROP DATABASE Cafe94;
+CREATE DATABASE Cafe94;
+USE DATABASE Cafe94;
+
+CREATE TABLE Address(
     AddressId Integer auto_increment, 
-    1stLineOfAddress varchar(255) not null, 
-    CityOfAddress varchar(255) not null, 
-    PostCode varchar(255) not null,
+    FirstLine varchar(255) not null,
+    City varchar(255) not null,
+    PostCode varchar(10) not null,
     Primary key(AddressId)
 );
 
@@ -11,18 +15,14 @@ Create Table Customers (
     Username varchar(255) not null unique,  
     Password varchar(255) not null unique,  
     FName varchar(255) not null,  
-    Surname varchar(255) not null,  
+    LName varchar(255) not null,
     AddressId Integer not  null,  
     Primary key (CustomerId),  
-    Foreign Key (AddressId) references Address(AddressId));
+    Foreign Key (AddressId) references Address(AddressId)
+);
 
-
-
-
- 
 Create Table Staff(
     StaffId Integer auto_increment,
-    Username varchar(255) not null,
     Password varchar(255) not null,
     FName varchar(255) not null,
     LName varchar(255) not null,
@@ -33,23 +33,25 @@ Create Table Staff(
 
 Create table CafeTables(
     TableId Integer,
-    Seats Integer not null,
-    Primary Key(TableId));
+    Capacity Integer not null,
+    Primary Key(TableId)
+);
 
 
 
 create table MenuItems(
     ItemId integer auto_increment not null, 
     ItemName varchar(255) not null, 
-    ItemType varchar(255) not null,
+    ItemType enum('Food', 'Drink') not null,
     Price Decimal(2,2) not null, 
-    Nos_Sold Integer not null default 0, 
+    Sold Integer not null default 0,
+    SpecialSpecial BOOLEAN DEFAULT FALSE,
     Primary key (ItemId)
 );
 
 Create Table Orders(
     OrderId Integer auto_increment not null,    
-    OrderDate DATETIME not null, 
+    Date DATETIME not null,
     CustomerId Integer not null,  
     Cooked Boolean not null default 0,  
     Primary key (OrderId),  
@@ -60,24 +62,23 @@ Create table OrderedItems(
 	OrderedItemID Integer auto_increment not null,
 	OrderID Integer not null,
 	ItemID Integer not null,
+	Quantity INTEGER NOT NULL,
 	Primary Key (OrderedItemID),
 	Foreign Key (OrderID) references Orders(OrderID),
 	Foreign Key (ItemID) references MenuItems(ItemID)
 ); 
     
  Create Table Bookings ( 
-    BookingId Integer auto_increment not null unique,  
+    BookingId Integer auto_increment not null UNIQUE,
     TableId Integer not null, 
     CustomerId Integer not null, 
     BookingDate DATETIME not null,
-    Nos_Guests Integer not null, 
-    BooknConfirmed boolean not null default 0, 
-    Primary key(BookingId, BookingDate), 
+    GuestQuantity Integer not null,
+    Approved boolean not null default 0,
+    PRIMARY KEY(TableId, BookingDate),
     Foreign Key (TableId) references CafeTables(TableId), 
     Foreign Key (CustomerId) references Customers(CustomerId)
 );
-    
-    
     
 create table EatinOrders(
 	OrderID Integer,
@@ -85,7 +86,6 @@ create table EatinOrders(
 	Primary Key (OrderId),
 	Foreign Key (OrderId) references Orders(OrderId),
 	Foreign Key (TableId) references CafeTables(TableId)
-	
 );
 
 create table TakeawayOrders(
@@ -105,6 +105,5 @@ create table DeliveryOrders(
 	Primary Key (OrderId),
 	Foreign Key (OrderId) references Orders(OrderId),
 	Foreign Key (DriverId) references Staff(StaffId)
-
 );
     
