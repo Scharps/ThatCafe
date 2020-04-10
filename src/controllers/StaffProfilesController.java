@@ -44,6 +44,7 @@ public class StaffProfilesController implements Initializable{
             StaffMember staff = StaffMember.getStaffMember(conn, selected_id);
             conn.close();
             StaffPosition position = staff.getPosition();
+            appState.setUser(staff);
 
              if (position == StaffPosition.Manager) {
                  //ToDO create managerUI
