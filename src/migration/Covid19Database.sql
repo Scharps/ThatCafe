@@ -1,6 +1,6 @@
 DROP DATABASE Cafe94;
 CREATE DATABASE Cafe94;
-USE DATABASE Cafe94;
+USE Cafe94;
 
 CREATE TABLE Address(
     AddressId Integer auto_increment, 
