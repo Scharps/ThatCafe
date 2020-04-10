@@ -8,8 +8,8 @@ import java.sql.SQLException;
 public class StaffMember extends User {
     private StaffPosition position;
 
-    private StaffMember(int id, String firstName, String lastName, StaffPosition position) {
-		super(id, firstName, lastName);
+    private StaffMember(int id, String username, String firstName, String lastName, StaffPosition position) {
+		super(id, username, firstName, lastName);
         this.position = position;
     }
 
@@ -17,10 +17,26 @@ public class StaffMember extends User {
         return this.position;
     }
 
+    public static StaffMember createStaffMember(Connection conn, String username, String password, String firstName,
+                                                String lastName, StaffPosition position) throws SQLException  {
+        PreparedStatement st = conn.prepareStatement(
+                "INSERT INTO STAFF(Username, Password, FName, LName, StaffPos) " +
+                    "VALUES (?, ?, ?, ?, ?)"
+        );
 
-    
-    public static StaffMember createStaffMember(String firstName, String lastName, StaffPosition position) {
-        throw new UnsupportedOperationException("createStaffMember() is not yet implemented");
+        st.setString(1, username);
+        st.setString(2, password);
+        st.setString(3, firstName);
+        st.setString(4, lastName);
+        st.setString(5, position.toString());
+        ResultSet rs = st.executeQuery();
+        return new StaffMember(
+                rs.getInt("StaffId"),
+                rs.getString("Username"),
+                rs.getString("FName"),
+                rs.getString("LName"),
+                position
+        );
     }
 
     public static StaffMember getStaffMember(Connection conn, int id) throws SQLException {
@@ -39,10 +55,11 @@ public class StaffMember extends User {
                     break;
             case "Waiter": position = StaffPosition.Waiter;
                     break;
-            default: throw new UnsupportedOperationException("Staff Position was not given as 0-3");
+            default: position = StaffPosition.Waiter;
         }
         staffMember = new StaffMember(
               rs.getInt("StaffId"),
+              rs.getString("Username"),
               rs.getString("FName"),
               rs.getString("LName"),
               position
@@ -50,11 +67,14 @@ public class StaffMember extends User {
         return staffMember;
     }
 
-    public static boolean deleteStaffMember(int id) {
-        throw new UnsupportedOperationException("deleteStaffMember() is not yet implemented");
+    public static boolean deleteStaffMember(Connection conn, int id) throws SQLException {
+        PreparedStatement st = conn.prepareStatement("DELETE FROM Staff WHERE StaffId = ?");
+        st.setInt(1, id);
+        ResultSet rs = st.executeQuery();
     }
 
-    public static boolean updateStaffMember(int id, String firstName, String lastName, StaffPosition position) {
+    public static boolean updateStaffMember(Connection conn, int id, String username, String password, String firstName,
+                                            String lastName, StaffPosition position) throws SQLException  {
         throw new UnsupportedOperationException("updateStaffMember() is not yet implemented");
     }
 }

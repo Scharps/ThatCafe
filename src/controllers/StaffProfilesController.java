@@ -10,6 +10,7 @@ import javafx.scene.*;
 import javafx.scene.control.ListView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+import services.AppState;
 import services.DatabaseService;
 import models.StaffMember;
 import models.StaffPosition;
@@ -32,15 +33,13 @@ public class StaffProfilesController implements Initializable{
         window.show();
     }
 
-    // TO FIX
-    /*
     public void profileSelect(MouseEvent event) {
+        AppState appState = AppState.getAppState();
         Object profileselected = stProfiles.getSelectionModel().getSelectedItem();
         String selected = (String) profileselected;
         int selected_id = Integer.parseInt(selected.split("\\:")[0]);
         try {
-            Connection conn = DatabaseService.getConnection(null);
-            int role = DatabaseService.profileSelect(conn, selected_id);
+            int role = DatabaseService.profileSelect(appState.getConn(), selected_id);
             conn.close();
 
              if (role == 1) {
@@ -64,7 +63,7 @@ public class StaffProfilesController implements Initializable{
             System.out.println(se);
         }
     }
-*/
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
