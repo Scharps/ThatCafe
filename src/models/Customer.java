@@ -29,20 +29,45 @@ public class Customer extends User {
         return customer;
         //throw new UnsupportedOperationException("createCustomer() is not yet implemented");
     }
+
+    public static void registerCustomer(Connection conn, String username, String password, String firstname, String lastname, int address_id) {
+        try {
+            PreparedStatement st = conn.prepareStatement("INSERT INTO Customers(Username, Password, FName, LName, AddressId)  values(?, ?, ?, ?, ?)");
+            st.setString(1, username);
+            st.setString(2, password);
+            st.setString(3, firstname);
+            st.setString(4, lastname);
+            st.setInt(5, address_id);
+            st.executeUpdate();
+        } catch (SQLException se){
+            se.printStackTrace();
+            System.out.println(se);
+        }
+
+    }
     public static Customer customerLogin(Connection conn, String username, String password){
         try {
             PreparedStatement st = conn.prepareStatement("select * from Customers where Username = ? and Password = ?");
             st.setString(1, username);
             st.setString(2, password);
             ResultSet rs = st.executeQuery();
-            if(rs.next()){
-                Address address = Address.createAddress(rs.getInt(1), rs.getString(6), rs.getString(7), rs.getString(8));
-                Customer customer = new Customer(rs.getInt(1), rs.getString(2), rs.getString(4), rs.getString(5), address);
-                return customer;
+            if(rs.next()) {
+                PreparedStatement address_st = conn.prepareStatement("SELECT * FROM Address WHERE AddressId = ? ");
+                address_st.setInt(1, rs.getInt(6));
+                ResultSet address_rs = address_st.executeQuery();
+                if (address_rs.next()) {
+                    Address address = Address.createAddress(address_rs.getInt(1), address_rs.getString(2), address_rs.getString(3), address_rs.getString(4));
+                    Customer customer = new Customer(rs.getInt(1), rs.getString(2), rs.getString(4), rs.getString(5), address);
+                    return customer;
+                } else {
+                    return null;
+                }
             } else {
                 return null;
             }
         } catch (SQLException se) {
+            se.printStackTrace();
+            System.out.println(se);
             return null;
         }
     }

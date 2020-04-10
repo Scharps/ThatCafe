@@ -13,6 +13,7 @@ import javafx.stage.Stage;
 import java.sql.*;
 import java.io.IOException;
 
+import models.Address;
 import models.Customer;
 import services.DatabaseService;
 
@@ -58,7 +59,7 @@ public class LoginController {
                 Customer confirmLogin = Customer.customerLogin(conn, customerusername.getText(), customerpassword.getText());
                 conn.close();
                 if(confirmLogin != null) {
-                    Parent customerParent = FXMLLoader.load(getClass().getResource("/gui/WaiterUI.fxml"));
+                    Parent customerParent = FXMLLoader.load(getClass().getResource("/gui/CustomerUI.fxml"));
                     Scene customerScene = new Scene(customerParent);
                     Stage window = (Stage)((Node) event.getSource()).getScene().getWindow();
                     window.setScene(customerScene);
@@ -135,19 +136,11 @@ public class LoginController {
         }
 
         if(check == true) {
-            String registersql = "insert into Customers (Username, Password, FName, Surname, Addressline1, City, Postcode)  values(?, ?, ?, ?, ?, ?, ?)";
-            Connection conn = null;
             try {
-                conn = DatabaseService.getConnection();
-                PreparedStatement st = conn.prepareStatement(registersql);
-                st.setString(1, registerusername.getText());
-                st.setString(2, registerpassword.getText());
-                st.setString(3, registername.getText());
-                st.setString(4, registersurname.getText());
-                st.setString(5, registeraddress.getText());
-                st.setString(6, registercity.getText());
-                st.setString(7, registerpostcode.getText());
-                st.executeUpdate();
+                Connection conn = DatabaseService.getConnection();
+                Address.registerAddress(conn, registeraddress.getText(), registercity.getText(), registerpostcode.getText());
+                int id = Address.getAddressId(conn, registeraddress.getText(), registercity.getText(), registerpostcode.getText());
+                Customer.registerCustomer(conn, registerusername.getText(), registerpassword.getText(), registername.getText(), registersurname.getText(), id);
                 registererror.setText("Thank you for registering");
                 registerusername.setText("");
                 registername.setText("");
@@ -161,6 +154,9 @@ public class LoginController {
             }
             catch(SQLIntegrityConstraintViolationException se) {
                 registererror.setText("Username is already in use");
+            } catch (SQLException se2) {
+                se2.printStackTrace();
+                System.out.println(se2);
             }
             catch(Exception ex) {
                 registererror.setText("ERROR");
