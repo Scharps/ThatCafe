@@ -1,4 +1,3 @@
-import com.mysql.cj.jdbc.ha.ServerAffinityStrategy;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
