@@ -50,7 +50,7 @@ create table MenuItems(
     SpecialSpecial BOOLEAN DEFAULT FALSE,
     Primary key (ItemId)
 );
-
+INSERT INTO MenuItems(ItemName,ItemType,Price) VALUES ("Pizza", 'Food', 11.99), ('Beef Burger','Food', 8.99), ("Cola", 'Drink', 1.99), ("Beer", "Drink", 3.25);
 Create Table Orders(
     OrderId Integer auto_increment not null,    
     Date DATETIME not null,
