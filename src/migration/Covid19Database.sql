@@ -26,7 +26,7 @@ Create Table Staff(
     Password varchar(255) not null,
     FName varchar(255) not null,
     LName varchar(255) not null,
-    StaffPos enum('Chef','Driver','Manager','Waiter') not null,
+    StaffPos varchar(10) not null,
     Primary key(StaffId)
 );
 
