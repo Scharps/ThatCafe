@@ -19,7 +19,7 @@ public class StaffMember extends User {
     }
 
 
-    public static void createStaffMember(Connection conn, String password, String firstName,
+    public static StaffMember createStaffMember(Connection conn, String password, String firstName,
                                                 String lastName, StaffPosition position) throws SQLException  {
         PreparedStatement st = conn.prepareStatement(
                 "INSERT INTO Staff( Password, FName, LName, StaffPos) " +
@@ -31,6 +31,17 @@ public class StaffMember extends User {
         st.setString(3, lastName);
         st.setString(4, position.toString());
         st.executeUpdate();
+
+        st = conn.prepareStatement("SELECT * FROM Staff\n" +
+                "WHERE StaffId = (SELECT MAX(StaffId) FROM Staff)");
+        ResultSet rs = st.executeQuery();
+        StaffMember staffMember = new StaffMember(
+                rs.getInt("StaffId"),
+                rs.getString("FName"),
+                rs.getString("LName"),
+                StaffPosition.valueOf(rs.getString("PostCode"))
+        );
+        return staffMember;
 
     }
 

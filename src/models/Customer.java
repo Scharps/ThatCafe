@@ -2,6 +2,7 @@ package models;
 
 import services.DatabaseService;
 
+import javax.xml.crypto.Data;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -24,63 +25,79 @@ public class Customer extends User {
 
     public String getUsername() { return this.username;}
 
-    public static Customer createCustomer(int id, String username, String firstName, String lastName, Address address) {
-        Customer customer = new Customer(id, username, firstName, lastName, address);
+    public static Customer createCustomer(Connection conn, String username, String password, String firstName, String lastName, Address address) throws SQLException{
+        PreparedStatement st = conn.prepareStatement("INSERT INTO Customers(Username, Password, FName, LName, AddressId)  VALUES(?, ?, ?, ?, ?)");
+        st.setString(1, username);
+        st.setString(2, password);
+        st.setString(3, firstName);
+        st.setString(4, lastName);
+        st.setInt(5, address.getId());
+        st.executeUpdate();
+
+        st = conn.prepareStatement("SELECT * FROM Customers\n" +
+                "WHERE CustomerId = (SELECT MAX(CustomerId) FROM Customer)");
+        ResultSet rs = st.executeQuery();
+        Customer customer = new Customer(
+                rs.getInt("CustomerId"),
+                rs.getString("Username"),
+                rs.getString("FName"),
+                rs.getString("FName"),
+                Address.getAddress(DatabaseService.getConnection(), rs.getInt("AddressId"))
+        );
         return customer;
-        //throw new UnsupportedOperationException("createCustomer() is not yet implemented");
     }
 
-    public static void registerCustomer(Connection conn, String username, String password, String firstname, String lastname, int address_id) {
-        try {
-            PreparedStatement st = conn.prepareStatement("INSERT INTO Customers(Username, Password, FName, LName, AddressId)  values(?, ?, ?, ?, ?)");
-            st.setString(1, username);
-            st.setString(2, password);
-            st.setString(3, firstname);
-            st.setString(4, lastname);
-            st.setInt(5, address_id);
-            st.executeUpdate();
-        } catch (SQLException se){
-            se.printStackTrace();
-            System.out.println(se);
-        }
-
-    }
-    public static Customer customerLogin(Connection conn, String username, String password){
-        try {
-            PreparedStatement st = conn.prepareStatement("select * from Customers where Username = ? and Password = ?");
-            st.setString(1, username);
-            st.setString(2, password);
-            ResultSet rs = st.executeQuery();
-            if(rs.next()) {
-                PreparedStatement address_st = conn.prepareStatement("SELECT * FROM Address WHERE AddressId = ? ");
-                address_st.setInt(1, rs.getInt(6));
-                ResultSet address_rs = address_st.executeQuery();
-                if (address_rs.next()) {
-                    Address address = Address.createAddress(address_rs.getInt(1), address_rs.getString(2), address_rs.getString(3), address_rs.getString(4));
-                    Customer customer = new Customer(rs.getInt(1), rs.getString(2), rs.getString(4), rs.getString(5), address);
-                    return customer;
-                } else {
-                    return null;
-                }
-            } else {
-                return null;
-            }
-        } catch (SQLException se) {
-            se.printStackTrace();
-            System.out.println(se);
+    public static Customer customerLogin(Connection conn, String username, String password) throws SQLException{
+        PreparedStatement st = conn.prepareStatement("select * from Customers where Username = ? and Password = ?");
+        st.setString(1, username);
+        st.setString(2, password);
+        ResultSet rs = st.executeQuery();
+        if(rs.next()) {
+            return new Customer(
+                    rs.getInt("CustomerId"),
+                    rs.getString("Username"),
+                    rs.getString("FName"),
+                    rs.getString("LName"),
+                    Address.getAddress(DatabaseService.getConnection(), rs.getInt("AddressId"))
+            );
+        } else {
             return null;
         }
     }
 
-    public static Customer getCustomer(int id) {
-        throw new UnsupportedOperationException("getCustomer() is not yet implemented");
+    public static Customer getCustomer(Connection conn, int id) throws SQLException {
+        PreparedStatement st = conn.prepareStatement("SELECT * FROM Customers WHERE CustomerId = ?");
+        st.setInt(1, id);
+        ResultSet rs = st.executeQuery();
+        if(rs.next()) {
+            return new Customer(
+                    rs.getInt("CustomerId"),
+                    rs.getString("Username"),
+                    rs.getString("FName"),
+                    rs.getString("LName"),
+                    Address.getAddress(DatabaseService.getConnection(), rs.getInt("AddressId"))
+            );
+        } else {
+            return null;
+        }
     }
 
-    public static boolean deleteCustomer(int id) {
-        throw new UnsupportedOperationException("deleteCustomer() is not yet implemented");
+    public static void deleteCustomer(Connection conn, int id) throws SQLException {
+        PreparedStatement st = conn.prepareStatement("DELETE FROM Customers WHERE CustomerId = ?");
+        st.setInt(1, id);
+        st.executeUpdate();
     }
 
-    public static boolean updateCustomer(int id, String firstName, String lastName, Address address) {
-        throw new UnsupportedOperationException("updateCustomer() is not yet implemented");
+    public static void updateCustomer(Connection conn, int id, String username, String password, String firstName, String lastName, Address address) throws SQLException {
+        PreparedStatement st = conn.prepareStatement("UPDATE Address " +
+                "SET Username = ?, Password = ?, FName = ?, LName = ?, AddressId = ?" +
+                "WHERE CustomerId = ?");
+        st.setString(1, username);
+        st.setString(2, password);
+        st.setString(3, firstName);
+        st.setString(4, lastName);
+        st.setInt(5, address.getId());
+        st.setInt(6, id);
+        st.executeUpdate();
     }
 }

@@ -1,5 +1,6 @@
 package models;
 
+import javax.xml.transform.Result;
 import java.lang.UnsupportedOperationException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -36,54 +37,55 @@ public class Address {
         return this.postCode;
     }
 
-    public static void registerAddress(Connection conn, String firstLine, String city, String postCode) {
-        try {
-            PreparedStatement st = conn.prepareStatement("INSERT INTO Address (FirstLine,City,PostCode) VALUES (?,?,?)");
-            st.setString(1, firstLine);
-            st.setString(2, city);
-            st.setString(3, postCode);
-            st.executeUpdate();
+    public static Address createAddress(Connection conn, String firstLine, String city, String postCode) throws SQLException{
+        PreparedStatement st = conn.prepareStatement("INSERT INTO Address (FirstLine,City,PostCode) VALUES (?,?,?)");
+        st.setString(1, firstLine);
+        st.setString(2, city);
+        st.setString(3, postCode);
+        st.executeUpdate();
 
-        } catch (SQLException se) {
-            se.printStackTrace();
-            System.out.println(se);
-        }
-    }
-
-    public static int getAddressId(Connection conn, String firstLine, String city, String postCode) {
-        try{
-            PreparedStatement st = conn.prepareStatement("Select * from Address where FirstLine = ? && City = ? && PostCode = ? ");
-            st.setString(1, firstLine);
-            st.setString(2, city);
-            st.setString(3, postCode);
-            ResultSet rs = st.executeQuery();
-            if(rs.next()){
-                return rs.getInt(1);
-            }
-            else return 0;
-        } catch (SQLException se){
-            se.printStackTrace();
-            System.out.println(se);
-            return 0;
-        }
-    }
-
-
-    public static Address createAddress(int id, String firstLine, String city, String postCode) {
-        Address address = new Address(id, firstLine, city, postCode);
+        st = conn.prepareStatement("SELECT * FROM Address\n" +
+                "WHERE AddressId = (SELECT MAX(AddressId) FROM Address);");
+        ResultSet rs = st.executeQuery();
+        Address address = new Address(
+                rs.getInt("AddressId"),
+                rs.getString("FirstLine"),
+                rs.getString("City"),
+                rs.getString("PostCode")
+        );
         return address;
         //throw new UnsupportedOperationException("createAddress() is not yet implemented");
     }
 
-    public static Address getAddress(int id) {
-        throw new UnsupportedOperationException("getAddress() is not yet implemented");
+    public static Address getAddress(Connection conn, int id) throws SQLException {
+        PreparedStatement st =conn.prepareStatement("SELECT * FROM Address WHERE AddressId = ?");
+        st.setInt(1, id);
+        ResultSet rs = st.executeQuery();
+        if(rs.next()) {
+            return new Address(
+                    rs.getInt("AddressId"),
+                    rs.getString("FirstLine"),
+                    rs.getString("City"),
+                    rs.getString("PostCode")
+            );
+        }
+        return null;
     }
 
-    public static boolean deleteAddress(int id) {
-        throw new UnsupportedOperationException("deleteAddress() is not yet implemented");
+    public static void deleteAddress(Connection conn, int id) throws SQLException {
+        PreparedStatement st = conn.prepareStatement("DELETE FROM Address WHERE AddressId = ?");
+        st.setInt(1, id);
+        st.executeUpdate();
     }
 
-    public static boolean updateAddress(int id, String firstLine, String city, String postCode) {
-        throw new UnsupportedOperationException("updateAddress() is not yet implemented");
+    public static void updateAddress(Connection conn, int id, String firstLine, String city, String postCode) throws SQLException {
+        PreparedStatement st = conn.prepareStatement("UPDATE Address " +
+                "SET FirstLine = ?, City = ?, PostCode = ?" +
+                "WHERE AddressId = ?");
+        st.setString(1, firstLine);
+        st.setString(2, city);
+        st.setString(3, postCode);
+        st.setInt(4, id);
+        st.executeUpdate();
     }
 }

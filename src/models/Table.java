@@ -1,6 +1,9 @@
 package models;
 
-import java.lang.UnsupportedOperationException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class Table {
     private int id;
@@ -19,19 +22,17 @@ public class Table {
         return this.capacity;
     }
 
-    public static Table createTable(int capacity) {
-        throw new UnsupportedOperationException("createTable() is not yet implemented");
-    }
-
-    public static Table getTable(int id) {
-        throw new UnsupportedOperationException("getTable() is not yet implemented");
-    }
-
-    public static boolean deleteTable(int id) {
-        throw new UnsupportedOperationException("deleteTable() is not yet implemented");
-    }
-
-    public static boolean updateTable(int id, int capacity) {
-        throw new UnsupportedOperationException("updateTable() is not yet implemented");
+    public static Table getTable(Connection conn, int id) throws SQLException {
+        PreparedStatement st = conn.prepareStatement("SELECT * FROM CafeTables WHERE TableId = ?");
+        st.setInt(1, id);
+        ResultSet rs = st.executeQuery();
+        if(rs.next()) {
+            return new Table(
+                    rs.getInt("TableId"),
+                    rs.getInt("Capacity")
+            );
+        } else {
+            return null;
+        }
     }
 }
