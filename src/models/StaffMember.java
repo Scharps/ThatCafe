@@ -18,6 +18,7 @@ public class StaffMember extends User {
         return this.position;
     }
 
+
     public static void createStaffMember(Connection conn, String password, String firstName,
                                                 String lastName, StaffPosition position) throws SQLException  {
         PreparedStatement st = conn.prepareStatement(

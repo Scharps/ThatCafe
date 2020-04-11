@@ -39,7 +39,6 @@ public class StaffProfilesController implements Initializable{
         String selected = (String) profileSelected;
         int selected_id = Integer.parseInt(selected.split("\\:")[0]);
         try {
-            //Connection conn = null;
             Connection conn = DatabaseService.getConnection();
             StaffMember staff = StaffMember.getStaffMember(conn, selected_id);
             conn.close();

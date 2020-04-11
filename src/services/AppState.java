@@ -6,7 +6,7 @@ import java.sql.Connection;
 
 public final class AppState {
 
-    private static AppState appState_ = null;
+    private static AppState appState_;
     private User user_;
     private Connection conn;
     private AppState(){};
@@ -22,10 +22,9 @@ public final class AppState {
 
     public static AppState getAppState() {
         if(appState_ == null) {
-            return new AppState();
-        } else {
-            return appState_;
+            appState_ = new AppState();
         }
+        return appState_;
     }
 
     public void setUser(User user) {

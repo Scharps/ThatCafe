@@ -80,9 +80,7 @@
                           <items>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="91.0" prefWidth="602.0">
                                  <children>
-                                    <Label layoutX="8.0" layoutY="14.0" text="Order 001" />
-                                    <Label layoutX="8.0" layoutY="38.0" text="Order 002" />
-                                    <Label layoutX="8.0" layoutY="66.0" text="Order 003" />
+                                    <ListView fx:id="deliveryorders" layoutY="-13.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                  </children>
                               </AnchorPane>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
@@ -196,7 +194,10 @@
                         </Text>
                      </children>
                   </AnchorPane>
-                  <AnchorPane prefHeight="200.0" prefWidth="200.0" />
+                  <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                     <children>
+                        <Label fx:id="namelabel" layoutX="80.0" layoutY="35.0" text="Label" />
+                     </children></AnchorPane>
                   <AnchorPane prefHeight="200.0" prefWidth="200.0">
                      <children>
                         <Button layoutX="98.0" layoutY="31.0" mnemonicParsing="false" onAction="#logoutPushed" prefHeight="25.0" prefWidth="60.0" text="Logout" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="120.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="30.0" />

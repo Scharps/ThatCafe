@@ -9,8 +9,12 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.stage.Stage;
+import models.StaffMember;
+import models.User;
+import services.AppState;
 import services.DatabaseService;
 
 import java.io.IOException;
@@ -24,9 +28,22 @@ import java.util.ResourceBundle;
 public class WaiterController implements Initializable {
     @FXML private ListView foodlist;
     @FXML private ListView drinkslist;
+    @FXML private ListView deliveryorderslist;
+    @FXML private Label namelabel;
 
+    private AppState appState;
     private ObservableList<String> fooditems = FXCollections.observableArrayList();
     private ObservableList<String> drinksitems = FXCollections.observableArrayList();
+    private ObservableList<String> deliveryorders = FXCollections.observableArrayList();
+/*
+    public void initData(AppState staff){
+        appState = staff;
+        namelabel.setText(appState.getUser().getFirstName());
+    }
+
+ */
+
+
 
     public void logoutPushed(ActionEvent event) throws IOException {
         Parent loginParent = FXMLLoader.load(getClass().getResource("/gui/StaffProfiles.fxml"));
@@ -37,6 +54,11 @@ public class WaiterController implements Initializable {
     }
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        AppState appState = AppState.getAppState();
+
+        namelabel.setText(appState.getUser().getFirstName());
+
+
         foodlist.setItems(fooditems);
         try {
             Connection conn = DatabaseService.getConnection();
