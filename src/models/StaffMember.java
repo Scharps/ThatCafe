@@ -4,9 +4,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class StaffMember extends User {
-
     private StaffPosition position;
 
     private StaffMember(int id, String firstName, String lastName, StaffPosition position) {
@@ -70,22 +70,37 @@ public class StaffMember extends User {
         }
     }
 
-    public static boolean deleteStaffMember(Connection conn, int id) throws SQLException {
+    public static void deleteStaffMember(Connection conn, int id) throws SQLException {
         PreparedStatement st = conn.prepareStatement("DELETE FROM Staff WHERE StaffId = ?");
         st.setInt(1, id);
         st.executeUpdate();
-        PreparedStatement st2 = conn.prepareStatement("Select * FROM Staff WHERE StaffId = ?");
-        st.setInt(1, id);
-        ResultSet rs = st2.executeQuery();
-        if(!rs.next()){
-            return true;
-        } else {
-            return false;
-        }
     }
 
-    public static boolean updateStaffMember(Connection conn, int id, String username, String password, String firstName,
+    public static void updateStaffMember(Connection conn, int id, String password, String firstName,
                                             String lastName, StaffPosition position) throws SQLException  {
-        throw new UnsupportedOperationException("updateStaffMember() is not yet implemented");
+        PreparedStatement st = conn.prepareStatement("UPDATE Staff " +
+                "SET Password = ?, FName = ?, LName = ?, StaffPos = ? " +
+                "WHERE StaffId = ?");
+        st.setString(1, password);
+        st.setString(2, firstName);
+        st.setString(3, lastName);
+        st.setString(4, position.toString());
+        st.setInt(5, id);
+        st.executeUpdate();
+    }
+
+    public static ArrayList<StaffMember> getAllStaffMembers(Connection conn) throws SQLException {
+        ArrayList<StaffMember> staffMembers = new ArrayList<>();
+        PreparedStatement st = conn.prepareStatement("SELECT * FROM Staff");
+        ResultSet rs = st.executeQuery();
+        while(rs.next()) {
+            staffMembers.add(new StaffMember(
+                    rs.getInt("StaffId"),
+                    rs.getString("FName"),
+                    rs.getString("LName"),
+                    StaffPosition.valueOf(rs.getString("StaffPos"))
+            ));
+        }
+        return staffMembers;
     }
 }
