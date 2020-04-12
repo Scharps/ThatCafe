@@ -13,20 +13,18 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+import models.*;
 import models.MenuItem;
-import models.MenuItemType;
-import models.StaffMember;
-import models.User;
 import services.AppState;
 import services.DatabaseService;
 
 import java.io.IOException;
 import java.io.PipedReader;
 import java.net.URL;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.Calendar;
 import java.util.ResourceBundle;
 
 public class WaiterController implements Initializable {
@@ -36,7 +34,7 @@ public class WaiterController implements Initializable {
     @FXML private ListView drinkslist;
     @FXML private TableView<MenuItem> ordertable;
     @FXML private TableColumn<MenuItem, String> ordereditem;
-    @FXML private ComboBox tableno;
+    @FXML private ComboBox<Integer> tableno;
     @FXML private ListView deliveryorderslist;
     @FXML private Label namelabel;
 
@@ -68,6 +66,30 @@ public class WaiterController implements Initializable {
     }
 
     public void confirmOrder(ActionEvent event){
+        LocalDateTime ordertime = LocalDateTime.now();
+        LocalDateTime bookingtime = LocalDateTime.now().withMinute(0).withSecond(0).withNano(0);
+        int tableid = (Integer) tableno.getValue();
+        Timestamp sqlordertime = Timestamp.valueOf(ordertime);
+        Timestamp sqlbookingtime = Timestamp.valueOf(bookingtime);
+        double sum = 0.0;
+        for(MenuItem item: orderitems) {
+            sum += item.getPrice();
+        }
+        try {
+            Connection conn = DatabaseService.getConnection();
+            int customerId = Booking.getCustomerId(conn, sqlbookingtime, tableid);
+            Order.createOrder(conn, sqlordertime, customerId, sum);
+            int orderId = DatabaseService.getLastInsert(conn);
+            EatInOrder.createEatInOrder(conn, orderId, tableid);
+            for (MenuItem item : orderitems) {
+                MenuItem.createOrderedItem(conn, orderId, item.getId());
+            }
+            conn.close();
+            orderitems.clear();
+            ordertable.setItems(orderitems);
+        }catch (SQLException se){
+        }
+
 
     }
 

@@ -1,35 +1,36 @@
 package models;
 
 import java.sql.Date;
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 public class DeliveryOrder extends Order {
-    private Date estimatedDeliveryTime;
-    private boolean approved = false;
+    private Timestamp estimatedDeliveryTime;
+    private boolean confirmed = false;
     private boolean delivered = false;
-    private Address address;
+    private int driverID;
 
-    private DeliveryOrder(int orderId, ArrayList<Integer> items, int customerId, Date estimatedDeliveryTime, Address address) {
-        super(orderId, items, OrderType.Delivery, customerId);
+    private DeliveryOrder(int orderId, Timestamp orderDate, int customerId, boolean cooked, double orderTotal, boolean confirmed, Timestamp estimatedDeliveryTime, int driverID, boolean delivered) {
+        super(orderId, orderDate, customerId, cooked, orderTotal);
+        this.confirmed = confirmed;
         this.estimatedDeliveryTime = estimatedDeliveryTime;
-        this.address = address;
+        this.driverID = driverID;
+        this.delivered = delivered;
     }
 
-    public Date getEstimatedDeliveryTime() {
+    public Timestamp getEstimatedDeliveryTime() {
         return this.estimatedDeliveryTime;
     }
 
-    public boolean isApproved() {
-        return this.approved;
+    public boolean isConfirmed() {
+        return this.confirmed;
     }
 
     public boolean isDelivered() {
         return this.delivered;
     }
 
-    public Address getAddress() {
-        return this.address;
-    }
 
     public boolean markApproved() {
         throw new UnsupportedOperationException("markApproved() not yet implemented");

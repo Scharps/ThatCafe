@@ -1,17 +1,20 @@
 package models;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 public class TakeawayOrder extends Order {
-    private Date pickupTime;
+    private Timestamp pickupTime;
+    private boolean collected;
 
-    private TakeawayOrder(int orderId, ArrayList<Integer> items, int customerId, Date pickupTime) {
-        super(orderId, items, OrderType.Takeaway, customerId);
+    private TakeawayOrder(int orderId, Timestamp orderDate, int customerId, boolean cooked, double orderTotal, Timestamp pickupTime, boolean collected) {
+        super(orderId, orderDate, customerId, cooked, orderTotal);
         this.pickupTime = pickupTime;
+        this.collected = collected;
     }
 
-    public Date getPickUpTime() {
+    public Timestamp getPickUpTime() {
         return this.pickupTime;
     }
 

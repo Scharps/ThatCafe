@@ -62,13 +62,13 @@
                                           </TableView>
                                           <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                              <children>
-                                                <Button layoutX="118.0" layoutY="13.0" mnemonicParsing="false" text="Confirm Order" AnchorPane.bottomAnchor="1.0" AnchorPane.topAnchor="13.0" />
+                                                <Button layoutX="118.0" layoutY="13.0" mnemonicParsing="false" onAction="#confirmOrder" text="Confirm Order" AnchorPane.bottomAnchor="1.0" AnchorPane.topAnchor="13.0" />
                                                 <ComboBox fx:id="tableno" layoutX="3.0" layoutY="13.0" prefHeight="25.0" prefWidth="107.0" promptText="Table No." />
                                              </children>
                                           </AnchorPane>
                                        </children>
                                        <padding>
-                                          <Insets bottom="5.0" top="5.0" />
+                                          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                        </padding>
                                     </VBox>
                                  </children>

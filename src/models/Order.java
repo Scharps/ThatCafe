@@ -1,31 +1,39 @@
 package models;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 public abstract class Order {
     private int orderId;
-    private ArrayList<Integer> items;
-    private OrderType orderType;
+    private Timestamp orderDate;
     private int customerId;
-    private boolean completed = false;
+    private boolean cooked = false;
+    private double orderTotal;
 
-    protected Order(int orderId, ArrayList<Integer> items, OrderType orderType, int customerId) {
+    protected Order(int orderId, Timestamp orderDate, int customerId, boolean cooked, double orderTotal) {
         this.orderId = orderId;
-        this.items = items;
-        this.orderType = orderType;
+        this.orderDate = orderDate;
         this.customerId = customerId;
+        this.cooked = cooked;
+        this.orderTotal = orderTotal;
     }
 
+    public static void createOrder(Connection conn, Timestamp orderDate, int customerId, double orderTotal){
+        try{
+            PreparedStatement st = conn.prepareStatement("INSERT INTO Orders (OrderDate, CustomerId, OrderTotal) VALUES (?,?,?)");
+            st.setTimestamp(1, orderDate);
+            st.setInt(2, customerId);
+            st.setDouble(3, orderTotal);
+            st.executeUpdate();
+        } catch (SQLException se){
+
+        }
+    }
     public int getOrderId() {
         return this.orderId;
-    }
-
-    public ArrayList<Integer> getItems() {
-        return this.items;
-    }
-
-    public OrderType getOrderType() {
-        return this.orderType;
     }
 
     public int getCustomerId() {
@@ -33,7 +41,7 @@ public abstract class Order {
     }
 
     public boolean isCompleted() {
-        return this.completed;
+        return this.cooked;
     }
 
     public boolean markCompleted() {

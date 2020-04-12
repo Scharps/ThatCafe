@@ -1,6 +1,8 @@
 package models;
 
-import java.sql.Date;
+import services.DatabaseService;
+
+import java.sql.*;
 
 public class Booking {
     private int id;
@@ -28,13 +30,32 @@ public class Booking {
     public Date getDateOfBooking() {
         return this.dateOfBooking;
     }
-
+/*
     public int getCustomerId() {
         return this.customerId;
     }
 
+ */
+
     public int getNumberOfGuests() {
         return this.numberOfGuests;
+    }
+
+    public static int getCustomerId(Connection conn, Timestamp time, int tableId){
+        try {
+            PreparedStatement st = conn.prepareStatement("SELECT CustomerId FROM Bookings WHERE BookingDate = ? AND TableId = ?");
+            st.setTimestamp(1, time);
+            st.setInt(2, tableId);
+            ResultSet rs = st.executeQuery();
+            if(rs.next()){
+                return rs.getInt(1);
+            }
+            else {
+                return 0;
+            }
+        } catch (SQLException se){
+            return 0;
+        }
     }
 
     public static Booking createBooking(int tableId, Date dateOfBooking, int customerId, int numberOfGuests) {

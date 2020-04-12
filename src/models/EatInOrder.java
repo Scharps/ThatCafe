@@ -1,17 +1,28 @@
 package models;
 
+import java.sql.*;
 import java.util.ArrayList;
 
 public class EatInOrder extends Order {
     private int tableId;
 
-    private EatInOrder(int orderId, ArrayList<Integer> items, int customerId, int tableId) {
-        super(orderId, items, OrderType.EatIn, customerId);   
+    private EatInOrder(int orderId, Timestamp orderDate, int customerId, boolean cooked, double orderTotal, int tableId) {
+        super(orderId, orderDate, customerId, cooked, orderTotal);
         this.tableId = tableId;     
     }
 
     public int getTable() {
         return this.tableId;
+    }
+
+    public static void createEatInOrder(Connection conn, int orderId, int tableId){
+        try{
+            PreparedStatement st = conn.prepareStatement("INSERT INTO EatinOrders (OrderId, TableId) VALUES (?,?)");
+            st.setInt(1, orderId);
+            st.setInt(2, tableId);
+            st.executeUpdate();
+        } catch (SQLException se){
+        }
     }
 
     public static EatInOrder createEatInOrder(ArrayList<Integer> items, int customerId, int tableId) {

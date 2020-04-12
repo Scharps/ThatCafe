@@ -1,5 +1,9 @@
 package models;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
 public class MenuItem {
     private int id;
     private String name;
@@ -17,6 +21,15 @@ public class MenuItem {
         this.special = special;
     }
 
+    public static void createOrderedItem(Connection conn, int orderId, int itemId){
+        try {
+            PreparedStatement st = conn.prepareStatement("INSERT INTO OrderedItems (OrderId, ItemId, Quantity) VALUES (?, ?, 1)");
+            st.setInt(1, orderId);
+            st.setInt(2, itemId);
+            st.executeUpdate();
+        } catch(SQLException se){
+        }
+    }
     public int getId() {
         return this.id;
     }
