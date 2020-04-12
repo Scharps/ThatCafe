@@ -56,7 +56,7 @@ public class Booking {
         }
     }
 
-    public static Booking createBooking(int tableId, Date dateOfBooking, int customerId, int numberOfGuests) {
+
     public static Booking getBooking(int id) {
         throw new UnsupportedOperationException("getBooking() is not yet implemented");
     }
