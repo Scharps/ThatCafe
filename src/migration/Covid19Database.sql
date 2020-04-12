@@ -55,7 +55,7 @@ INSERT INTO MenuItems(ItemName,ItemType,Price) VALUES ("Pizza", 'Food', 11.99), 
 
 Create Table Orders(
     OrderId Integer auto_increment not null,    
-    Date DATETIME not null,
+    OrderDate DATETIME not null,
     CustomerId Integer not null,  
     Cooked Boolean not null default 0,
     OrderTotal Decimal(5,2) not null default 0,

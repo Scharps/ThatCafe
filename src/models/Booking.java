@@ -30,12 +30,10 @@ public class Booking {
     public Date getDateOfBooking() {
         return this.dateOfBooking;
     }
-/*
+
     public int getCustomerId() {
         return this.customerId;
     }
-
- */
 
     public int getNumberOfGuests() {
         return this.numberOfGuests;
@@ -59,9 +57,6 @@ public class Booking {
     }
 
     public static Booking createBooking(int tableId, Date dateOfBooking, int customerId, int numberOfGuests) {
-        throw new UnsupportedOperationException("createBooking() is not yet implemented");
-    }
-
     public static Booking getBooking(int id) {
         throw new UnsupportedOperationException("getBooking() is not yet implemented");
     }

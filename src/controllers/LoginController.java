@@ -138,9 +138,8 @@ public class LoginController {
         if(check == true) {
             try {
                 Connection conn = DatabaseService.getConnection();
-                Address.registerAddress(conn, registeraddress.getText(), registercity.getText(), registerpostcode.getText());
-                int id = Address.getAddressId(conn, registeraddress.getText(), registercity.getText(), registerpostcode.getText());
-                Customer.registerCustomer(conn, registerusername.getText(), registerpassword.getText(), registername.getText(), registersurname.getText(), id);
+                Address address = Address.createAddress(conn, registeraddress.getText(), registercity.getText(), registerpostcode.getText());
+                Customer.createCustomer(conn, registerusername.getText(), registerpassword.getText(), registername.getText(), registersurname.getText(), address);
                 registererror.setText("Thank you for registering");
                 registerusername.setText("");
                 registername.setText("");
