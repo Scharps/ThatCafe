@@ -7,11 +7,11 @@ import java.sql.*;
 public class Booking {
     private int id;
     private int tableId;
-    private Date dateOfBooking;
+    private Timestamp dateOfBooking;
     private int customerId;
     private int numberOfGuests;
 
-    private Booking(int id, int tableId, Date dateOfBooking, int customerId, int numberOfGuests) {
+    private Booking(int id, int tableId, Timestamp dateOfBooking, int customerId, int numberOfGuests) {
         this.id = id;
         this.tableId = tableId;
         this.dateOfBooking = dateOfBooking;
@@ -27,7 +27,7 @@ public class Booking {
         return this.tableId;
     }
 
-    public Date getDateOfBooking() {
+    public Timestamp getDateOfBooking() {
         return this.dateOfBooking;
     }
 
@@ -65,7 +65,7 @@ public class Booking {
         throw new UnsupportedOperationException("deleteBooking() is not yet implemented");
     }
 
-    public static boolean updateBooking(int id, int tableId, Date dateOfBooking, int customerId, int numberOfGuests) {
+    public static boolean updateBooking(int id, int tableId, Timestamp dateOfBooking, int customerId, int numberOfGuests) {
         throw new UnsupportedOperationException("updateBooking() is not yet implemented");
     }
 }
