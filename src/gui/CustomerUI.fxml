@@ -186,6 +186,40 @@
                   </AnchorPane>
                </content>
             </Tab>
+            <Tab text="Order History">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <VBox prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <children>
+                              <TableView fx:id="orderHistoryTable" prefHeight="274.0" prefWidth="604.0">
+                                <columns>
+                                  <TableColumn prefWidth="110.0" text="Order No" />
+                                  <TableColumn prefWidth="117.0" text="Order Date" />
+                                    <TableColumn prefWidth="115.0" text="Order Total" />
+                                </columns>
+                              </TableView>
+                              <HBox prefHeight="163.0" prefWidth="604.0" spacing="10.0">
+                                 <children>
+                                    <ComboBox prefWidth="150.0" />
+                                    <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="100.0" text="Re-order" />
+                                    <TableView fx:id="historyItemsTable" prefHeight="143.0" prefWidth="219.0">
+                                      <columns>
+                                        <TableColumn prefWidth="75.0" text="Item" />
+                                        <TableColumn prefWidth="75.0" text="Price" />
+                                      </columns>
+                                    </TableView>
+                                 </children>
+                                 <padding>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                 </padding>
+                              </HBox>
+                           </children>
+                        </VBox>
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
          </tabs>
       </TabPane>
    </center>

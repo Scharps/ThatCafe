@@ -43,6 +43,7 @@ public class CustomerController implements Initializable {
     private ObservableList<MenuItem> orderitems = FXCollections.observableArrayList();
     private ObservableList<MenuItem> drinksitems = FXCollections.observableArrayList();
     private ObservableList<String> orderOption = FXCollections.observableArrayList();
+    private ObservableList<Order> orderHistory = FXCollections.observableArrayList();
     private AppState appState = AppState.getAppState();
 
     public void logoutPushed(ActionEvent event) throws IOException {
@@ -136,6 +137,10 @@ public class CustomerController implements Initializable {
             rs = st.executeQuery("SELECT * FROM MenuItems WHERE ItemType = 'Drink'");
             while(rs.next()){
                 drinksitems.add(MenuItem.createMenuItem(rs.getInt(1), rs.getString(2), MenuItemType.Drink, rs.getDouble(4), rs.getInt(5), rs.getBoolean(6)));
+            }
+            rs = Order.getOrderHistory(conn, appState.getUser().getId());
+            while(rs.next()){
+                orderHistory.add(Order.createOrder(rs.getInt(1), rs.getTimestamp(2), rs.getInt(3), rs.getBoolean(4), rs.getDouble(5)));
             }
             conn.close();
 

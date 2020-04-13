@@ -46,6 +46,7 @@ public class WaiterController implements Initializable {
     private ObservableList<MenuItem> orderitems = FXCollections.observableArrayList();
     private ObservableList<Integer> tables = FXCollections.observableArrayList();
     private ObservableList<MenuItem> drinksitems = FXCollections.observableArrayList();
+
     //private ObservableList<String> deliveryorders = FXCollections.observableArrayList();
 
     public void logoutPushed(ActionEvent event) throws IOException {

@@ -1,12 +1,11 @@
 package models;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Timestamp;
+import javafx.collections.ObservableList;
+
+import java.sql.*;
 import java.util.ArrayList;
 
-public abstract class Order {
+public class Order {
     private int orderId;
     private Timestamp orderDate;
     private int customerId;
@@ -21,6 +20,10 @@ public abstract class Order {
         this.orderTotal = orderTotal;
     }
 
+    public static Order createOrder(int orderId, Timestamp orderDate, int customerId, boolean cooked, double orderTotal){
+        return new Order(orderId, orderDate, customerId, cooked, orderTotal);
+    }
+
     public static void createOrder(Connection conn, Timestamp orderDate, int customerId, double orderTotal){
         try{
             PreparedStatement st = conn.prepareStatement("INSERT INTO Orders (OrderDate, CustomerId, OrderTotal) VALUES (?,?,?)");
@@ -30,6 +33,17 @@ public abstract class Order {
             st.executeUpdate();
         } catch (SQLException se){
 
+        }
+    }
+
+    public static ResultSet getOrderHistory(Connection conn, int customerId){
+        try{
+            PreparedStatement st = conn.prepareStatement("SELECT * FROM Orders WHERE CustomerId = ? AND Cooked = 1");
+            st.setInt(1, customerId);
+            ResultSet rs = st.executeQuery();
+            return rs;
+        }catch (SQLException se){
+            return null;
         }
     }
     public int getOrderId() {
