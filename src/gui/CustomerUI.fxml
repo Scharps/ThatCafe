@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="490.0" prefWidth="684.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.CustomerController">
+<?import javafx.scene.control.*?>
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="490.0" prefWidth="684.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.CustomerController">
    <center>
       <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
          <tabs>
@@ -61,38 +69,66 @@
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="371.0" prefWidth="661.0">
                      <children>
-                        <GridPane alignment="CENTER" hgap="10.0" layoutX="102.0" layoutY="-14.0" minHeight="400.0" minWidth="400.0" vgap="10.0">
-                           <padding>
-                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                           </padding>
-                           <columnConstraints>
-                              <ColumnConstraints />
-                              <ColumnConstraints minWidth="10.0" prefWidth="100.0" />
-                           </columnConstraints>
-                           <rowConstraints>
-                              <RowConstraints minHeight="10.0" prefHeight="30.0" />
-                              <RowConstraints />
-                              <RowConstraints />
-                              <RowConstraints minHeight="10.0" prefHeight="30.0" />
-                              <RowConstraints minHeight="10.0" prefHeight="30.0" />
-                              <RowConstraints minHeight="10.0" prefHeight="30.0" />
-                              <RowConstraints minHeight="10.0" prefHeight="30.0" />
-                              <RowConstraints minHeight="10.0" prefHeight="30.0" />
-                              <RowConstraints minHeight="10.0" prefHeight="30.0" />
-                           </rowConstraints>
+                        <HBox layoutX="102.0" layoutY="-14.0">
                            <children>
-                              <Label fx:id="nameLabel" text=" " GridPane.columnIndex="1" />
-                              <Label text="Number of guests:" GridPane.rowIndex="5" />
-                              <Separator prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="2" />
-                              <Label text="Booking date:" GridPane.rowIndex="3" />
-                              <Label text="Time:" GridPane.rowIndex="4" />
-                              <Separator prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="7" />
-                              <Button fx:id="confirmButton" mnemonicParsing="false" text="Confirm" GridPane.rowIndex="6" />
-                              <ComboBox fx:id="guestsBox" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                              <ComboBox fx:id="timeBox" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                              <DatePicker maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                              <GridPane alignment="CENTER_LEFT" hgap="10.0" minHeight="400.0" minWidth="200.0" vgap="10.0">
+                                 <padding>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                 </padding>
+                                 <columnConstraints>
+                                    <ColumnConstraints />
+                                    <ColumnConstraints minWidth="10.0" prefWidth="100.0" />
+                                 </columnConstraints>
+                                 <rowConstraints>
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" />
+                                    <RowConstraints />
+                                    <RowConstraints />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" />
+                                 </rowConstraints>
+                                 <children>
+                                    <Label fx:id="nameLabel" text=" " GridPane.columnIndex="1" />
+                                    <Label text="Number of guests:" GridPane.rowIndex="5" />
+                                    <Separator prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="2" />
+                                    <Label text="Booking date:" GridPane.rowIndex="3" />
+                                    <Label text="Time:" GridPane.rowIndex="4" />
+                                    <Separator prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="8" />
+                                    <Button fx:id="confirmButton" mnemonicParsing="false" text="Confirm" GridPane.rowIndex="7" />
+                                    <ComboBox fx:id="timeCombo" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                                    <DatePicker fx:id="dateSelector" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                    <Label text="Duration:" GridPane.rowIndex="6" />
+                                    <Spinner fx:id="guestNumberSpinner" GridPane.columnIndex="1" GridPane.rowIndex="5" >
+                                        <valueFactory>
+                                            <SpinnerValueFactory.IntegerSpinnerValueFactory min="1" max="10" initialValue="1" amountToStepBy="1"/>
+                                        </valueFactory>
+                                    </Spinner>
+                                    <Spinner fx:id="durationSpinner" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="6">
+                                        <valueFactory>
+                                            <SpinnerValueFactory.IntegerSpinnerValueFactory min="1" max="5" initialValue="1" amountToStepBy="1"/>
+                                        </valueFactory>
+                                    </Spinner>
+                                 </children>
+                              </GridPane>
+                              <VBox alignment="CENTER">
+                                 <children>
+                                    <ListView maxWidth="1.7976931348623157E308" minWidth="200.0" prefHeight="200.0" VBox.vgrow="ALWAYS" />
+                                    <Button alignment="CENTER" mnemonicParsing="false" text="Request Booking">
+                                       <VBox.margin>
+                                          <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                       </VBox.margin>
+                                    </Button>
+                                 </children>
+                                 <HBox.margin>
+                                    <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                                 </HBox.margin>
+                              </VBox>
                            </children>
-                        </GridPane>
+                        </HBox>
                      </children>
                   </AnchorPane>
                </content>
