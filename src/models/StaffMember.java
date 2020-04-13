@@ -35,6 +35,7 @@ public class StaffMember extends User {
         st = conn.prepareStatement("SELECT * FROM Staff\n" +
                 "WHERE StaffId = (SELECT MAX(StaffId) FROM Staff)");
         ResultSet rs = st.executeQuery();
+        rs.next();
         StaffMember staffMember = new StaffMember(
                 rs.getInt("StaffId"),
                 rs.getString("FName"),
