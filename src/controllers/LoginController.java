@@ -15,6 +15,7 @@ import java.io.IOException;
 
 import models.Address;
 import models.Customer;
+import services.AppState;
 import services.DatabaseService;
 
 
@@ -59,6 +60,8 @@ public class LoginController {
                 Customer confirmLogin = Customer.customerLogin(conn, customerusername.getText(), customerpassword.getText());
                 conn.close();
                 if(confirmLogin != null) {
+                    AppState appState = AppState.getAppState();
+                    appState.setUser(confirmLogin);
                     Parent customerParent = FXMLLoader.load(getClass().getResource("/gui/CustomerUI.fxml"));
                     Scene customerScene = new Scene(customerParent);
                     Stage window = (Stage)((Node) event.getSource()).getScene().getWindow();

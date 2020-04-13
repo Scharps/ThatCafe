@@ -1,7 +1,7 @@
 package models;
 
-import java.sql.Date;
-import java.sql.Timestamp;
+import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class TakeawayOrder extends Order {
@@ -12,6 +12,21 @@ public class TakeawayOrder extends Order {
         super(orderId, orderDate, customerId, cooked, orderTotal);
         this.pickupTime = pickupTime;
         this.collected = collected;
+    }
+
+    public static Timestamp estimatePickUpTime(LocalDateTime orderTime){
+        orderTime = orderTime.withSecond(0).withNano(0);
+        return Timestamp.valueOf(orderTime.plusMinutes(20));
+    }
+
+    public static void createTakeawayOrder(Connection conn, int orderId, Timestamp pickupTime) {
+        try {
+            PreparedStatement st = conn.prepareStatement("INSERT INTO TakeawayOrders (OrderId, PickUpTime) VALUES (?,?)");
+            st.setInt(1, orderId);
+            st.setTimestamp(2, pickupTime);
+            st.executeUpdate();
+        } catch (SQLException se){
+        }
     }
 
     public Timestamp getPickUpTime() {

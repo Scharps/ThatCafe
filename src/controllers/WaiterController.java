@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.PipedReader;
 import java.net.URL;
 import java.sql.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
@@ -31,17 +32,20 @@ public class WaiterController implements Initializable {
     @FXML private TableView<MenuItem> foodtable;
     @FXML private TableColumn<MenuItem, String> foodname;
     @FXML private TableColumn<MenuItem, Double> foodprice;
-    @FXML private ListView drinkslist;
+    @FXML private TableView<MenuItem> drinktable;
+    @FXML private TableColumn<MenuItem, String> drinkname;
+    @FXML private TableColumn<MenuItem, Double> drinkprice;
     @FXML private TableView<MenuItem> ordertable;
     @FXML private TableColumn<MenuItem, String> ordereditem;
     @FXML private ComboBox<Integer> tableno;
-    @FXML private ListView deliveryorderslist;
+    @FXML private TextArea orderError;
+    @FXML private TableView<DeliveryOrder> deliverytable;
     @FXML private Label namelabel;
 
     private ObservableList<MenuItem> fooditems = FXCollections.observableArrayList();
     private ObservableList<MenuItem> orderitems = FXCollections.observableArrayList();
     private ObservableList<Integer> tables = FXCollections.observableArrayList();
-    private ObservableList<String> drinksitems = FXCollections.observableArrayList();
+    private ObservableList<MenuItem> drinksitems = FXCollections.observableArrayList();
     //private ObservableList<String> deliveryorders = FXCollections.observableArrayList();
 
     public void logoutPushed(ActionEvent event) throws IOException {
@@ -52,8 +56,15 @@ public class WaiterController implements Initializable {
         window.show();
     }
 
-    public void itemSelect(MouseEvent event){
+    public void foodSelect(MouseEvent event){
         MenuItem itemSelected = foodtable.getSelectionModel().getSelectedItem();
+        orderitems.add(itemSelected);
+        ordereditem.setCellValueFactory((new PropertyValueFactory<MenuItem, String>("name")));
+        ordertable.setItems(orderitems);
+    }
+
+    public void drinkSelect(MouseEvent event){
+        MenuItem itemSelected = drinktable.getSelectionModel().getSelectedItem();
         orderitems.add(itemSelected);
         ordereditem.setCellValueFactory((new PropertyValueFactory<MenuItem, String>("name")));
         ordertable.setItems(orderitems);
@@ -66,27 +77,34 @@ public class WaiterController implements Initializable {
     }
 
     public void confirmOrder(ActionEvent event){
-        LocalDateTime ordertime = LocalDateTime.now();
-        LocalDateTime bookingtime = LocalDateTime.now().withMinute(0).withSecond(0).withNano(0);
-        int tableid = (Integer) tableno.getValue();
-        Timestamp sqlordertime = Timestamp.valueOf(ordertime);
-        Timestamp sqlbookingtime = Timestamp.valueOf(bookingtime);
-        double sum = 0.0;
+        LocalDateTime orderTime = LocalDateTime.now();
+        LocalDate bookingDate = LocalDate.now();
+        int bookingHour = LocalDateTime.now().getHour();
+        int tableId = (Integer) tableno.getValue();
+        Timestamp sqlordertime = Timestamp.valueOf(orderTime);
+        Date sqlbookingDate = Date.valueOf(bookingDate);
+        double orderTotal = 0.0;
         for(MenuItem item: orderitems) {
-            sum += item.getPrice();
+            orderTotal += item.getPrice();
         }
         try {
             Connection conn = DatabaseService.getConnection();
-            int customerId = Booking.getCustomerId(conn, sqlbookingtime, tableid);
-            Order.createOrder(conn, sqlordertime, customerId, sum);
-            int orderId = DatabaseService.getLastInsert(conn);
-            EatInOrder.createEatInOrder(conn, orderId, tableid);
-            for (MenuItem item : orderitems) {
-                MenuItem.createOrderedItem(conn, orderId, item.getId());
+            int customerId = Booking.getCustomerId(conn, sqlbookingDate, bookingHour, tableId);
+            if(customerId == 0){
+                orderError.setText("No booking at this table at this time.");
             }
+            else {
+                Order.createOrder(conn, sqlordertime, customerId, orderTotal);
+                int orderId = DatabaseService.getLastInsert(conn);
+                EatInOrder.createEatInOrder(conn, orderId, tableId);
+                for (MenuItem item : orderitems) {
+                    MenuItem.createOrderedItem(conn, orderId, item.getId());
+                }
+                orderitems.clear();
+                ordertable.setItems(orderitems);
+            }
+
             conn.close();
-            orderitems.clear();
-            ordertable.setItems(orderitems);
         }catch (SQLException se){
         }
 
@@ -96,14 +114,19 @@ public class WaiterController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         AppState appState = AppState.getAppState();
-
         namelabel.setText(appState.getUser().getFirstName());
+
         foodname.setCellValueFactory(new PropertyValueFactory<MenuItem, String>("name"));
         foodprice.setCellValueFactory(new PropertyValueFactory<MenuItem, Double>("price"));
         foodtable.setItems(fooditems);
 
-        drinkslist.setItems(drinksitems);
+        drinkname.setCellValueFactory(new PropertyValueFactory<MenuItem, String>("name"));
+        drinkprice.setCellValueFactory(new PropertyValueFactory<MenuItem, Double>("price"));
+        drinktable.setItems(drinksitems);
+
         tableno.setItems(tables);
+
+
         try {
             Connection conn = DatabaseService.getConnection();
             Statement st = conn.createStatement();
@@ -113,7 +136,7 @@ public class WaiterController implements Initializable {
             }
             rs = st.executeQuery("SELECT * FROM MenuItems WHERE ItemType = 'Drink'");
             while(rs.next()){
-                drinksitems.add(rs.getString(2) + ": £" + rs.getString(4));
+                drinksitems.add(MenuItem.createMenuItem(rs.getInt(1), rs.getString(2), MenuItemType.Drink, rs.getDouble(4), rs.getInt(5), rs.getBoolean(6)));
             }
             rs = st.executeQuery("SELECT TableId from CafeTables");
             while(rs.next()){
