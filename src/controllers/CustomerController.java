@@ -31,12 +31,26 @@ public class CustomerController implements Initializable {
     @FXML private TableView<MenuItem> foodtable;
     @FXML private TableColumn<MenuItem, String> foodname;
     @FXML private TableColumn<MenuItem, Double> foodprice;
+
     @FXML private TableView<MenuItem> drinktable;
     @FXML private TableColumn<MenuItem, String> drinkname;
     @FXML private TableColumn<MenuItem, Double> drinkprice;
+
     @FXML private TableView<MenuItem> ordertable;
     @FXML private TableColumn<MenuItem, String> ordereditem;
+
+    @FXML private TableView<Order> orderHistoryTable;
+    @FXML private TableColumn<Order, Integer> orderHistoryNo;
+    @FXML private TableColumn<Order, Timestamp> orderHistoryDate;
+    @FXML private TableColumn<Order, Double> orderHistoryTotal;
+
+    @FXML private TableView<MenuItem> historyItemsTable;
+    @FXML private TableColumn<MenuItem, String> historyItemName;
+    @FXML private TableColumn<MenuItem, Double> historyItemPrice;
+
+
     @FXML private ComboBox<String> orderType;
+    @FXML private ComboBox<String> reorderType;
     @FXML private TextArea orderMessage;
 
     private ObservableList<MenuItem> fooditems = FXCollections.observableArrayList();
@@ -44,6 +58,7 @@ public class CustomerController implements Initializable {
     private ObservableList<MenuItem> drinksitems = FXCollections.observableArrayList();
     private ObservableList<String> orderOption = FXCollections.observableArrayList();
     private ObservableList<Order> orderHistory = FXCollections.observableArrayList();
+    private ObservableList<MenuItem> orderHistoryItems = FXCollections.observableArrayList();
     private AppState appState = AppState.getAppState();
 
     public void logoutPushed(ActionEvent event) throws IOException {
@@ -101,6 +116,7 @@ public class CustomerController implements Initializable {
                     MenuItem.createOrderedItem(conn, orderId, item.getId());
                 }
                 orderitems.clear();
+
                 ordertable.setItems(orderitems);
             } catch(Exception e){
                 System.out.println("something has gone wrong");
@@ -110,6 +126,66 @@ public class CustomerController implements Initializable {
         else {
         }
     }
+
+    public void confirmReOrder(ActionEvent event){
+        int customerId = appState.getUser().getId();
+        LocalDateTime ordertime = LocalDateTime.now();
+        Timestamp sqlordertime = Timestamp.valueOf(ordertime);
+        double sum = 0.0;
+        for(MenuItem item: orderHistoryItems) {
+            sum += item.getPrice();
+        }
+
+        if(reorderType.getValue() == "Delivery" || reorderType.getValue() == "Takeaway"){
+            try {
+                Connection conn = DatabaseService.getConnection();
+                Order.createOrder(conn, sqlordertime, customerId, sum);
+                int orderId = DatabaseService.getLastInsert(conn);
+                if(reorderType.getValue() == "Delivery"){
+                    Timestamp sqldeliverytime = DeliveryOrder.estimateDeliveryTime(ordertime);
+                    DeliveryOrder.createDeliveryOrder(conn, orderId, sqldeliverytime);
+                    orderMessage.setText("Thank you for your order: \nEstimated Delivery time will be " + sqldeliverytime);
+                } else {
+                    Timestamp sqlpickuptime = TakeawayOrder.estimatePickUpTime(ordertime);
+                    TakeawayOrder.createTakeawayOrder(conn, orderId, sqlpickuptime);
+                    orderMessage.setText("Thank you for your order: \nEstimated Pickup time will be " + sqlpickuptime);
+                }
+                for (MenuItem item : orderHistoryItems) {
+                    MenuItem.createOrderedItem(conn, orderId, item.getId());
+                }
+                orderHistoryItems.clear();
+
+                historyItemsTable.setItems(orderHistoryItems);
+            } catch(Exception e){
+                System.out.println("something has gone wrong");
+            }
+
+        }
+        else {
+        }
+    }
+
+    public void selectHistoricOrder(MouseEvent event){
+        Order selectedOrder = orderHistoryTable.getSelectionModel().getSelectedItem();
+        //orderHistoryItems.clear();
+        try{
+            Connection conn = DatabaseService.getConnection();
+            ResultSet rs = MenuItem.getOrderItems(conn, selectedOrder.getOrderId());
+            if(rs.next()) {
+                while (rs.next()) {
+                    orderHistoryItems.add(MenuItem.createMenuItem(rs.getInt(1), rs.getString(2), MenuItemType.valueOf(rs.getString(3)), rs.getDouble(4), rs.getInt(5), rs.getBoolean(6)));
+                }
+                historyItemName.setCellValueFactory(new PropertyValueFactory<MenuItem, String>("name"));
+                historyItemPrice.setCellValueFactory(new PropertyValueFactory<MenuItem, Double>("price"));
+                historyItemsTable.setItems(orderHistoryItems);
+            }
+            conn.close();
+        } catch (SQLException se){
+            System.out.println("help");
+        }
+
+    }
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -123,10 +199,15 @@ public class CustomerController implements Initializable {
         drinkprice.setCellValueFactory(new PropertyValueFactory<MenuItem, Double>("price"));
         drinktable.setItems(drinksitems);
 
+        orderHistoryNo.setCellValueFactory(new PropertyValueFactory<Order, Integer>("orderId"));
+        orderHistoryDate.setCellValueFactory(new PropertyValueFactory<Order, Timestamp>("orderDate"));
+        orderHistoryTotal.setCellValueFactory(new PropertyValueFactory<Order, Double>("orderTotal"));
+        orderHistoryTable.setItems(orderHistory);
+
         orderOption.add("Takeaway");
         orderOption.add("Delivery");
         orderType.setItems(orderOption);
-
+        reorderType.setItems(orderOption);
         try {
             Connection conn = DatabaseService.getConnection();
             Statement st = conn.createStatement();

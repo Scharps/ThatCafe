@@ -54,11 +54,21 @@ public class Order {
         return this.customerId;
     }
 
+    public Timestamp getOrderDate() {
+        return this.orderDate;
+    }
+
     public boolean isCompleted() {
         return this.cooked;
+    }
+
+    public double getOrderTotal() {
+        return orderTotal;
     }
 
     public boolean markCompleted() {
         throw new UnsupportedOperationException("markCompleted() is not yet implemented");
     }
+
+
 }

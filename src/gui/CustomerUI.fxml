@@ -192,21 +192,21 @@
                      <children>
                         <VBox prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
-                              <TableView fx:id="orderHistoryTable" prefHeight="274.0" prefWidth="604.0">
+                              <TableView fx:id="orderHistoryTable" onMouseClicked="#selectHistoricOrder" prefHeight="274.0" prefWidth="604.0">
                                 <columns>
-                                  <TableColumn prefWidth="110.0" text="Order No" />
-                                  <TableColumn prefWidth="117.0" text="Order Date" />
-                                    <TableColumn prefWidth="115.0" text="Order Total" />
+                                  <TableColumn fx:id="orderHistoryNo" prefWidth="110.0" text="Order No" />
+                                  <TableColumn fx:id="orderHistoryDate" prefWidth="117.0" text="Order Date" />
+                                    <TableColumn fx:id="orderHistoryTotal" prefWidth="115.0" text="Order Total" />
                                 </columns>
                               </TableView>
                               <HBox prefHeight="163.0" prefWidth="604.0" spacing="10.0">
                                  <children>
-                                    <ComboBox prefWidth="150.0" />
-                                    <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="100.0" text="Re-order" />
+                                    <ComboBox fx:id="reorderType" prefWidth="150.0" />
+                                    <Button mnemonicParsing="false" onAction="#confirmReOrder" prefHeight="26.0" prefWidth="100.0" text="Re-order" />
                                     <TableView fx:id="historyItemsTable" prefHeight="143.0" prefWidth="219.0">
                                       <columns>
-                                        <TableColumn prefWidth="75.0" text="Item" />
-                                        <TableColumn prefWidth="75.0" text="Price" />
+                                        <TableColumn fx:id="historyItemName" prefWidth="75.0" text="Item" />
+                                        <TableColumn fx:id="historyItemPrice" prefWidth="75.0" text="Price" />
                                       </columns>
                                     </TableView>
                                  </children>

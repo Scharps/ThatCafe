@@ -2,6 +2,7 @@ package models;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class MenuItem {
@@ -30,6 +31,18 @@ public class MenuItem {
         } catch(SQLException se){
         }
     }
+
+    public static ResultSet getOrderItems(Connection conn, int orderId){
+        try{
+            PreparedStatement st = conn.prepareStatement("SELECT m.ItemId, m.ItemName, m.ItemType, m.Price, m.Sold, m.SpecialSpecial FROM OrderedItems o, MenuItems m WHERE o.OrderId=? AND m.ItemId=o.ItemId");
+            st.setInt(1,orderId);
+            ResultSet rs = st.executeQuery();
+            return rs;
+        }catch (SQLException se){
+            return null;
+        }
+    }
+
     public int getId() {
         return this.id;
     }
