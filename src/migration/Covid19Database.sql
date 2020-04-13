@@ -76,8 +76,9 @@ Create table OrderedItems(
  Create Table Bookings ( 
     BookingId Integer auto_increment not null UNIQUE,
     TableId Integer not null, 
-    CustomerId Integer not null, 
-    BookingDate DATETIME not null,
+    CustomerId Integer not null,
+    BookingHour INTEGER NOT NULL.
+    BookingDate DATE not null,
     GuestQuantity Integer not null,
     Approved boolean not null default 0,
     PRIMARY KEY(TableId, BookingDate),

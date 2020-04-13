@@ -35,8 +35,9 @@ public class Customer extends User {
         st.executeUpdate();
 
         st = conn.prepareStatement("SELECT * FROM Customers\n" +
-                "WHERE CustomerId = (SELECT MAX(CustomerId) FROM Customer)");
+                "WHERE CustomerId = (SELECT MAX(CustomerId) FROM Customers)");
         ResultSet rs = st.executeQuery();
+        rs.next();
         Customer customer = new Customer(
                 rs.getInt("CustomerId"),
                 rs.getString("Username"),

@@ -47,6 +47,7 @@ public class Address {
         st = conn.prepareStatement("SELECT * FROM Address\n" +
                 "WHERE AddressId = (SELECT MAX(AddressId) FROM Address);");
         ResultSet rs = st.executeQuery();
+        rs.next();
         Address address = new Address(
                 rs.getInt("AddressId"),
                 rs.getString("FirstLine"),
