@@ -27,6 +27,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class CustomerController implements Initializable {
@@ -266,6 +267,7 @@ public class CustomerController implements Initializable {
                     (Integer) durationSpinner.getValue(),
                     guestCount
             );
+            availableSlotsList.getItems().clear();
             for(Table t : availableTables) {
                 availableSlotsList.getItems().add(t);
             }
