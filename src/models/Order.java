@@ -1,6 +1,8 @@
 package models;
 
+import javafx.animation.ScaleTransition;
 import javafx.collections.ObservableList;
+import javafx.scene.control.ComboBox;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -46,6 +48,28 @@ public class Order {
             return null;
         }
     }
+
+    public static ResultSet getUncookedOrders(Connection conn){
+        try{
+            Statement st = conn.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM Orders WHERE Cooked = 0");
+            return rs;
+        } catch (SQLException se){
+            return null;
+        }
+    }
+
+    public void setCooked(Connection conn){
+        try {
+            PreparedStatement st = conn.prepareStatement("UPDATE Orders SET Cooked =1 WHERE OrderId = ?");
+            st.setInt(1, this.orderId);
+            st.executeUpdate();
+        } catch (SQLException se){
+
+        }
+    }
+
+
     public int getOrderId() {
         return this.orderId;
     }

@@ -1,247 +1,107 @@
-/*
 package controllers;
 
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.RowConstraints;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import models.MenuItem;
 import models.MenuItemType;
 import models.Order;
-import models.OrderType;
+import services.AppState;
+import services.DatabaseService;
 
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
+import java.io.IOException;
+import java.net.URL;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.ResourceBundle;
 
-public class ChefController {
-    private static SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy/MM/dd hh:mm aa", Locale.getDefault());
+public class ChefController implements Initializable {
+    private AppState appState = AppState.getAppState();
 
-    private List<Order> allOrders = new ArrayList<>();
-    private List<MenuItem> orderItems = new ArrayList<>();
-    private Label[] orderIds;
-    private Label[] orderTypes;
-    private Label[] orderCompletes;
+    @FXML private TableView<Order> currentOrderTable;
+    @FXML private TableColumn<Order, Integer> currentOrderNo;
+    @FXML private TableColumn<Order, Timestamp> currentOrderDate;
 
-    private Label[] itemNames;
-    private Label[] itemAmount;
-    private CheckBox[] itemCheck;
+    @FXML private TableView<MenuItem> currentItemTable;
+    @FXML private TableColumn<MenuItem, String> currentOrderItem;
 
-    private Integer currentOrderNo = null;
+    ObservableList<Order> currentOrders = FXCollections.observableArrayList();
+    ObservableList<MenuItem> currentOrderItems = FXCollections.observableArrayList();
 
-
-    @FXML
-    GridPane ordersGrid;
-
-    @FXML
-    GridPane itemsGrid;
-
-    @FXML
-    Button logoutButton;
-
-
-    @FXML
-    public void initialize() {
-        getAllOrders();
-
-        fillOrdersTable();
+    public void logoutPushed(ActionEvent event) throws IOException {
+        Parent loginParent = FXMLLoader.load(getClass().getResource("/gui/StaffProfiles.fxml"));
+        Scene loginScene = new Scene(loginParent);
+        Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
+        window.setScene(loginScene);
+        window.show();
     }
 
-    private void fillOrdersTable() {
-
-        orderIds = new Label[allOrders.size()];
-        orderTypes = new Label[allOrders.size()];
-        orderCompletes = new Label[allOrders.size()];
-
-        ordersGrid.getRowConstraints().clear();
-        //System.out.println(allOrders.size());
-        for (int i = 0; i < allOrders.size(); i++) {
-            orderIds[i] = new Label(allOrders.get(i).getOrderId() + "");
-            orderTypes[i] = new Label(allOrders.get(i).getOrderType() + "");
-            orderCompletes[i] = new Label((allOrders.get(i).isCompleted() ? "Completed" : "Not"));
-
-
-            RowConstraints con = new RowConstraints();
-            con.setMinHeight(25);
-            ordersGrid.getRowConstraints().add(con);
-            ordersGrid.add(orderIds[i], 0, i);
-            ordersGrid.add(orderTypes[i], 1, i);
-            ordersGrid.add(orderCompletes[i], 2, i);
-
-            orderIds[i].setOnMouseClicked(e -> mouseListener(e));
-            orderTypes[i].setOnMouseClicked(e -> mouseListener(e));
-            orderCompletes[i].setOnMouseClicked(e -> mouseListener(e));
-        }
-    }
-
-    private void fillItemsTable(int row) {
-        Order order = allOrders.get(row);
-        orderItems.clear();
-        for (int index = 0; index < order.getItems().size(); index++) {
-            MenuItem item = getItemById(index);
-            orderItems.add(item);
-        }
-
-        itemNames = new Label[orderItems.size()];
-        itemAmount = new Label[orderItems.size()];
-        itemCheck = new CheckBox[orderItems.size()];
-
-        itemsGrid.getRowConstraints().clear();
-        itemsGrid.getChildren().clear();
-        for (int i = 0; i < orderItems.size(); i++) {
-            itemNames[i] = new Label(orderItems.get(i).getName() + "");
-            itemAmount[i] = new Label(orderItems.get(i).getNumberSold() + "");
-            itemCheck[i] = new CheckBox("Done");
-
-            RowConstraints con = new RowConstraints();
-            con.setMinHeight(25);
-            itemsGrid.getRowConstraints().add(con);
-            itemsGrid.add(itemNames[i], 0, i);
-            itemsGrid.add(itemAmount[i], 1, i);
-            itemsGrid.add(itemCheck[i], 2, i);
-
-            itemCheck[i].setOnAction(e -> itemCheckAction());
-        }
-    }
-
-    private void mouseListener(MouseEvent e) {
-        int row = GridPane.getRowIndex((Node) e.getSource());
-        fillItemsTable(row);
-        currentOrderNo = row;
-    }
-
-    private void itemCheckAction() {
-        //TODO or not to do
-    }
-
-    @FXML
-    public void logoutAction() {
-        ((Stage) logoutButton.getScene().getWindow()).close();
-    }
-
-
-    @FXML
-    private void markAction() {
-        allOrders.get(currentOrderNo).markCompleted();
-        orderCompletes[currentOrderNo].setText("Completed");
-        currentOrderNo = null;
-        //itemsGrid.getRowConstraints().clear();
-        itemsGrid.getChildren().clear();
-    }
-
-
-    //// ------------------ STUB methods --------------------
-    private void getAllOrders() {
-        for (int i = 0; i < 25; i++) {
-            TestOrder order;
-            if (i % 2 == 0) {
-                order = new TestOrder(i + 1, new ArrayList<>(), OrderType.EatIn, 100 + i);
-            } else {
-                order = new TestOrder(i + 1, new ArrayList<>(), OrderType.Delivery, 100 + i);
+    public void selectOrder(MouseEvent event){
+        Order selectedOrder = currentOrderTable.getSelectionModel().getSelectedItem();
+        currentOrderItems.clear();
+        try{
+            Connection conn = DatabaseService.getConnection();
+            ResultSet rs = MenuItem.getOrderItems(conn, selectedOrder.getOrderId());
+            if(rs.next()) {
+                while (rs.next()) {
+                    currentOrderItems.add(MenuItem.createMenuItem(rs.getInt(1), rs.getString(2), MenuItemType.valueOf(rs.getString(3)), rs.getDouble(4), rs.getInt(5), rs.getBoolean(6)));
+                }
+                currentOrderItem.setCellValueFactory(new PropertyValueFactory<MenuItem, String>("name"));
+                currentItemTable.setItems(currentOrderItems);
             }
-            if (i % 3 == 0) {
-                order.markCompleted();
+            conn.close();
+        } catch (SQLException se){
+            System.out.println("help");
+        }
+    }
+
+    public void confirmCooked(ActionEvent event){
+        Order selectedOrder = currentOrderTable.getSelectionModel().getSelectedItem();
+        try{
+            Connection conn = DatabaseService.getConnection();
+            selectedOrder.setCooked(conn);
+            conn.close();
+        }catch (SQLException se){
+        }
+        currentOrders.clear();
+        currentOrderItems.clear();
+        initialiseCurrentOrders();
+
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        initialiseCurrentOrders();
+
+    }
+
+    public void initialiseCurrentOrders(){
+        currentOrderNo.setCellValueFactory(new PropertyValueFactory<Order, Integer>("orderId"));
+        currentOrderDate.setCellValueFactory((new PropertyValueFactory<Order, Timestamp>("orderDate")));
+        currentOrderTable.setItems(currentOrders);
+
+        try{
+            Connection conn = DatabaseService.getConnection();
+            ResultSet rs = Order.getUncookedOrders(conn);
+            while(rs.next()){
+                currentOrders.add(Order.createOrder(rs.getInt(1), rs.getTimestamp(2), rs.getInt(3), rs.getBoolean(4), rs.getDouble(5)));
             }
-
-            for (int j = 0; j < 5; j++) {
-                order.getItems().add(10 + j);
-            }
-            allOrders.add(order);
-        }
-    }
-
-    private MenuItem getItemById(int id) {
-        //now random
-        String[] names = new String[] {"Steak", "Fish", "Chips", "Milk", "Cola", "Beer", "Vegetables"};
-        MenuItemType[] types = new MenuItemType[] {MenuItemType.Food, MenuItemType.Food, MenuItemType.Food, MenuItemType.Drink, MenuItemType.Drink, MenuItemType.Drink, MenuItemType.Food};
-        int r = new Random().nextInt(names.length);
-        return MenuItem.createMenuItem(names[r], "Description", types[r], 10, r);
-    }
-
-
-    //////////////////remove in release/////////////////////
-    private class TestOrder extends Order {
-        private boolean completed;
-
-        public TestOrder(int orderId, ArrayList<Integer> items, OrderType orderType, int customerId) {
-            super(orderId, items, orderType, customerId);
+            conn.close();
+        }catch (SQLException se){
         }
 
-        @Override
-        public boolean markCompleted() {
-            completed = true;
-            return true;
-        }
-
-        @Override
-        public boolean isCompleted() {
-            return completed;
-        }
-    }
-
-
-    //////////////////remove in release/////////////////////
-    private static class MenuItem {
-        private int id;
-        private String name;
-        private String description;
-        private MenuItemType itemType;
-        private double price;
-        private int numberSold;
-
-        private MenuItem(int id, String name, String description, MenuItemType itemType, double price, int numberSold) {
-            this.id = id;
-            this.name = name;
-            this.description = description;
-            this.itemType = itemType;
-            this.price = price;
-            this.numberSold = numberSold;
-        }
-
-        public int getId() {
-            return this.id;
-        }
-
-        public String getName() {
-            return this.name;
-        }
-
-        public String getDescription() {
-            return this.description;
-        }
-
-        public MenuItemType getMenuItemType() {
-            return this.itemType;
-        }
-
-        public double getPrice() {
-            return this.price;
-        }
-
-        public int getNumberSold() {
-            return this.numberSold;
-        }
-
-        public static MenuItem createMenuItem(String name, String description, MenuItemType itemType, double price, int numberSold) {
-            return new MenuItem(2, name, description, itemType, price, numberSold);
-        }
-
-        public static MenuItem getMenuItem(int id) {
-            throw new UnsupportedOperationException("getMenuItem() is not yet implemented");
-        }
-
-        public static boolean deleteMenuItem(int id) {
-            throw new UnsupportedOperationException("deleteMenuItem() is not yet implemented");
-        }
-
-        public static boolean updateMenuItem(int id, String name, String description, MenuItemType itemType, double price, int numberSold) {
-            throw new UnsupportedOperationException("updateMenuItem() is not yet implemented");
-        }
     }
 }
-*/
