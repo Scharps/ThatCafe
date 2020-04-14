@@ -9,22 +9,24 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import models.*;
+import models.MenuItem;
 import services.AppState;
 import services.DatabaseService;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.*;
+import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
+import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class CustomerController implements Initializable {
@@ -48,10 +50,20 @@ public class CustomerController implements Initializable {
     @FXML private TableColumn<MenuItem, String> historyItemName;
     @FXML private TableColumn<MenuItem, Double> historyItemPrice;
 
+    @FXML private DatePicker dateSelector;
+    @FXML private ComboBox timeCombo;
+    @FXML private Spinner guestNumberSpinner;
+    @FXML private Spinner durationSpinner;
+    @FXML private Label bookingStatusLabel;
+    private LocalDate dateChosen;
+    private int hourChosen;
+    private int guestCount;
+
 
     @FXML private ComboBox<String> orderType;
     @FXML private ComboBox<String> reorderType;
     @FXML private TextArea orderMessage;
+    @FXML private ListView availableSlotsList;
 
     private ObservableList<MenuItem> fooditems = FXCollections.observableArrayList();
     private ObservableList<MenuItem> orderitems = FXCollections.observableArrayList();
@@ -189,8 +201,6 @@ public class CustomerController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
-
         foodname.setCellValueFactory(new PropertyValueFactory<MenuItem, String>("name"));
         foodprice.setCellValueFactory(new PropertyValueFactory<MenuItem, Double>("price"));
         foodtable.setItems(fooditems);
@@ -208,6 +218,9 @@ public class CustomerController implements Initializable {
         orderOption.add("Delivery");
         orderType.setItems(orderOption);
         reorderType.setItems(orderOption);
+
+        initializeBookingTab();
+
         try {
             Connection conn = DatabaseService.getConnection();
             Statement st = conn.createStatement();
@@ -232,4 +245,55 @@ public class CustomerController implements Initializable {
         }
 
     }
+
+    private void initializeBookingTab() {
+        for(int i = Booking.OPENING_TIME; i < Booking.CLOSING_TIME; i++) {
+            timeCombo.getItems().add(String.format("%d:00", i));
+        }
+    }
+
+    public void viewAvailableSlots(ActionEvent e) {
+        int startTime = Integer.parseInt(timeCombo.getValue().toString().substring(0,2));
+        hourChosen = startTime;
+        dateChosen = dateSelector.getValue();
+        guestCount = (Integer) guestNumberSpinner.getValue();
+        Date date = Date.valueOf(dateChosen);
+        try {
+            ArrayList<Table> availableTables = Table.getAvailableTables(
+                    DatabaseService.getConnection(),
+                    date,
+                    startTime,
+                    (Integer) durationSpinner.getValue(),
+                    guestCount
+            );
+            for(Table t : availableTables) {
+                availableSlotsList.getItems().add(t);
+            }
+        } catch(SQLException err) {
+            JOptionPane.showMessageDialog(null, err.getMessage(),"Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    public void requestBooking() {
+        Table selectedTable = (Table) availableSlotsList.getSelectionModel().getSelectedItem();
+
+        if(selectedTable != null) {
+            try {
+                Booking.createBooking(
+                    DatabaseService.getConnection(),
+                    selectedTable.getId(),
+                    hourChosen,
+                    Date.valueOf(dateChosen),
+                    appState.getUser().getId(),
+                    guestCount
+                );
+                bookingStatusLabel.setText("Booking requested!");
+            } catch (SQLException e) {
+
+            }
+        } else {
+            bookingStatusLabel.setText("Please select a table.");
+        }
+    }
+
 }

@@ -2,6 +2,7 @@ package models;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Booking {
     private int id;
@@ -201,5 +202,41 @@ public class Booking {
         }
 
         return availableTimes;
+    }
+
+    public static ArrayList<Table> getAvailableTables(Connection conn, Date day, int startHour, int duration, int capacity) throws SQLException {
+        String sqlStatement = String.format(
+            "SELECT TableId\n" +
+            "FROM Bookings b, CafeTables t\n" +
+            "WHERE b.TableId = t.TableId AND\n" +
+            "t.Capacity >= ? AND\n" +
+            "b.BookingDate = ? AND\n" +
+            "("
+        );
+
+        for(int i = startHour; i < startHour + duration; i++) {
+            sqlStatement += "b.BookingHour = " + i;
+            if(i < startHour + duration + 1) {
+                sqlStatement += " || ";
+            } else {
+                sqlStatement += ")";
+            }
+        }
+
+        System.out.println(sqlStatement);
+
+        PreparedStatement st = conn.prepareStatement(sqlStatement);
+        st.setInt(1,capacity);
+        st.setDate(2, day);
+        ResultSet rs = st.executeQuery();
+        ArrayList<Table> unavailableTables = new ArrayList<>();
+        while(rs.next()) {
+            unavailableTables.add(Table.getTable(conn, rs.getInt("TableId")));
+        }
+        ArrayList<Table> availableTables = Table.getAllTables(conn);
+        for(Table t : unavailableTables) {
+            availableTables.removeIf(table -> table.getId() == t.getId());
+        }
+        return availableTables;
     }
 }
