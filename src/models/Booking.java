@@ -82,15 +82,7 @@ public class Booking {
                 "WHERE BookingId = (SELECT MAX(BookingId) FROM Bookings)");
         ResultSet rs = st.executeQuery();
         rs.next();
-        return new Booking(
-                rs.getInt("BookingId"),
-                rs.getInt("TableId"),
-                rs.getInt("BookingHour"),
-                rs.getDate("BookingDate"),
-                rs.getInt("CustomerId"),
-                rs.getInt("GuestQuantity"),
-                false
-        );
+        return bookingFromResultSet(rs);
     }
 
     public static int getCustomerId(Connection conn, Date time, int hour, int tableId) throws SQLException {
@@ -114,15 +106,7 @@ public class Booking {
         st.setInt(1, id);
         ResultSet rs = st.executeQuery();
         if(rs.next()) {
-            return new Booking(
-                    rs.getInt("BookingId"),
-                    rs.getInt("TableId"),
-                    rs.getInt("BookingHour"),
-                    rs.getDate("BookingDate"),
-                    rs.getInt("CustomerId"),
-                    rs.getInt("GuestQuantity"),
-                    rs.getBoolean("Approved")
-            );
+            return bookingFromResultSet(rs);
         } else {
             return null;
         }
@@ -152,15 +136,7 @@ public class Booking {
         st.setInt(1, tableId);
         ResultSet rs = st.executeQuery();
         while(rs.next()) {
-            bookings.add(new Booking(
-                    rs.getInt("BookingId"),
-                    rs.getInt("TableId"),
-                    rs.getInt("BookingHour"),
-                    rs.getDate("BookingDate"),
-                    rs.getInt("CustomerId"),
-                    rs.getInt("GuestQuantity"),
-                    rs.getBoolean("Approved")
-            ));
+            bookings.add(bookingFromResultSet(rs));
         }
         return bookings;
     }
@@ -170,15 +146,7 @@ public class Booking {
         PreparedStatement st = conn.prepareStatement("SELECT * FROM Bookings");
         ResultSet rs = st.executeQuery();
         while(rs.next()) {
-            bookings.add(new Booking(
-                    rs.getInt("BookingId"),
-                    rs.getInt("TableId"),
-                    rs.getInt("BookingHour"),
-                    rs.getDate("BookingDate"),
-                    rs.getInt("CustomerId"),
-                    rs.getInt("GuestQuantity"),
-                    rs.getBoolean("Approved")
-            ));
+            bookings.add(bookingFromResultSet(rs));
         }
         return bookings;
     }
@@ -204,39 +172,26 @@ public class Booking {
         return availableTimes;
     }
 
-    public static ArrayList<Table> getAvailableTables(Connection conn, Date day, int startHour, int duration, int capacity) throws SQLException {
-        String sqlStatement = String.format(
-            "SELECT TableId\n" +
-            "FROM Bookings b, CafeTables t\n" +
-            "WHERE b.TableId = t.TableId AND\n" +
-            "t.Capacity >= ? AND\n" +
-            "b.BookingDate = ? AND\n" +
-            "("
-        );
-
-        for(int i = startHour; i < startHour + duration; i++) {
-            sqlStatement += "b.BookingHour = " + i;
-            if(i < startHour + duration + 1) {
-                sqlStatement += " || ";
-            } else {
-                sqlStatement += ")";
-            }
-        }
-
-        System.out.println(sqlStatement);
-
-        PreparedStatement st = conn.prepareStatement(sqlStatement);
-        st.setInt(1,capacity);
-        st.setDate(2, day);
+    public static ArrayList<Booking> getBookingForCustomer(Connection conn, int customerId) throws SQLException {
+        PreparedStatement st = conn.prepareStatement("SELECT * FROM Booking WHERE CustomerId = ?");
+        st.setInt(1, customerId);
         ResultSet rs = st.executeQuery();
-        ArrayList<Table> unavailableTables = new ArrayList<>();
+        ArrayList<Booking> bookings = new ArrayList<>();
         while(rs.next()) {
-            unavailableTables.add(Table.getTable(conn, rs.getInt("TableId")));
+            bookings.add(bookingFromResultSet(rs));
         }
-        ArrayList<Table> availableTables = Table.getAllTables(conn);
-        for(Table t : unavailableTables) {
-            availableTables.removeIf(table -> table.getId() == t.getId());
-        }
-        return availableTables;
+        return bookings;
+    }
+
+    private static Booking bookingFromResultSet(ResultSet rs) throws SQLException {
+        return new Booking(
+                rs.getInt("BookingId"),
+                rs.getInt("TableId"),
+                rs.getInt("BookingHour"),
+                rs.getDate("BookingDate"),
+                rs.getInt("CustomerId"),
+                rs.getInt("GuestQuantity"),
+                rs.getBoolean("Approved")
+        );
     }
 }
