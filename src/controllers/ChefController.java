@@ -52,13 +52,13 @@ public class ChefController implements Initializable {
     @FXML private TableColumn<MenuItem, String> specialsName;
     @FXML private TableColumn<MenuItem, Double> specialsPrice;
 
-    private ObservableList<Order> currentOrders = FXCollections.observableArrayList();
-    private ObservableList<MenuItem> currentOrderItems = FXCollections.observableArrayList();
-    private ObservableList<String> newTypeList = FXCollections.observableArrayList();
+    private final ObservableList<Order> currentOrders = FXCollections.observableArrayList();
+    private final ObservableList<MenuItem> currentOrderItems = FXCollections.observableArrayList();
+    private final ObservableList<String> newTypeList = FXCollections.observableArrayList();
 
-    private ObservableList<MenuItem> fooditems = FXCollections.observableArrayList();
-    private ObservableList<MenuItem> specialitems = FXCollections.observableArrayList();
-    private ObservableList<MenuItem> drinksitems = FXCollections.observableArrayList();
+    private final ObservableList<MenuItem> fooditems = FXCollections.observableArrayList();
+    private final ObservableList<MenuItem> specialitems = FXCollections.observableArrayList();
+    private final ObservableList<MenuItem> drinksitems = FXCollections.observableArrayList();
 
     public void logoutPushed(ActionEvent event) throws IOException {
         Parent loginParent = FXMLLoader.load(getClass().getResource("/gui/StaffProfiles.fxml"));

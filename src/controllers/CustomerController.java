@@ -55,6 +55,7 @@ public class CustomerController implements Initializable {
     @FXML private TableColumn<MenuItem, String> historyItemName;
     @FXML private TableColumn<MenuItem, Double> historyItemPrice;
 
+
     @FXML private DatePicker dateSelector;
     @FXML private ComboBox timeCombo;
     @FXML private Spinner guestNumberSpinner;
@@ -74,13 +75,14 @@ public class CustomerController implements Initializable {
     @FXML private TextArea orderMessage;
     @FXML private ListView availableSlotsList;
 
-    private ObservableList<MenuItem> fooditems = FXCollections.observableArrayList();
-    private ObservableList<MenuItem> orderitems = FXCollections.observableArrayList();
-    private ObservableList<MenuItem> drinksitems = FXCollections.observableArrayList();
-    private ObservableList<MenuItem> specialitems = FXCollections.observableArrayList();
-    private ObservableList<String> orderOption = FXCollections.observableArrayList();
-    private ObservableList<Order> orderHistory = FXCollections.observableArrayList();
-    private ObservableList<MenuItem> orderHistoryItems = FXCollections.observableArrayList();
+    private final ObservableList<MenuItem> fooditems = FXCollections.observableArrayList();
+    private final ObservableList<MenuItem> orderitems = FXCollections.observableArrayList();
+    private final ObservableList<MenuItem> drinksitems = FXCollections.observableArrayList();
+    private final ObservableList<MenuItem> specialitems = FXCollections.observableArrayList();
+    private final ObservableList<String> orderOption = FXCollections.observableArrayList();
+    private final ObservableList<Order> orderHistory = FXCollections.observableArrayList();
+    private final ObservableList<MenuItem> orderHistoryItems = FXCollections.observableArrayList();
+
     private AppState appState = AppState.getAppState();
 
     public void logoutPushed(ActionEvent event) throws IOException {
@@ -196,7 +198,7 @@ public class CustomerController implements Initializable {
 
     public void selectHistoricOrder(MouseEvent event){
         Order selectedOrder = orderHistoryTable.getSelectionModel().getSelectedItem();
-        //orderHistoryItems.clear();
+        orderHistoryItems.clear();
         try{
             Connection conn = DatabaseService.getConnection();
             ResultSet rs = MenuItem.getOrderItems(conn, selectedOrder.getOrderId());
@@ -281,6 +283,7 @@ public class CustomerController implements Initializable {
         }
 
     }
+
 
     public void cancelSelectedBooking() {
         int selectedIndex = myBookingsList.getSelectionModel().getSelectedIndex();

@@ -45,12 +45,26 @@ public class WaiterController implements Initializable {
     @FXML private TableView<DeliveryOrder> deliverytable;
     @FXML private Label namelabel;
 
-    private ObservableList<MenuItem> fooditems = FXCollections.observableArrayList();
-    private ObservableList<MenuItem> orderitems = FXCollections.observableArrayList();
-    private ObservableList<MenuItem> specialitems = FXCollections.observableArrayList();
-    private ObservableList<Integer> tables = FXCollections.observableArrayList();
-    private ObservableList<MenuItem> drinksitems = FXCollections.observableArrayList();
+    @FXML private TableView<Booking> bookingTable;
+    @FXML private TableColumn<Booking, Integer> bookingNo;
+    @FXML private TableColumn<Booking, Date> bookingDate;
+    @FXML private TableColumn<Booking, Integer> bookingHour;
+    @FXML private TableColumn<Booking, Integer> tableNo;
+    @FXML private TableColumn<Booking, Integer> guestNo;
 
+    @FXML private TableView<Booking> todayBookingTable;
+    @FXML private TableColumn<Booking, Integer> todayBookingNo;
+    @FXML private TableColumn<Booking, Integer> todayBookingHour;
+    @FXML private TableColumn<Booking, Integer> todayTableNo;
+    @FXML private TableColumn<Booking, Integer> todayGuestNo;
+
+    private final ObservableList<MenuItem> fooditems = FXCollections.observableArrayList();
+    private final ObservableList<MenuItem> orderitems = FXCollections.observableArrayList();
+    private final ObservableList<MenuItem> specialitems = FXCollections.observableArrayList();
+    private final ObservableList<Integer> tables = FXCollections.observableArrayList();
+    private final ObservableList<MenuItem> drinksitems = FXCollections.observableArrayList();
+    private final ObservableList<Booking> unconfirmedBookings = FXCollections.observableArrayList();
+    private final ObservableList<Booking> todaysBookings = FXCollections.observableArrayList();
     //private ObservableList<String> deliveryorders = FXCollections.observableArrayList();
 
     public void logoutPushed(ActionEvent event) throws IOException {
@@ -119,8 +133,21 @@ public class WaiterController implements Initializable {
             conn.close();
         }catch (SQLException se){
         }
+    }
 
+    public void confirmBooking(ActionEvent event){
+        Booking selectedBooking = bookingTable.getSelectionModel().getSelectedItem();
+        if(selectedBooking != null){
+            try{
+                Connection conn = DatabaseService.getConnection();
+                Booking.confirmBooking(conn, selectedBooking.getId());
+                conn.close();
+                initialiseUnconfirmedBookings();
+                initialiseTodaysBookings();
+            } catch(Exception se){
 
+            }
+        }
     }
 
     @Override
@@ -128,10 +155,10 @@ public class WaiterController implements Initializable {
         AppState appState = AppState.getAppState();
         namelabel.setText(appState.getUser().getFirstName());
 
-
-
         tableno.setItems(tables);
         initialiseMenu();
+        initialiseUnconfirmedBookings();
+        initialiseTodaysBookings();
 
         try {
             Connection conn = DatabaseService.getConnection();
@@ -181,6 +208,50 @@ public class WaiterController implements Initializable {
             }
             conn.close();
         }catch (SQLException se){
+        }
+
+    }
+
+    public void initialiseUnconfirmedBookings(){
+        unconfirmedBookings.clear();
+
+        bookingNo.setCellValueFactory(new PropertyValueFactory<Booking, Integer>("id"));
+        bookingDate.setCellValueFactory(new PropertyValueFactory<Booking, Date>("dateOfBooking"));
+        bookingHour.setCellValueFactory(new PropertyValueFactory<Booking, Integer>("hourOfBooking"));
+        tableNo.setCellValueFactory(new PropertyValueFactory<Booking, Integer>("tableId"));
+        guestNo.setCellValueFactory(new PropertyValueFactory<Booking, Integer>("numberOfGuests"));
+        bookingTable.setItems(unconfirmedBookings);
+
+        try{
+            Connection conn = DatabaseService.getConnection();
+            ResultSet rs = Booking.getUncomfirmedBooking(conn);
+            while(rs.next()){
+                unconfirmedBookings.add(Booking.createBooking(rs.getInt(1), rs.getInt(2), rs.getInt(4), rs.getDate(5), rs.getInt(3), rs.getInt(6), rs.getBoolean(7)));
+            }
+            conn.close();
+        }catch (SQLException se){
+
+        }
+
+    }
+
+    public void initialiseTodaysBookings(){
+        todaysBookings.clear();
+
+        todayBookingNo.setCellValueFactory(new PropertyValueFactory<Booking, Integer>("id"));
+        todayBookingHour.setCellValueFactory(new PropertyValueFactory<Booking, Integer>("hourOfBooking"));
+        todayTableNo.setCellValueFactory(new PropertyValueFactory<Booking, Integer>("tableId"));
+        todayGuestNo.setCellValueFactory(new PropertyValueFactory<Booking, Integer>("numberOfGuests"));
+        todayBookingTable.setItems(todaysBookings);
+        try{
+            Connection conn = DatabaseService.getConnection();
+            ResultSet rs = Booking.getTodaysBookings(conn);
+            while(rs.next()){
+                todaysBookings.add(Booking.createBooking(rs.getInt(1), rs.getInt(2), rs.getInt(4), rs.getDate(5), rs.getInt(3), rs.getInt(6), rs.getBoolean(7)));
+            }
+            conn.close();
+        }catch (SQLException se){
+
         }
 
     }

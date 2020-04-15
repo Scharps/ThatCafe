@@ -3,6 +3,7 @@ package models;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.PropertyPermission;
 
 public class Booking {
     private int id;
@@ -23,6 +24,10 @@ public class Booking {
         this.customerId = customerId;
         this.numberOfGuests = numberOfGuests;
         this.isApproved = approved;
+    }
+
+    public static Booking createBooking(int id, int tableId, int hourOfBooking, Date dateOfBooking, int customerId, int numberOfGuests, boolean approved){
+        return new Booking(id,  tableId, hourOfBooking, dateOfBooking, customerId, numberOfGuests, approved);
     }
 
     @Override
@@ -97,6 +102,38 @@ public class Booking {
         }
         else {
             return 0;
+        }
+    }
+
+    public static ResultSet getUncomfirmedBooking(Connection conn){
+        try{
+            PreparedStatement st = conn.prepareStatement("SELECT * FROM Bookings WHERE Approved = 0");
+            ResultSet rs = st.executeQuery();
+            return rs;
+        }catch (SQLException se){
+            return null;
+        }
+    }
+
+    public static void confirmBooking(Connection conn, int id){
+
+        try{
+            PreparedStatement st = conn.prepareStatement("UPDATE Bookings SET Approved = 1 WHERE BookingId = ?");
+            st.setInt(1, id);
+            st.executeUpdate();
+        }catch (SQLException se){
+
+        }
+    }
+
+    public static ResultSet getTodaysBookings(Connection conn){
+        try{
+            PreparedStatement st = conn.prepareStatement("SELECT * FROM Bookings WHERE BookingDate = ? AND Approved = 1");
+            st.setDate(1, new Date(System.currentTimeMillis()));
+            ResultSet rs = st.executeQuery();
+            return rs;
+        }catch (SQLException se){
+            return null;
         }
     }
 
