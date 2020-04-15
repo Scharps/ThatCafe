@@ -326,10 +326,11 @@ public class CustomerController implements Initializable {
             for(Booking b: customerBookings) {
                 myBookingsList.getItems().add(
                     String.format(
-                            "Date: %s, Time: %s, Table: %d",
+                            "Date: %s\t Time: %s\t Table: %d\t Approval Status: %s",
                             b.getDateOfBooking().toString(),
                             b.getHourOfBooking() + ":00",
-                            b.getTableId()
+                            b.getTableId(),
+                            b.isApproved() ? "Approved" : "Not Approved"
                     )
                 );
             }
