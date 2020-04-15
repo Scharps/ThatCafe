@@ -60,6 +60,10 @@ public class CustomerController implements Initializable {
     private int hourChosen;
     private int guestCount;
 
+    @FXML private ListView myBookingsList;
+    @FXML private Label myBookingsStatus;
+    ArrayList<Booking> customerBookings;
+
 
     @FXML private ComboBox<String> orderType;
     @FXML private ComboBox<String> reorderType;
@@ -245,6 +249,65 @@ public class CustomerController implements Initializable {
             System.out.println(se);
         }
 
+    }
+
+    public void cancelSelectedBooking() {
+        int selectedIndex = myBookingsList.getSelectionModel().getSelectedIndex();
+        if(selectedIndex != -1) {
+            try {
+                Booking.deleteBooking(
+                    DatabaseService.getConnection(),
+                    customerBookings.get(selectedIndex).getId()
+                );
+                customerBookings.remove(selectedIndex);
+                myBookingsList.getItems().remove(selectedIndex);
+                myBookingsStatus.setText("Status: Cancelled booking.");
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(
+                        null,
+                        "Error in cancelling booking.\n" + e.getMessage(),
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE
+                );
+                myBookingsStatus.setText("Status: Error, " + e.getMessage());
+            }
+        } else {
+            JOptionPane.showMessageDialog(
+                    null,
+                    "Please select a booking to cancel.",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
+    }
+
+    public void updateMyBookings() {
+        try {
+            customerBookings = Booking.getBookingsForCustomer(
+                    DatabaseService.getConnection(),
+                    appState.getUser().getId()
+            );
+            myBookingsStatus.setText("Status: Retrieved bookings.");
+            myBookingsList.getItems().clear();
+            for(Booking b: customerBookings) {
+                myBookingsList.getItems().add(
+                    String.format(
+                            "Date: %s, Time: %s, Table: %d",
+                            b.getDateOfBooking().toString(),
+                            b.getHourOfBooking() + ":00",
+                            b.getTableId()
+                    )
+                );
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(
+                    null,
+                    "Error in getting your bookings.\n" + e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            myBookingsStatus.setText("Status: Error, " + e.getMessage());
+        }
     }
 
     private void initializeBookingTab() {

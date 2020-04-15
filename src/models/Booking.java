@@ -172,8 +172,8 @@ public class Booking {
         return availableTimes;
     }
 
-    public static ArrayList<Booking> getBookingForCustomer(Connection conn, int customerId) throws SQLException {
-        PreparedStatement st = conn.prepareStatement("SELECT * FROM Booking WHERE CustomerId = ?");
+    public static ArrayList<Booking> getBookingsForCustomer(Connection conn, int customerId) throws SQLException {
+        PreparedStatement st = conn.prepareStatement("SELECT * FROM Bookings WHERE CustomerId = ?");
         st.setInt(1, customerId);
         ResultSet rs = st.executeQuery();
         ArrayList<Booking> bookings = new ArrayList<>();

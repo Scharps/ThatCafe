@@ -237,11 +237,26 @@
                   </AnchorPane>
                </content>
             </Tab>
-            <Tab text="My Bookings">
+            <Tab onSelectionChanged="#updateMyBookings" text="My Bookings">
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <ListView layoutX="6.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                        <VBox layoutX="10.0" layoutY="10.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+                           <children>
+                              <ListView fx:id="myBookingsList" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+                              <HBox alignment="CENTER">
+                                 <children>
+                                    <Label fx:id="myBookingsStatus" text="Status:" />
+                                    <Region HBox.hgrow="ALWAYS" />
+                                    <Button mnemonicParsing="false" onAction="#cancelSelectedBooking" text="Cancel Booking">
+                                       <HBox.margin>
+                                          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                       </HBox.margin>
+                                    </Button>
+                                 </children>
+                              </HBox>
+                           </children>
+                        </VBox>
                      </children>
                   </AnchorPane>
                </content>
