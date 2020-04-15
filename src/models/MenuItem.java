@@ -22,6 +22,18 @@ public class MenuItem {
         this.special = special;
     }
 
+    public static void createNewItem(Connection conn, String name, String itemType, double price, boolean special){
+        try{
+            PreparedStatement st = conn.prepareStatement("INSERT INTO MenuItems (ItemName, ItemType, Price, SpecialSpecial) VALUES (?,?,?,?)");
+            st.setString(1, name);
+            st.setString(2, itemType);
+            st.setDouble(3, price);
+            st.setBoolean(4, special);
+            st.executeUpdate();
+        }catch (SQLException se){
+        }
+    }
+
     public static void createOrderedItem(Connection conn, int orderId, int itemId){
         try {
             PreparedStatement st = conn.prepareStatement("INSERT INTO OrderedItems (OrderId, ItemId, Quantity) VALUES (?, ?, 1)");
