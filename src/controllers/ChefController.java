@@ -42,9 +42,23 @@ public class ChefController implements Initializable {
     @FXML private ComboBox<String> newItemType;
     @FXML private CheckBox newSpecial;
 
-    ObservableList<Order> currentOrders = FXCollections.observableArrayList();
-    ObservableList<MenuItem> currentOrderItems = FXCollections.observableArrayList();
-    ObservableList<String> newTypeList = FXCollections.observableArrayList();
+    @FXML private TableView<MenuItem> foodTable;
+    @FXML private TableColumn<MenuItem, String> foodName;
+    @FXML private TableColumn<MenuItem, Double> foodPrice;
+    @FXML private TableView<MenuItem> drinkTable;
+    @FXML private TableColumn<MenuItem, String> drinkName;
+    @FXML private TableColumn<MenuItem, Double> drinkPrice;
+    @FXML private TableView<MenuItem> specialsTable;
+    @FXML private TableColumn<MenuItem, String> specialsName;
+    @FXML private TableColumn<MenuItem, Double> specialsPrice;
+
+    private ObservableList<Order> currentOrders = FXCollections.observableArrayList();
+    private ObservableList<MenuItem> currentOrderItems = FXCollections.observableArrayList();
+    private ObservableList<String> newTypeList = FXCollections.observableArrayList();
+
+    private ObservableList<MenuItem> fooditems = FXCollections.observableArrayList();
+    private ObservableList<MenuItem> specialitems = FXCollections.observableArrayList();
+    private ObservableList<MenuItem> drinksitems = FXCollections.observableArrayList();
 
     public void logoutPushed(ActionEvent event) throws IOException {
         Parent loginParent = FXMLLoader.load(getClass().getResource("/gui/StaffProfiles.fxml"));
@@ -110,12 +124,48 @@ public class ChefController implements Initializable {
             newItemPrice.clear();
             newSpecial.setSelected(false);
             newItemType.getSelectionModel().clearSelection();
+            initialiseMenu();
         }
+    }
+
+    public void removeFoodItem(ActionEvent event){
+        MenuItem selectedItem = foodTable.getSelectionModel().getSelectedItem();
+        try{
+            Connection conn = DatabaseService.getConnection();
+            MenuItem.deleteMenuItem(conn, selectedItem.getId());
+            conn.close();
+        }catch (SQLException se){
+
+        }
+        initialiseMenu();
+    }
+    public void removeDrinkItem(ActionEvent event){
+        MenuItem selectedItem = drinkTable.getSelectionModel().getSelectedItem();
+        try{
+            Connection conn = DatabaseService.getConnection();
+            MenuItem.deleteMenuItem(conn, selectedItem.getId());
+            conn.close();
+        }catch (SQLException se){
+
+        }
+        initialiseMenu();
+    }
+    public void removeSpecialItem(ActionEvent event){
+        MenuItem selectedItem = specialsTable.getSelectionModel().getSelectedItem();
+        try{
+            Connection conn = DatabaseService.getConnection();
+            MenuItem.deleteMenuItem(conn, selectedItem.getId());
+            conn.close();
+        }catch (SQLException se){
+
+        }
+        initialiseMenu();
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         initialiseCurrentOrders();
+        initialiseMenu();
         newTypeList.add(String.valueOf(MenuItemType.Food));
         newTypeList.add(String.valueOf(MenuItemType.Drink));
         newItemType.setItems(newTypeList);
@@ -133,6 +183,41 @@ public class ChefController implements Initializable {
             ResultSet rs = Order.getUncookedOrders(conn);
             while(rs.next()){
                 currentOrders.add(Order.createOrder(rs.getInt(1), rs.getTimestamp(2), rs.getInt(3), rs.getBoolean(4), rs.getDouble(5)));
+            }
+            conn.close();
+        }catch (SQLException se){
+        }
+
+    }
+
+    public void initialiseMenu(){
+        fooditems.clear();
+        drinksitems.clear();
+        specialitems.clear();
+
+        foodName.setCellValueFactory(new PropertyValueFactory<MenuItem, String>("name"));
+        foodPrice.setCellValueFactory(new PropertyValueFactory<MenuItem, Double>("price"));
+        foodTable.setItems(fooditems);
+        drinkName.setCellValueFactory(new PropertyValueFactory<MenuItem, String>("name"));
+        drinkPrice.setCellValueFactory(new PropertyValueFactory<MenuItem, Double>("price"));
+        drinkTable.setItems(drinksitems);
+        specialsName.setCellValueFactory(new PropertyValueFactory<MenuItem, String>("name"));
+        specialsPrice.setCellValueFactory(new PropertyValueFactory<MenuItem, Double>("price"));
+        specialsTable.setItems(specialitems);
+        try{
+            Connection conn = DatabaseService.getConnection();
+            ResultSet rs = MenuItem.getMenuItems(conn, false);
+            while(rs.next()) {
+                if (rs.getString(3).equals(String.valueOf(MenuItemType.Food))){
+                    fooditems.add(MenuItem.createMenuItem(rs.getInt(1), rs.getString(2), MenuItemType.Food, rs.getDouble(4), rs.getInt(5), rs.getBoolean(6)));
+                } else {
+                    drinksitems.add(MenuItem.createMenuItem(rs.getInt(1), rs.getString(2), MenuItemType.Drink, rs.getDouble(4), rs.getInt(5), rs.getBoolean(6)));
+                }
+            }
+
+            rs = MenuItem.getMenuItems(conn, true);
+            while(rs.next()){
+                specialitems.add(MenuItem.createMenuItem(rs.getInt(1), rs.getString(2), MenuItemType.valueOf(rs.getString(3)), rs.getDouble(4), rs.getInt(5), rs.getBoolean(6)));
             }
             conn.close();
         }catch (SQLException se){
