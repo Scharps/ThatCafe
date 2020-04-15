@@ -58,13 +58,13 @@ public class WaiterController implements Initializable {
     @FXML private TableColumn<Booking, Integer> todayTableNo;
     @FXML private TableColumn<Booking, Integer> todayGuestNo;
 
-    private ObservableList<MenuItem> fooditems = FXCollections.observableArrayList();
-    private ObservableList<MenuItem> orderitems = FXCollections.observableArrayList();
-    private ObservableList<MenuItem> specialitems = FXCollections.observableArrayList();
-    private ObservableList<Integer> tables = FXCollections.observableArrayList();
-    private ObservableList<MenuItem> drinksitems = FXCollections.observableArrayList();
-    private ObservableList<Booking> unconfirmedBookings = FXCollections.observableArrayList();
-    private ObservableList<Booking> todaysBookings = FXCollections.observableArrayList();
+    private final ObservableList<MenuItem> fooditems = FXCollections.observableArrayList();
+    private final ObservableList<MenuItem> orderitems = FXCollections.observableArrayList();
+    private final ObservableList<MenuItem> specialitems = FXCollections.observableArrayList();
+    private final ObservableList<Integer> tables = FXCollections.observableArrayList();
+    private final ObservableList<MenuItem> drinksitems = FXCollections.observableArrayList();
+    private final ObservableList<Booking> unconfirmedBookings = FXCollections.observableArrayList();
+    private final ObservableList<Booking> todaysBookings = FXCollections.observableArrayList();
     //private ObservableList<String> deliveryorders = FXCollections.observableArrayList();
 
     public void logoutPushed(ActionEvent event) throws IOException {

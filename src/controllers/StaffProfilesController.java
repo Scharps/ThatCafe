@@ -23,7 +23,7 @@ import java.util.ResourceBundle;
 
 public class StaffProfilesController implements Initializable{
     @FXML private ListView stProfiles;
-    private ObservableList<String> items = FXCollections.observableArrayList();
+    private final ObservableList<String> items = FXCollections.observableArrayList();
 
     public void logoutpushed(ActionEvent event) throws IOException {
         Parent loginParent = FXMLLoader.load(getClass().getResource("/gui/Login_ui.fxml"));
