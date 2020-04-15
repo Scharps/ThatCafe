@@ -8,41 +8,42 @@ import java.util.ArrayList;
 
 public class StaffMember extends User {
     private StaffPosition position;
+    private int rotaId;
 
-    private StaffMember(int id, String firstName, String lastName, StaffPosition position) {
+    private StaffMember(int id, String firstName, String lastName, StaffPosition position, int rotaId) {
 		super(id, firstName, lastName);
         this.position = position;
+        this.rotaId = rotaId;
     }
 
     public StaffPosition getPosition() {
         return this.position;
     }
 
+    public int getRotaId() {
+        return this.rotaId;
+    }
+
 
     public static StaffMember createStaffMember(Connection conn, String password, String firstName,
-                                                String lastName, StaffPosition position) throws SQLException  {
+                                                String lastName, StaffPosition position, int rotaId) throws SQLException  {
         PreparedStatement st = conn.prepareStatement(
-                "INSERT INTO Staff( Password, FName, LName, StaffPos) " +
-                    "VALUES (?, ?, ?, ?)"
+                "INSERT INTO Staff( Password, FName, LName, StaffPos, RotaId) " +
+                    "VALUES (?, ?, ?, ?, ?)"
         );
 
         st.setString(1, password);
         st.setString(2, firstName);
         st.setString(3, lastName);
         st.setString(4, position.toString());
+        st.setInt(5, rotaId);
         st.executeUpdate();
 
         st = conn.prepareStatement("SELECT * FROM Staff\n" +
                 "WHERE StaffId = (SELECT MAX(StaffId) FROM Staff)");
         ResultSet rs = st.executeQuery();
         rs.next();
-        StaffMember staffMember = new StaffMember(
-                rs.getInt("StaffId"),
-                rs.getString("FName"),
-                rs.getString("LName"),
-                StaffPosition.valueOf(rs.getString("PostCode"))
-        );
-        return staffMember;
+        return staffMemberFromResultSet(rs);
 
     }
 
@@ -70,13 +71,7 @@ public class StaffMember extends User {
                 default:
                     position = StaffPosition.Waiter;
             }
-            staffMember = new StaffMember(
-                    rs.getInt("StaffId"),
-                    rs.getString("FName"),
-                    rs.getString("LName"),
-                    position
-            );
-            return staffMember;
+            return staffMemberFromResultSet(rs);
         }
         else{
             return null;
@@ -90,15 +85,16 @@ public class StaffMember extends User {
     }
 
     public static void updateStaffMember(Connection conn, int id, String password, String firstName,
-                                            String lastName, StaffPosition position) throws SQLException  {
+                                            String lastName, StaffPosition position, int rotaId) throws SQLException  {
         PreparedStatement st = conn.prepareStatement("UPDATE Staff " +
-                "SET Password = ?, FName = ?, LName = ?, StaffPos = ? " +
+                "SET Password = ?, FName = ?, LName = ?, StaffPos = ?, rotaId = ?" +
                 "WHERE StaffId = ?");
         st.setString(1, password);
         st.setString(2, firstName);
         st.setString(3, lastName);
         st.setString(4, position.toString());
-        st.setInt(5, id);
+        st.setInt(5, rotaId);
+        st.setInt(6, id);
         st.executeUpdate();
     }
 
@@ -107,13 +103,18 @@ public class StaffMember extends User {
         PreparedStatement st = conn.prepareStatement("SELECT * FROM Staff");
         ResultSet rs = st.executeQuery();
         while(rs.next()) {
-            staffMembers.add(new StaffMember(
-                    rs.getInt("StaffId"),
-                    rs.getString("FName"),
-                    rs.getString("LName"),
-                    StaffPosition.valueOf(rs.getString("StaffPos"))
-            ));
+            staffMembers.add(staffMemberFromResultSet(rs));
         }
         return staffMembers;
+    }
+
+    private static StaffMember staffMemberFromResultSet(ResultSet rs) throws SQLException {
+        return new StaffMember(
+                rs.getInt("StaffId"),
+                rs.getString("FName"),
+                rs.getString("LName"),
+                StaffPosition.valueOf(rs.getString("StaffPos")),
+                rs.getInt("RotaId")
+        );
     }
 }
