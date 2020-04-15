@@ -46,7 +46,11 @@ public class StaffProfilesController implements Initializable{
             appState.setUser(staff);
 
              if (position == StaffPosition.Manager) {
-                 //ToDO create managerUI
+                 Parent waiterParent = FXMLLoader.load(getClass().getResource("/gui/Manager_ui.fxml"));
+                 Scene waiterScene = new Scene(waiterParent);
+                 Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                 window.setScene(waiterScene);
+                 window.show();
              }
              else if (position == StaffPosition.Waiter) {
                  Parent waiterParent = FXMLLoader.load(getClass().getResource("/gui/WaiterUI.fxml"));

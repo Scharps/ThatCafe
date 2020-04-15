@@ -15,6 +15,10 @@ public class Rota {
     private Shift saturdayShift;
     private Shift sundayShift;
 
+    private Rota(int rotaId) {
+
+    }
+
     private Rota(int rotaId, Shift mondayShift, Shift tuesdayShift, Shift wednesdayShift, Shift thursdayShift, Shift fridayShift, Shift saturdayShift, Shift sundayShift) {
         this.rotaId = rotaId;
         this.mondayShift = mondayShift;
@@ -56,6 +60,17 @@ public class Rota {
 
     public Shift getSundayShift() {
         return sundayShift;
+    }
+
+    public static Rota createRota(Connection conn) throws SQLException {
+        PreparedStatement st = conn.prepareStatement("INSERT INTO Rota() VALUES ()");
+        st.executeUpdate();
+
+        st = conn.prepareStatement("SELECT * FROM Rota\n" +
+                "WHERE RotaId = (SELECT MAX(RotaId) FROM Rota)");
+        ResultSet rs = st.executeQuery();
+        rs.next();
+        return rotaFromResultSet(rs);
     }
 
     public static Rota createRota(

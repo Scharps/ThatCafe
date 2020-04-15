@@ -1,5 +1,7 @@
 package models;
 
+import services.DatabaseService;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -8,25 +10,29 @@ import java.util.ArrayList;
 
 public class StaffMember extends User {
     private StaffPosition position;
-    private int rotaId;
+    private Rota rota;
 
-    private StaffMember(int id, String firstName, String lastName, StaffPosition position, int rotaId) {
+    private StaffMember(int id, String firstName, String lastName, StaffPosition position, Rota rota) {
 		super(id, firstName, lastName);
         this.position = position;
-        this.rotaId = rotaId;
+        this.rota = rota;
     }
 
     public StaffPosition getPosition() {
         return this.position;
     }
 
-    public int getRotaId() {
-        return this.rotaId;
+    public Rota getRotaId() {
+        return this.rota;
     }
 
+    @Override
+    public String toString() {
+        return String.format("%s %s\t Position: %s", getFirstName(), getLastName(), getPosition());
+    }
 
     public static StaffMember createStaffMember(Connection conn, String password, String firstName,
-                                                String lastName, StaffPosition position, int rotaId) throws SQLException  {
+                                                String lastName, StaffPosition position, Rota rota) throws SQLException  {
         PreparedStatement st = conn.prepareStatement(
                 "INSERT INTO Staff( Password, FName, LName, StaffPos, RotaId) " +
                     "VALUES (?, ?, ?, ?, ?)"
@@ -36,7 +42,7 @@ public class StaffMember extends User {
         st.setString(2, firstName);
         st.setString(3, lastName);
         st.setString(4, position.toString());
-        st.setInt(5, rotaId);
+        st.setInt(5, rota.getRotaId());
         st.executeUpdate();
 
         st = conn.prepareStatement("SELECT * FROM Staff\n" +
@@ -114,7 +120,7 @@ public class StaffMember extends User {
                 rs.getString("FName"),
                 rs.getString("LName"),
                 StaffPosition.valueOf(rs.getString("StaffPos")),
-                rs.getInt("RotaId")
+                Rota.getRota(DatabaseService.getConnection(), rs.getInt("RotaId"))
         );
     }
 }
