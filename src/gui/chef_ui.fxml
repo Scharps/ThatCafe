@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.ChefController">
+<BorderPane prefHeight="633.0" prefWidth="966.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.ChefController">
    <center>
       <TabPane>
          <tabs>
@@ -16,8 +16,8 @@
                            <children>
                               <TableView fx:id="currentOrderTable" onMouseClicked="#selectOrder" prefHeight="470.0" prefWidth="294.0">
                                 <columns>
-                                  <TableColumn fx:id="currentOrderNo" prefWidth="75.0" text="C1" />
-                                  <TableColumn fx:id="currentOrderDate" prefWidth="75.0" text="C2" />
+                                  <TableColumn fx:id="currentOrderNo" prefWidth="106.0" text="Order No" />
+                                  <TableColumn fx:id="currentOrderDate" prefWidth="103.0" text="Order Time" />
                                 </columns>
                               </TableView>
                               <VBox spacing="15.0">
@@ -25,11 +25,11 @@
                                     <Label text="Label" />
                                     <TableView fx:id="currentItemTable" prefHeight="224.0" prefWidth="292.0">
                                       <columns>
-                                        <TableColumn fx:id="currentOrderItem" prefWidth="75.0" text="C1" />
-                                        <TableColumn prefWidth="75.0" text="C2" />
+                                        <TableColumn fx:id="currentOrderItem" prefWidth="94.0" text="C1" />
+                                        <TableColumn prefWidth="89.0" text="C2" />
                                       </columns>
                                     </TableView>
-                                    <Button mnemonicParsing="false" onAction="#confirmCooked" text="Button" />
+                                    <Button mnemonicParsing="false" onAction="#confirmCooked" text="Order Cooked" />
                                  </children>
                                  <padding>
                                     <Insets top="10.0" />
@@ -44,13 +44,87 @@
                   </AnchorPane>
                </content>
             </Tab>
+            <Tab text="Add Menu Item">
+               <content>
+                  <AnchorPane>
+                     <children>
+                        <HBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <children>
+                              <VBox alignment="TOP_CENTER" prefHeight="500.0" prefWidth="800.0" spacing="20.0">
+                                 <children>
+                                    <Label text="Create New Menu Item" />
+                                    <TextField fx:id="newItemName" prefHeight="26.0" prefWidth="589.0" promptText="Item Name" />
+                                    <ComboBox fx:id="newItemType" prefWidth="150.0" promptText="Item Type" />
+                                    <TextField fx:id="newItemPrice" promptText="Item Price" />
+                                    <CheckBox fx:id="newSpecial" mnemonicParsing="false" text="Special" />
+                                    <Button mnemonicParsing="false" onAction="#addMenuItem" text="Add Item to Menu" />
+                                 </children>
+                                 <padding>
+                                    <Insets bottom="50.0" left="100.0" right="100.0" top="30.0" />
+                                 </padding>
+                              </VBox>
+                              <VBox prefHeight="500.0" prefWidth="790.0">
+                                 <children>
+                                    <Label text="Label" />
+                                    <TabPane prefHeight="292.0" prefWidth="478.0" tabClosingPolicy="UNAVAILABLE">
+                                      <tabs>
+                                        <Tab text="Food">
+                                          <content>
+                                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="191.0" prefWidth="478.0">
+                                                   <children>
+                                                      <TableView layoutX="14.0" layoutY="14.0" prefHeight="259.0" prefWidth="478.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                        <columns>
+                                                          <TableColumn prefWidth="75.0" text="C1" />
+                                                          <TableColumn prefWidth="75.0" text="C2" />
+                                                        </columns>
+                                                      </TableView>
+                                                   </children></AnchorPane>
+                                          </content>
+                                        </Tab>
+                                        <Tab text="Drink">
+                                          <content>
+                                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                                   <children>
+                                                      <TableView layoutX="14.0" layoutY="14.0" prefHeight="259.0" prefWidth="478.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                        <columns>
+                                                          <TableColumn prefWidth="75.0" text="C1" />
+                                                          <TableColumn prefWidth="75.0" text="C2" />
+                                                        </columns>
+                                                      </TableView>
+                                                   </children></AnchorPane>
+                                          </content>
+                                        </Tab>
+                                         <Tab text="Specials">
+                                            <content>
+                                               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                                   <children>
+                                                      <TableView layoutY="22.0" prefHeight="259.0" prefWidth="478.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                        <columns>
+                                                          <TableColumn prefWidth="75.0" text="C1" />
+                                                          <TableColumn prefWidth="75.0" text="C2" />
+                                                        </columns>
+                                                      </TableView>
+                                                   </children></AnchorPane>
+                                            </content>
+                                         </Tab>
+
+                                      </tabs>
+                                    </TabPane>
+                                    <Button mnemonicParsing="false" text="Button" />
+                                 </children>
+                              </VBox>
+                           </children>
+                        </HBox>
+                     </children></AnchorPane>
+               </content>
+            </Tab>
          </tabs>
       </TabPane>
    </center>
    <top>
       <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
-            <Button mnemonicParsing="false" onAction="#logoutPushed" text="Logout" />
+            <Button mnemonicParsing="false" onAction="#logoutPushed" prefHeight="37.0" prefWidth="81.0" text="Logout" />
          </children>
          <padding>
             <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />

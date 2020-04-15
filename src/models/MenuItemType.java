@@ -5,6 +5,5 @@ package models;
 //information is lost on what type it is. Perhaps SpecialFood/SpecialDrink?
 public enum MenuItemType {
     Food,
-    Drink,
-    Special
+    Drink
 }

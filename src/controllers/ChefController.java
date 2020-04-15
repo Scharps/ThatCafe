@@ -9,8 +9,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
@@ -38,8 +37,14 @@ public class ChefController implements Initializable {
     @FXML private TableView<MenuItem> currentItemTable;
     @FXML private TableColumn<MenuItem, String> currentOrderItem;
 
+    @FXML private TextField newItemName;
+    @FXML private TextField newItemPrice;
+    @FXML private ComboBox<String> newItemType;
+    @FXML private CheckBox newSpecial;
+
     ObservableList<Order> currentOrders = FXCollections.observableArrayList();
     ObservableList<MenuItem> currentOrderItems = FXCollections.observableArrayList();
+    ObservableList<String> newTypeList = FXCollections.observableArrayList();
 
     public void logoutPushed(ActionEvent event) throws IOException {
         Parent loginParent = FXMLLoader.load(getClass().getResource("/gui/StaffProfiles.fxml"));
@@ -82,9 +87,39 @@ public class ChefController implements Initializable {
 
     }
 
+    public void addMenuItem(ActionEvent event){
+        if(newItemName.getText() == ""){
+
+        }
+        else {
+            String newName = newItemName.getText();
+            String newType = newItemType.getValue();
+
+            boolean special = newSpecial.isSelected();
+            try {
+                double newPrice = Double.parseDouble(newItemPrice.getText());
+                Connection conn = DatabaseService.getConnection();
+                MenuItem.createNewItem(conn, newName, newType, newPrice, special);
+                conn.close();
+            } catch (NumberFormatException ne) {
+
+            } catch (SQLException se) {
+
+            }
+            newItemName.clear();
+            newItemPrice.clear();
+            newSpecial.setSelected(false);
+            newItemType.getSelectionModel().clearSelection();
+        }
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         initialiseCurrentOrders();
+        newTypeList.add(String.valueOf(MenuItemType.Food));
+        newTypeList.add(String.valueOf(MenuItemType.Drink));
+        newItemType.setItems(newTypeList);
+
 
     }
 
@@ -104,4 +139,5 @@ public class ChefController implements Initializable {
         }
 
     }
+
 }
