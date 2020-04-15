@@ -23,10 +23,10 @@
                                                             <content>
                                                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                                                     <children>
-                                                                        <TableView fx:id="foodtable" onMouseClicked="#foodSelect" prefHeight="200.0" prefWidth="292.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                                        <TableView fx:id="foodTable" onMouseClicked="#foodSelect" prefHeight="200.0" prefWidth="292.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                                             <columns>
-                                                                                <TableColumn fx:id="foodname" prefWidth="104.0" resizable="false" text="Item" />
-                                                                                <TableColumn fx:id="foodprice" prefWidth="120.0" resizable="false" text="Price" />
+                                                                                <TableColumn fx:id="foodName" prefWidth="104.0" resizable="false" text="Item" />
+                                                                                <TableColumn fx:id="foodPrice" prefWidth="120.0" resizable="false" text="Price" />
                                                                             </columns>
                                                                         </TableView>
                                                                     </children>
@@ -37,10 +37,24 @@
                                                             <content>
                                                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="367.0" prefWidth="229.0">
                                                                     <children>
-                                                                        <TableView fx:id="drinktable" layoutX="14.0" layoutY="14.0" onMouseClicked="#drinkSelect" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                                        <TableView fx:id="drinkTable" layoutX="14.0" layoutY="14.0" onMouseClicked="#drinkSelect" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                                             <columns>
-                                                                                <TableColumn fx:id="drinkname" prefWidth="75.0" text="Item" />
-                                                                                <TableColumn fx:id="drinkprice" prefWidth="75.0" text="Price" />
+                                                                                <TableColumn fx:id="drinkName" prefWidth="75.0" text="Item" />
+                                                                                <TableColumn fx:id="drinkPrice" prefWidth="75.0" text="Price" />
+                                                                            </columns>
+                                                                        </TableView>
+                                                                    </children>
+                                                                </AnchorPane>
+                                                            </content>
+                                                        </Tab>
+                                                        <Tab text="Specials">
+                                                            <content>
+                                                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="367.0" prefWidth="229.0">
+                                                                    <children>
+                                                                        <TableView fx:id="specialsTable" layoutX="14.0" layoutY="31.0" onMouseClicked="#specialSelect" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                                            <columns>
+                                                                                <TableColumn fx:id="specialsName" prefWidth="75.0" text="Item" />
+                                                                                <TableColumn fx:id="specialsPrice" prefWidth="75.0" text="Price" />
                                                                             </columns>
                                                                         </TableView>
                                                                     </children>
