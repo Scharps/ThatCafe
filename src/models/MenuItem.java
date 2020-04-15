@@ -55,6 +55,17 @@ public class MenuItem {
         }
     }
 
+    public static ResultSet getMenuItems(Connection conn, boolean special){
+        try{
+            PreparedStatement st = conn.prepareStatement("SELECT * FROM MenuItems WHERE SpecialSpecial = ?");
+            st.setBoolean(1, special);
+            ResultSet rs = st.executeQuery();
+            return rs;
+        }catch (SQLException se){
+            return null;
+        }
+    }
+
     public int getId() {
         return this.id;
     }
@@ -81,13 +92,22 @@ public class MenuItem {
         //throw new UnsupportedOperationException("createMenuItem() is not yet implemented");
     }
 
+    public static void deleteMenuItem(Connection conn, int id) {
+        try{
+            PreparedStatement st = conn.prepareStatement("DELETE FROM MenuItems WHERE ItemId = ?");
+            st.setInt(1, id);
+            st.executeUpdate();
+        }catch (SQLException se){
+
+        }
+
+    }
+
     public static MenuItem getMenuItem(int id) {
         throw new UnsupportedOperationException("getMenuItem() is not yet implemented");
     }
 
-    public static boolean deleteMenuItem(int id) {
-        throw new UnsupportedOperationException("deleteMenuItem() is not yet implemented");
-    }
+
 
     public static boolean updateMenuItem(int id, String name, String description, MenuItemType itemType, double price, int numberSold) {
         throw new UnsupportedOperationException("updateMenuItem() is not yet implemented");

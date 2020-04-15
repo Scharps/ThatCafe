@@ -63,21 +63,26 @@
                                     <Insets bottom="50.0" left="100.0" right="100.0" top="30.0" />
                                  </padding>
                               </VBox>
-                              <VBox prefHeight="500.0" prefWidth="790.0">
+                              <VBox prefHeight="500.0" prefWidth="790.0" spacing="10.0">
                                  <children>
-                                    <Label text="Label" />
-                                    <TabPane prefHeight="292.0" prefWidth="478.0" tabClosingPolicy="UNAVAILABLE">
+                                    <Label text="Delete Menu Items" />
+                                    <TabPane prefHeight="382.0" prefWidth="478.0" tabClosingPolicy="UNAVAILABLE">
                                       <tabs>
                                         <Tab text="Food">
                                           <content>
                                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="191.0" prefWidth="478.0">
                                                    <children>
-                                                      <TableView layoutX="14.0" layoutY="14.0" prefHeight="259.0" prefWidth="478.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                                        <columns>
-                                                          <TableColumn prefWidth="75.0" text="C1" />
-                                                          <TableColumn prefWidth="75.0" text="C2" />
-                                                        </columns>
-                                                      </TableView>
+                                                      <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                         <children>
+                                                            <TableView fx:id="foodTable" prefHeight="259.0" prefWidth="478.0">
+                                                              <columns>
+                                                                <TableColumn fx:id="foodName" prefWidth="101.0" text="Item" />
+                                                                <TableColumn fx:id="foodPrice" prefWidth="67.0" text="Price" />
+                                                              </columns>
+                                                            </TableView>
+                                                            <Button mnemonicParsing="false" onAction="#removeFoodItem" text="Delete" />
+                                                         </children>
+                                                      </VBox>
                                                    </children></AnchorPane>
                                           </content>
                                         </Tab>
@@ -85,12 +90,17 @@
                                           <content>
                                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                                    <children>
-                                                      <TableView layoutX="14.0" layoutY="14.0" prefHeight="259.0" prefWidth="478.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                                        <columns>
-                                                          <TableColumn prefWidth="75.0" text="C1" />
-                                                          <TableColumn prefWidth="75.0" text="C2" />
-                                                        </columns>
-                                                      </TableView>
+                                                      <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                         <children>
+                                                            <TableView fx:id="drinkTable" prefHeight="259.0" prefWidth="478.0">
+                                                              <columns>
+                                                                <TableColumn fx:id="drinkName" prefWidth="100.0" text="Item" />
+                                                                <TableColumn fx:id="drinkPrice" prefWidth="67.0" text="Price" />
+                                                              </columns>
+                                                            </TableView>
+                                                            <Button mnemonicParsing="false" onAction="#removeDrinkItem" text="Delete" />
+                                                         </children>
+                                                      </VBox>
                                                    </children></AnchorPane>
                                           </content>
                                         </Tab>
@@ -98,20 +108,27 @@
                                             <content>
                                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                                    <children>
-                                                      <TableView layoutY="22.0" prefHeight="259.0" prefWidth="478.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                                        <columns>
-                                                          <TableColumn prefWidth="75.0" text="C1" />
-                                                          <TableColumn prefWidth="75.0" text="C2" />
-                                                        </columns>
-                                                      </TableView>
+                                                      <VBox spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                         <children>
+                                                            <TableView fx:id="specialsTable" prefHeight="259.0" prefWidth="478.0">
+                                                              <columns>
+                                                                <TableColumn fx:id="specialsName" prefWidth="100.0" text="Item" />
+                                                                <TableColumn fx:id="specialsPrice" prefWidth="69.0" text="Price" />
+                                                              </columns>
+                                                            </TableView>
+                                                            <Button mnemonicParsing="false" onAction="#removeSpecialItem" text="Delete" />
+                                                         </children>
+                                                      </VBox>
                                                    </children></AnchorPane>
                                             </content>
                                          </Tab>
 
                                       </tabs>
                                     </TabPane>
-                                    <Button mnemonicParsing="false" text="Button" />
                                  </children>
+                                 <padding>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                 </padding>
                               </VBox>
                            </children>
                         </HBox>

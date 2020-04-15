@@ -31,13 +31,17 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 public class CustomerController implements Initializable {
-    @FXML private TableView<MenuItem> foodtable;
-    @FXML private TableColumn<MenuItem, String> foodname;
-    @FXML private TableColumn<MenuItem, Double> foodprice;
+    @FXML private TableView<MenuItem> foodTable;
+    @FXML private TableColumn<MenuItem, String> foodName;
+    @FXML private TableColumn<MenuItem, Double> foodPrice;
 
-    @FXML private TableView<MenuItem> drinktable;
-    @FXML private TableColumn<MenuItem, String> drinkname;
-    @FXML private TableColumn<MenuItem, Double> drinkprice;
+    @FXML private TableView<MenuItem> drinkTable;
+    @FXML private TableColumn<MenuItem, String> drinkName;
+    @FXML private TableColumn<MenuItem, Double> drinkPrice;
+
+    @FXML private TableView<MenuItem> specialsTable;
+    @FXML private TableColumn<MenuItem, String> specialsName;
+    @FXML private TableColumn<MenuItem, Double> specialsPrice;
 
     @FXML private TableView<MenuItem> ordertable;
     @FXML private TableColumn<MenuItem, String> ordereditem;
@@ -73,6 +77,7 @@ public class CustomerController implements Initializable {
     private ObservableList<MenuItem> fooditems = FXCollections.observableArrayList();
     private ObservableList<MenuItem> orderitems = FXCollections.observableArrayList();
     private ObservableList<MenuItem> drinksitems = FXCollections.observableArrayList();
+    private ObservableList<MenuItem> specialitems = FXCollections.observableArrayList();
     private ObservableList<String> orderOption = FXCollections.observableArrayList();
     private ObservableList<Order> orderHistory = FXCollections.observableArrayList();
     private ObservableList<MenuItem> orderHistoryItems = FXCollections.observableArrayList();
@@ -87,14 +92,21 @@ public class CustomerController implements Initializable {
     }
 
     public void foodSelect(MouseEvent event){
-        MenuItem itemSelected = foodtable.getSelectionModel().getSelectedItem();
+        MenuItem itemSelected = foodTable.getSelectionModel().getSelectedItem();
         orderitems.add(itemSelected);
         ordereditem.setCellValueFactory((new PropertyValueFactory<MenuItem, String>("name")));
         ordertable.setItems(orderitems);
     }
 
     public void drinkSelect(MouseEvent event){
-        MenuItem itemSelected = drinktable.getSelectionModel().getSelectedItem();
+        MenuItem itemSelected = drinkTable.getSelectionModel().getSelectedItem();
+        orderitems.add(itemSelected);
+        ordereditem.setCellValueFactory((new PropertyValueFactory<MenuItem, String>("name")));
+        ordertable.setItems(orderitems);
+    }
+
+    public void specialSelect(MouseEvent event){
+        MenuItem itemSelected = specialsTable.getSelectionModel().getSelectedItem();
         orderitems.add(itemSelected);
         ordereditem.setCellValueFactory((new PropertyValueFactory<MenuItem, String>("name")));
         ordertable.setItems(orderitems);
@@ -206,14 +218,6 @@ public class CustomerController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        foodname.setCellValueFactory(new PropertyValueFactory<MenuItem, String>("name"));
-        foodprice.setCellValueFactory(new PropertyValueFactory<MenuItem, Double>("price"));
-        foodtable.setItems(fooditems);
-
-        drinkname.setCellValueFactory(new PropertyValueFactory<MenuItem, String>("name"));
-        drinkprice.setCellValueFactory(new PropertyValueFactory<MenuItem, Double>("price"));
-        drinktable.setItems(drinksitems);
-
         orderHistoryNo.setCellValueFactory(new PropertyValueFactory<Order, Integer>("orderId"));
         orderHistoryDate.setCellValueFactory(new PropertyValueFactory<Order, Timestamp>("orderDate"));
         orderHistoryTotal.setCellValueFactory(new PropertyValueFactory<Order, Double>("orderTotal"));
@@ -225,19 +229,11 @@ public class CustomerController implements Initializable {
         reorderType.setItems(orderOption);
 
         initializeBookingTab();
+        initialiseMenu();
 
         try {
             Connection conn = DatabaseService.getConnection();
-            Statement st = conn.createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM MenuItems WHERE ItemType = 'Food'");
-            while(rs.next()){
-                fooditems.add(MenuItem.createMenuItem(rs.getInt(1), rs.getString(2), MenuItemType.Food, rs.getDouble(4), rs.getInt(5), rs.getBoolean(6)));
-            }
-            rs = st.executeQuery("SELECT * FROM MenuItems WHERE ItemType = 'Drink'");
-            while(rs.next()){
-                drinksitems.add(MenuItem.createMenuItem(rs.getInt(1), rs.getString(2), MenuItemType.Drink, rs.getDouble(4), rs.getInt(5), rs.getBoolean(6)));
-            }
-            rs = Order.getOrderHistory(conn, appState.getUser().getId());
+            ResultSet rs = Order.getOrderHistory(conn, appState.getUser().getId());
             while(rs.next()){
                 orderHistory.add(Order.createOrder(rs.getInt(1), rs.getTimestamp(2), rs.getInt(3), rs.getBoolean(4), rs.getDouble(5)));
             }
@@ -247,6 +243,41 @@ public class CustomerController implements Initializable {
         catch (SQLException se){
             se.printStackTrace();
             System.out.println(se);
+        }
+
+    }
+
+    public void initialiseMenu(){
+        fooditems.clear();
+        drinksitems.clear();
+        specialitems.clear();
+
+        foodName.setCellValueFactory(new PropertyValueFactory<MenuItem, String>("name"));
+        foodPrice.setCellValueFactory(new PropertyValueFactory<MenuItem, Double>("price"));
+        foodTable.setItems(fooditems);
+        drinkName.setCellValueFactory(new PropertyValueFactory<MenuItem, String>("name"));
+        drinkPrice.setCellValueFactory(new PropertyValueFactory<MenuItem, Double>("price"));
+        drinkTable.setItems(drinksitems);
+        specialsName.setCellValueFactory(new PropertyValueFactory<MenuItem, String>("name"));
+        specialsPrice.setCellValueFactory(new PropertyValueFactory<MenuItem, Double>("price"));
+        specialsTable.setItems(specialitems);
+        try{
+            Connection conn = DatabaseService.getConnection();
+            ResultSet rs = MenuItem.getMenuItems(conn, false);
+            while(rs.next()) {
+                if (rs.getString(3).equals(String.valueOf(MenuItemType.Food))){
+                    fooditems.add(MenuItem.createMenuItem(rs.getInt(1), rs.getString(2), MenuItemType.Food, rs.getDouble(4), rs.getInt(5), rs.getBoolean(6)));
+                } else {
+                    drinksitems.add(MenuItem.createMenuItem(rs.getInt(1), rs.getString(2), MenuItemType.Drink, rs.getDouble(4), rs.getInt(5), rs.getBoolean(6)));
+                }
+            }
+
+            rs = MenuItem.getMenuItems(conn, true);
+            while(rs.next()){
+                specialitems.add(MenuItem.createMenuItem(rs.getInt(1), rs.getString(2), MenuItemType.valueOf(rs.getString(3)), rs.getDouble(4), rs.getInt(5), rs.getBoolean(6)));
+            }
+            conn.close();
+        }catch (SQLException se){
         }
 
     }
