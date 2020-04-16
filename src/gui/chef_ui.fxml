@@ -16,9 +16,9 @@
                            <children>
                               <TableView fx:id="currentOrderTable" onMouseClicked="#selectOrder" prefHeight="470.0" prefWidth="435.0">
                                 <columns>
-                                  <TableColumn fx:id="currentOrderNo" prefWidth="91.0" text="Order No" />
-                                  <TableColumn fx:id="currentOrderDate" prefWidth="118.0" text="Order Time" />
-                                    <TableColumn fx:id="currentOrderType" prefWidth="117.0" text="Order Type" />
+                                  <TableColumn fx:id="currentOrderNo" prefWidth="112.0" text="Order No" />
+                                  <TableColumn fx:id="currentOrderDate" prefWidth="105.0" text="Order Time" />
+                                    <TableColumn fx:id="currentOrderType" prefWidth="109.0" text="Order Type" />
                                 </columns>
                               </TableView>
                               <VBox spacing="15.0">
@@ -73,7 +73,7 @@
                                           <content>
                                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="191.0" prefWidth="478.0">
                                                    <children>
-                                                      <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                      <VBox spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                          <children>
                                                             <TableView fx:id="foodTable" prefHeight="259.0" prefWidth="478.0">
                                                               <columns>
@@ -91,7 +91,7 @@
                                           <content>
                                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                                    <children>
-                                                      <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                      <VBox spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                          <children>
                                                             <TableView fx:id="drinkTable" prefHeight="259.0" prefWidth="478.0">
                                                               <columns>
