@@ -312,7 +312,7 @@ public class CustomerController implements Initializable {
             city.setText(address.getCity());
             postCode.setText(address.getPostCode());
         }catch (SQLException se){
-            
+
         }
 
 
