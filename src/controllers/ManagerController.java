@@ -335,7 +335,7 @@ public class ManagerController implements Initializable {
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(
                     null,
-                    "Error retrieving report information.",
+                    "Error retrieving report information." + e.getMessage(),
                     "Error", JOptionPane.ERROR_MESSAGE
             );
         }
