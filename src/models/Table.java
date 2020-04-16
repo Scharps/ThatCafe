@@ -72,7 +72,6 @@ public class Table {
 
         PreparedStatement st = conn.prepareStatement(sqlStatement);
         st.setDate(1, day);
-        System.out.println(st);
         ResultSet rs = st.executeQuery();
         ArrayList<Table> unavailableTables = new ArrayList<>();
 
