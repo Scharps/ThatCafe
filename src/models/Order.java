@@ -13,25 +13,28 @@ public class Order {
     private int customerId;
     private boolean cooked = false;
     private double orderTotal;
+    private OrderType orderType;
 
-    protected Order(int orderId, Timestamp orderDate, int customerId, boolean cooked, double orderTotal) {
+    protected Order(int orderId, Timestamp orderDate, int customerId, boolean cooked, double orderTotal, OrderType orderType) {
         this.orderId = orderId;
         this.orderDate = orderDate;
         this.customerId = customerId;
         this.cooked = cooked;
         this.orderTotal = orderTotal;
+        this.orderType = orderType;
     }
 
-    public static Order createOrder(int orderId, Timestamp orderDate, int customerId, boolean cooked, double orderTotal){
-        return new Order(orderId, orderDate, customerId, cooked, orderTotal);
+    public static Order createOrder(int orderId, Timestamp orderDate, int customerId, boolean cooked, double orderTotal, OrderType orderType){
+        return new Order(orderId, orderDate, customerId, cooked, orderTotal, orderType);
     }
 
-    public static void createOrder(Connection conn, Timestamp orderDate, int customerId, double orderTotal){
+    public static void createOrder(Connection conn, Timestamp orderDate, int customerId, double orderTotal, OrderType orderType){
         try{
-            PreparedStatement st = conn.prepareStatement("INSERT INTO Orders (OrderDate, CustomerId, OrderTotal) VALUES (?,?,?)");
+            PreparedStatement st = conn.prepareStatement("INSERT INTO Orders (OrderDate, CustomerId, OrderTotal, OrderType) VALUES (?,?,?, ?)");
             st.setTimestamp(1, orderDate);
             st.setInt(2, customerId);
             st.setDouble(3, orderTotal);
+            st.setString(4, String.valueOf(orderType));
             st.executeUpdate();
         } catch (SQLException se){
 
@@ -88,6 +91,10 @@ public class Order {
 
     public double getOrderTotal() {
         return orderTotal;
+    }
+
+    public String getOrderType(){
+        return String.valueOf(this.orderType);
     }
 
     public boolean markCompleted() {

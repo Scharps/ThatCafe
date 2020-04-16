@@ -120,7 +120,7 @@ public class WaiterController implements Initializable {
                 orderError.setText("No booking at this table at this time.");
             }
             else {
-                Order.createOrder(conn, sqlordertime, customerId, orderTotal);
+                Order.createOrder(conn, sqlordertime, customerId, orderTotal, OrderType.EatIn);
                 int orderId = DatabaseService.getLastInsert(conn);
                 EatInOrder.createEatInOrder(conn, orderId, tableId);
                 for (MenuItem item : orderitems) {

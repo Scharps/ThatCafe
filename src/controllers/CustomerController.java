@@ -132,7 +132,7 @@ public class CustomerController implements Initializable {
         if(orderType.getValue() == "Delivery" || orderType.getValue() == "Takeaway"){
             try {
                 Connection conn = DatabaseService.getConnection();
-                Order.createOrder(conn, sqlordertime, customerId, sum);
+                Order.createOrder(conn, sqlordertime, customerId, sum, OrderType.valueOf(orderType.getValue()));
                 int orderId = DatabaseService.getLastInsert(conn);
                 if(orderType.getValue() == "Delivery"){
                     Timestamp sqldeliverytime = DeliveryOrder.estimateDeliveryTime(ordertime);
@@ -170,7 +170,7 @@ public class CustomerController implements Initializable {
         if(reorderType.getValue() == "Delivery" || reorderType.getValue() == "Takeaway"){
             try {
                 Connection conn = DatabaseService.getConnection();
-                Order.createOrder(conn, sqlordertime, customerId, sum);
+                Order.createOrder(conn, sqlordertime, customerId, sum , OrderType.valueOf(reorderType.getValue()));
                 int orderId = DatabaseService.getLastInsert(conn);
                 if(reorderType.getValue() == "Delivery"){
                     Timestamp sqldeliverytime = DeliveryOrder.estimateDeliveryTime(ordertime);
@@ -237,7 +237,7 @@ public class CustomerController implements Initializable {
             Connection conn = DatabaseService.getConnection();
             ResultSet rs = Order.getOrderHistory(conn, appState.getUser().getId());
             while(rs.next()){
-                orderHistory.add(Order.createOrder(rs.getInt(1), rs.getTimestamp(2), rs.getInt(3), rs.getBoolean(4), rs.getDouble(5)));
+                orderHistory.add(Order.createOrder(rs.getInt(1), rs.getTimestamp(2), rs.getInt(3), rs.getBoolean(4), rs.getDouble(5), OrderType.valueOf(rs.getString(6))));
             }
             conn.close();
 

@@ -10,8 +10,8 @@ public class DeliveryOrder extends Order {
     private boolean delivered = false;
     private int driverID;
 
-    private DeliveryOrder(int orderId, Timestamp orderDate, int customerId, boolean cooked, double orderTotal, boolean confirmed, Timestamp estimatedDeliveryTime, int driverID, boolean delivered) {
-        super(orderId, orderDate, customerId, cooked, orderTotal);
+    private DeliveryOrder(int orderId, Timestamp orderDate, int customerId, boolean cooked, double orderTotal, OrderType orderType, boolean confirmed, Timestamp estimatedDeliveryTime, int driverID, boolean delivered) {
+        super(orderId, orderDate, customerId, cooked, orderTotal, orderType);
         this.confirmed = confirmed;
         this.estimatedDeliveryTime = estimatedDeliveryTime;
         this.driverID = driverID;
