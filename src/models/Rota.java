@@ -69,8 +69,9 @@ public class Rota {
         return rotaFromResultSet(rs);
     }
 
-    public static Rota createRota (
+    public static void updateRota(
             Connection conn,
+            int rotaId,
             Shift mondayShift,
             Shift tuesdayShift,
             Shift wednesdayShift,
@@ -78,47 +79,34 @@ public class Rota {
             Shift fridayShift,
             Shift saturdayShift,
             Shift sundayShift
-    ) throws SQLException {
-        PreparedStatement st = conn.prepareStatement(
-        "INSERT INTO Rota(" +
-                "RotaId, " +
-                "MonStart, " +
-                "MonFinish, " +
-                "TueStart, " +
-                "TueFinish, " +
-                "WedStart, " +
-                "WedFinish, " +
-                "ThuStart, " +
-                "ThuFinish, " +
-                "FriStart, " +
-                "FriFinish, " +
-                "SatStart, " +
-                "SatFinish, " +
-                "SunStart, " +
-                "SunFinish" +
-            ") VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
-        );
-        st.setInt(1, mondayShift.getStartTime());
-        st.setInt(2, mondayShift.getFinishTime());
-        st.setInt(3, tuesdayShift.getStartTime());
-        st.setInt(4, tuesdayShift.getFinishTime());
-        st.setInt(5, wednesdayShift.getStartTime());
-        st.setInt(6, wednesdayShift.getFinishTime());
-        st.setInt(7, thursdayShift.getStartTime());
-        st.setInt(8, thursdayShift.getFinishTime());
-        st.setInt(9, fridayShift.getStartTime());
-        st.setInt(10, fridayShift.getFinishTime());
-        st.setInt(11, saturdayShift.getStartTime());
-        st.setInt(12, saturdayShift.getFinishTime());
-        st.setInt(13, sundayShift.getStartTime());
-        st.setInt(14, sundayShift.getFinishTime());
-        st.executeUpdate();
-
-        st = conn.prepareStatement("SELECT * FROM Rota\n" +
-                "WHERE RotaId = (SELECT MAX(RotaId) FROM Rota)");
-        ResultSet rs = st.executeQuery();
-        rs.next();
-        return rotaFromResultSet(rs);
+        ) throws SQLException {
+            PreparedStatement st = conn.prepareStatement(
+            "UPDATE Rota\n" +
+                "SET MonStart = ?, MonFinish = ?, " +
+                "TueStart = ?, TueFinish = ?, " +
+                "WedStart = ?, WedFinish = ?, " +
+                "ThuStart = ?, ThuFinish = ?, " +
+                "FriStart = ?, FriFinish = ?, " +
+                "SatStart = ?, SatFinish = ?, " +
+                "SunStart = ?, SunFinish = ? " +
+                "WHERE RotaId = ?"
+            );
+            st.setString(1, mondayShift.getStartTime());
+            st.setString(2, mondayShift.getFinishTime());
+            st.setString(3, tuesdayShift.getStartTime());
+            st.setString(4, tuesdayShift.getFinishTime());
+            st.setString(5, wednesdayShift.getStartTime());
+            st.setString(6, wednesdayShift.getFinishTime());
+            st.setString(7, thursdayShift.getStartTime());
+            st.setString(8, thursdayShift.getFinishTime());
+            st.setString(9, fridayShift.getStartTime());
+            st.setString(10, fridayShift.getFinishTime());
+            st.setString(11, saturdayShift.getStartTime());
+            st.setString(12, saturdayShift.getFinishTime());
+            st.setString(13, sundayShift.getStartTime());
+            st.setString(14, sundayShift.getFinishTime());
+            st.setInt(15, rotaId);
+            st.executeUpdate();
     }
 
     public static Rota getRota(Connection conn, int rotaId) throws SQLException {
@@ -140,32 +128,32 @@ public class Rota {
         return new Rota(
                 rs.getInt("RotaId"),
                 new Shift(
-                        rs.getInt("MonStart"),
-                        rs.getInt("MonFinish")
+                        rs.getString("MonStart"),
+                        rs.getString("MonFinish")
                 ),
                 new Shift(
-                        rs.getInt("TueStart"),
-                        rs.getInt("TueFinish")
+                        rs.getString("TueStart"),
+                        rs.getString("TueFinish")
                 ),
                 new Shift(
-                        rs.getInt("WedStart"),
-                        rs.getInt("WedFinish")
+                        rs.getString("WedStart"),
+                        rs.getString("WedFinish")
                 ),
                 new Shift(
-                        rs.getInt("ThuStart"),
-                        rs.getInt("ThuFinish")
+                        rs.getString("ThuStart"),
+                        rs.getString("ThuFinish")
                 ),
                 new Shift(
-                        rs.getInt("FriStart"),
-                        rs.getInt("FriFinish")
+                        rs.getString("FriStart"),
+                        rs.getString("FriFinish")
                 ),
                 new Shift(
-                        rs.getInt("SatStart"),
-                        rs.getInt("SatFinish")
+                        rs.getString("SatStart"),
+                        rs.getString("SatFinish")
                 ),
                 new Shift(
-                        rs.getInt("SunStart"),
-                        rs.getInt("SunFinish")
+                        rs.getString("SunStart"),
+                        rs.getString("SunFinish")
                 )
         );
     }

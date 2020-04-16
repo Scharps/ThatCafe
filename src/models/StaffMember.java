@@ -22,7 +22,7 @@ public class StaffMember extends User {
         return this.position;
     }
 
-    public Rota getRotaId() {
+    public Rota getRota() {
         return this.rota;
     }
 

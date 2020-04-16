@@ -1,24 +1,24 @@
 package models;
 
 public class Shift {
-    private int startTime;
-    private int finishTime;
+    private String startTime;
+    private String finishTime;
 
     public Shift() {
-        startTime = -1;
-        finishTime = -1;
+        startTime = "None";
+        finishTime = "None";
     }
 
-    public Shift(int startTime, int finishTime) {
+    public Shift(String startTime, String finishTime) {
         this.startTime = startTime;
         this.finishTime = finishTime;
     }
 
-    public int getStartTime() {
+    public String getStartTime() {
         return startTime;
     }
 
-    public int getFinishTime() {
+    public String getFinishTime() {
         return finishTime;
     }
 }
