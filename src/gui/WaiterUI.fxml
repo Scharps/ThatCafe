@@ -166,7 +166,7 @@
                                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                             </rowConstraints>
                                              <children>
-                                                <TableView fx:id="currentEatinTable" prefHeight="371.0" prefWidth="322.0">
+                                                <TableView fx:id="currentEatinTable" onMouseClicked="#eatinSelect" prefHeight="371.0" prefWidth="322.0">
                                                   <columns>
                                                     <TableColumn fx:id="eatinNo" prefWidth="79.0" text="Order" />
                                                     <TableColumn fx:id="eatinTime" prefWidth="95.0" text="Order Time" />
@@ -174,15 +174,15 @@
                                                       <TableColumn fx:id="eatinCooked" prefWidth="75.0" text="Cooked" />
                                                   </columns>
                                                 </TableView>
-                                                <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1">
+                                                <VBox prefHeight="200.0" prefWidth="100.0" spacing="10.0" GridPane.columnIndex="1">
                                                    <children>
-                                                      <TableView prefHeight="200.0" prefWidth="200.0">
+                                                      <TableView fx:id="eatinItemsTable" prefHeight="200.0" prefWidth="200.0">
                                                         <columns>
-                                                          <TableColumn prefWidth="75.0" text="C1" />
-                                                          <TableColumn prefWidth="75.0" text="C2" />
+                                                          <TableColumn fx:id="eatinItem" prefWidth="226.0" text="Items" />
                                                         </columns>
                                                       </TableView>
                                                       <Button mnemonicParsing="false" onAction="#confirmServed" text="Served" />
+                                                      <Button mnemonicParsing="false" onAction="#refreshEatIn" text="Refresh" />
                                                    </children>
                                                    <padding>
                                                       <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
@@ -206,24 +206,24 @@
                                                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                               </rowConstraints>
                                               <children>
-                                                  <TableView fx:id="currentTakeawayTable" prefHeight="371.0" prefWidth="312.0">
+                                                  <TableView fx:id="currentTakeawayTable" onMouseClicked="#takeawaySelect" prefHeight="371.0" prefWidth="312.0">
                                                       <columns>
                                                           <TableColumn fx:id="takeawayNo" prefWidth="75.0" text="Order" />
-                                                      <TableColumn fx:id="pickUp" prefWidth="103.0" text="Pick Up Time" />
-                                                      <TableColumn fx:id="takeawayCooked" prefWidth="75.0" text="Cooked" />
+                                                      <TableColumn fx:id="pickUp" prefWidth="179.0" text="Pick Up Time" />
+                                                      <TableColumn fx:id="takeawayCooked" prefWidth="98.0" text="Cooked" />
                                                       </columns>
                                                   </TableView>
-                                                  <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1">
+                                                  <VBox prefHeight="200.0" prefWidth="100.0" spacing="10.0" GridPane.columnIndex="1">
                                                       <children>
-                                                      <Label text="Label" />
-                                                      <Label text="Label" />
-                                                          <TableView prefHeight="200.0" prefWidth="200.0">
+                                                      <Label fx:id="takeawayName" text="Name" />
+                                                      <Label fx:id="takeawayTime" text="Pick Up Time" />
+                                                          <TableView fx:id="takeawayItemsTable" prefHeight="200.0" prefWidth="200.0">
                                                               <columns>
-                                                                  <TableColumn prefWidth="75.0" text="C1" />
-                                                                  <TableColumn prefWidth="75.0" text="C2" />
+                                                                  <TableColumn fx:id="takeawayItem" prefWidth="177.0" text="Items" />
                                                               </columns>
                                                           </TableView>
-                                                      <Button mnemonicParsing="false" text="Confirm Collected" />
+                                                      <Button mnemonicParsing="false" onAction="#confirmCollected" text="Confirm Collected" />
+                                                      <Button mnemonicParsing="false" onAction="#refreshTakeaway" text="Refresh" />
                                                       </children>
                                                       <padding>
                                                           <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
@@ -247,25 +247,30 @@
                                                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                                   </rowConstraints>
                                                   <children>
-                                                      <TableView fx:id="currentDeliveryTable" prefHeight="200.0" prefWidth="200.0">
+                                                      <TableView fx:id="currentDeliveryTable" onMouseClicked="#deliverySelect" prefHeight="200.0" prefWidth="200.0">
                                                           <columns>
-                                                              <TableColumn prefWidth="58.0" text="Order" />
-                                                              <TableColumn prefWidth="106.0" text="DeliveryTime" />
-                                                      <TableColumn prefWidth="88.0" text="Approved" />
-                                                      <TableColumn prefWidth="77.0" text="Cooked" />
+                                                              <TableColumn fx:id="deliveryNo" prefWidth="89.0" text="Order" />
+                                                      <TableColumn fx:id="deliveryApproved" prefWidth="109.0" text="Approved" />
+                                                      <TableColumn fx:id="deliveryCooked" text="Cooked" />
                                                           </columns>
                                                       </TableView>
-                                                      <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1">
+                                                      <VBox prefHeight="200.0" prefWidth="100.0" spacing="10.0" GridPane.columnIndex="1">
                                                           <children>
-                                                              <TableView prefHeight="200.0" prefWidth="200.0">
+                                                      <Label fx:id="deliveryName" text="Customer Name" />
+                                                      <Label fx:id="deliveryTime" text="Delivery Time" />
+                                                      <Label fx:id="deliveryAddress1" text="Address Line 1" />
+                                                      <Label fx:id="deliveryCity" text="City" />
+                                                      <Label fx:id="deliveryPostCode" text="PostCode" />
+                                                              <TableView fx:id="deliveryItemsTable" prefHeight="135.0" prefWidth="199.0">
                                                                   <columns>
-                                                                      <TableColumn prefWidth="198.0" text="Items" />
+                                                                      <TableColumn fx:id="deliveryItem" prefWidth="198.0" text="Items" />
                                                                   </columns>
                                                               </TableView>
-                                                      <Button mnemonicParsing="false" text="Approve Order" />
+                                                      <Button mnemonicParsing="false" onAction="#approveDelivery" text="Approve Order" />
+                                                      <Button mnemonicParsing="false" onAction="#refreshDelivery" text="Refresh" />
                                                           </children>
                                                           <padding>
-                                                              <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                                                              <Insets bottom="20.0" left="20.0" right="20.0" top="5.0" />
                                                           </padding>
                                                       </VBox>
                                                   </children>
