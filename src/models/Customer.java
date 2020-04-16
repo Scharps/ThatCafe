@@ -93,7 +93,7 @@ public class Customer extends User {
                     rs.getString("Username"),
                     rs.getString("FName"),
                     rs.getString("LName"),
-                    Address.getAddress(DatabaseService.getConnection(), rs.getInt("AddressId"))
+                    Address.getAddress(conn, rs.getInt("AddressId"))
             );
         } else {
             return null;

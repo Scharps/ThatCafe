@@ -19,6 +19,7 @@ import services.AppState;
 import services.DatabaseService;
 
 import javax.print.DocFlavor;
+import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.io.PipedReader;
 import java.net.URL;
@@ -67,10 +68,31 @@ public class WaiterController implements Initializable {
     @FXML private TableColumn<EatInOrder, Integer> eatinTableNo;
     @FXML private TableColumn<EatInOrder, Boolean> eatinCooked;
 
+    @FXML private TableView<MenuItem> eatinItemsTable;
+    @FXML private TableColumn<MenuItem, String> eatinItem;
+
     @FXML private TableView<TakeawayOrder> currentTakeawayTable;
     @FXML private TableColumn<TakeawayOrder, Integer> takeawayNo;
     @FXML private TableColumn<TakeawayOrder, Timestamp> pickUp;
     @FXML private TableColumn<TakeawayOrder, Boolean> takeawayCooked;
+
+    @FXML private TableView<MenuItem> takeawayItemsTable;
+    @FXML private TableColumn<MenuItem, String> takeawayItem;
+    @FXML private Label takeawayName;
+    @FXML private Label takeawayTime;
+
+    @FXML private TableView<DeliveryOrder> currentDeliveryTable;
+    @FXML private TableColumn<DeliveryOrder, Integer> deliveryNo;
+    @FXML private TableColumn<DeliveryOrder, Boolean> deliveryApproved;
+    @FXML private TableColumn<DeliveryOrder, Boolean> deliveryCooked;
+
+    @FXML private TableView<MenuItem> deliveryItemsTable;
+    @FXML private TableColumn<MenuItem, String> deliveryItem;
+    @FXML private Label deliveryName;
+    @FXML private Label deliveryTime;
+    @FXML private Label deliveryAddress1;
+    @FXML private Label deliveryCity;
+    @FXML private Label deliveryPostCode;
 
     private final ObservableList<MenuItem> fooditems = FXCollections.observableArrayList();
     private final ObservableList<MenuItem> orderitems = FXCollections.observableArrayList();
@@ -79,9 +101,10 @@ public class WaiterController implements Initializable {
     private final ObservableList<MenuItem> drinksitems = FXCollections.observableArrayList();
     private final ObservableList<Booking> unconfirmedBookings = FXCollections.observableArrayList();
     private final ObservableList<Booking> todaysBookings = FXCollections.observableArrayList();
-    private ObservableList<EatInOrder> eatinOrders = FXCollections.observableArrayList();
-    private ObservableList<TakeawayOrder> takeawayOrders = FXCollections.observableArrayList();
-    private ObservableList<DeliveryOrder> deliveryOrders = FXCollections.observableArrayList();
+    private final ObservableList<EatInOrder> eatinOrders = FXCollections.observableArrayList();
+    private final ObservableList<TakeawayOrder> takeawayOrders = FXCollections.observableArrayList();
+    private final ObservableList<DeliveryOrder> deliveryOrders = FXCollections.observableArrayList();
+    private final ObservableList<MenuItem> orderItemsList= FXCollections.observableArrayList();
 
     public void logoutPushed(ActionEvent event) throws IOException {
         Parent loginParent = FXMLLoader.load(getClass().getResource("/gui/StaffProfiles.fxml"));
@@ -181,9 +204,117 @@ public class WaiterController implements Initializable {
                     EatInOrder.confirmedServed(conn, selectedOrder.getOrderId());
                     conn.close();
                     initialiseCurrentEatInOrders();
+                    orderItemsList.clear();
                 } catch (SQLException se) {
 
                 }
+            }
+        }
+    }
+
+    public void eatinSelect(MouseEvent event){
+        EatInOrder selectedOrder = currentEatinTable.getSelectionModel().getSelectedItem();
+        orderItemsList.clear();
+        if(selectedOrder != null) {
+
+            try{
+                Connection conn = DatabaseService.getConnection();
+                ResultSet rs = MenuItem.getOrderItems(conn, selectedOrder.getOrderId());
+                if(rs.next()) {
+                    while (rs.next()) {
+                        orderItemsList.add(MenuItem.createMenuItem(rs.getInt(1), rs.getString(2), MenuItemType.valueOf(rs.getString(3)), rs.getDouble(4), rs.getInt(5), rs.getBoolean(6)));
+                    }
+                    eatinItem.setCellValueFactory(new PropertyValueFactory<MenuItem, String>("name"));
+                    eatinItemsTable.setItems(orderItemsList);
+                }
+                conn.close();
+            } catch (SQLException se){
+                System.out.println("help");
+            }
+        }
+    }
+
+    public void confirmCollected(ActionEvent event){
+        TakeawayOrder selectedOrder = currentTakeawayTable.getSelectionModel().getSelectedItem();
+        if(selectedOrder != null) {
+            if (!selectedOrder.isCooked()) {
+
+            } else {
+                try {
+                    Connection conn = DatabaseService.getConnection();
+                    selectedOrder.confirmCollected(conn);
+                    conn.close();
+                    initialiseCurrentTakeawayOrders();
+                    orderItemsList.clear();
+                } catch (SQLException se) {
+
+                }
+            }
+        }
+    }
+
+    public void takeawaySelect(MouseEvent event){
+        TakeawayOrder selectedOrder = currentTakeawayTable.getSelectionModel().getSelectedItem();
+        orderItemsList.clear();
+        if(selectedOrder != null) {
+            takeawayTime.setText(String.valueOf(selectedOrder.getPickupTime()));
+
+            try{
+                Connection conn = DatabaseService.getConnection();
+                Customer customer = Customer.getCustomer(conn, selectedOrder.getCustomerId());
+                takeawayName.setText(customer.getFirstName() + " " + customer.getLastName());
+                ResultSet rs = MenuItem.getOrderItems(conn, selectedOrder.getOrderId());
+                if(rs.next()) {
+                    while (rs.next()) {
+                        orderItemsList.add(MenuItem.createMenuItem(rs.getInt(1), rs.getString(2), MenuItemType.valueOf(rs.getString(3)), rs.getDouble(4), rs.getInt(5), rs.getBoolean(6)));
+                    }
+                    takeawayItem.setCellValueFactory(new PropertyValueFactory<MenuItem, String>("name"));
+                    takeawayItemsTable.setItems(orderItemsList);
+                }
+                conn.close();
+            } catch (SQLException se){
+                System.out.println("help");
+            }
+        }
+    }
+
+    public void approveDelivery(ActionEvent event){
+        DeliveryOrder selectedOrder = currentDeliveryTable.getSelectionModel().getSelectedItem();
+        if(selectedOrder != null) {
+            try {
+                Connection conn = DatabaseService.getConnection();
+                selectedOrder.approveDelivery(conn);
+                conn.close();
+                initialiseCurrentDeliveryOrders();
+                orderItemsList.clear();
+            } catch (SQLException se) {
+            }
+        }
+    }
+
+    public void deliverySelect(MouseEvent event){
+        DeliveryOrder selectedOrder = currentDeliveryTable.getSelectionModel().getSelectedItem();
+        orderItemsList.clear();
+        if(selectedOrder != null) {
+            deliveryTime.setText(String.valueOf(selectedOrder.getEstimatedDeliveryTime()));
+            try{
+                Connection conn = DatabaseService.getConnection();
+                Customer customer = Customer.getCustomer(conn, selectedOrder.getCustomerId());
+                deliveryName.setText(customer.getFirstName() + " " + customer.getLastName());
+                deliveryAddress1.setText(customer.getAddress().getFirstLine());
+                deliveryCity.setText(customer.getAddress().getCity());
+                deliveryPostCode.setText(customer.getAddress().getPostCode());
+                ResultSet rs = MenuItem.getOrderItems(conn, selectedOrder.getOrderId());
+                if(rs.next()) {
+                    while (rs.next()) {
+                        orderItemsList.add(MenuItem.createMenuItem(rs.getInt(1), rs.getString(2), MenuItemType.valueOf(rs.getString(3)), rs.getDouble(4), rs.getInt(5), rs.getBoolean(6)));
+                    }
+                    deliveryItem.setCellValueFactory(new PropertyValueFactory<MenuItem, String>("name"));
+                    deliveryItemsTable.setItems(orderItemsList);
+                }
+                conn.close();
+            } catch (SQLException se){
+                System.out.println("help");
             }
         }
     }
@@ -199,6 +330,7 @@ public class WaiterController implements Initializable {
         initialiseTodaysBookings();
         initialiseCurrentEatInOrders();
         initialiseCurrentTakeawayOrders();
+        initialiseCurrentDeliveryOrders();
         try {
             Connection conn = DatabaseService.getConnection();
             Statement st = conn.createStatement();
@@ -293,7 +425,6 @@ public class WaiterController implements Initializable {
 
     public void initialiseCurrentTakeawayOrders(){
         takeawayOrders.clear();
-
         takeawayNo.setCellValueFactory(new PropertyValueFactory<TakeawayOrder, Integer>("orderId"));
         pickUp.setCellValueFactory(new PropertyValueFactory<TakeawayOrder, Timestamp>("pickupTime"));
         takeawayCooked.setCellValueFactory(new PropertyValueFactory<TakeawayOrder, Boolean>("cooked"));
@@ -311,7 +442,21 @@ public class WaiterController implements Initializable {
     }
 
     public void initialiseCurrentDeliveryOrders(){
+        deliveryOrders.clear();
+        deliveryNo.setCellValueFactory(new PropertyValueFactory<DeliveryOrder, Integer>("orderId"));
+        deliveryApproved.setCellValueFactory(new PropertyValueFactory<DeliveryOrder, Boolean>("confirmed"));
+        deliveryCooked.setCellValueFactory(new PropertyValueFactory<DeliveryOrder, Boolean>("cooked"));
+        currentDeliveryTable.setItems(deliveryOrders);
+        try{
+            Connection conn = DatabaseService.getConnection();
+            ResultSet rs = DeliveryOrder.getUndelivered(conn);
+            while(rs.next()){
+                deliveryOrders.add(DeliveryOrder.orderFromRS(rs));
+            }
+            conn.close();
+        }catch (SQLException se){
 
+        }
     }
 
     public void initialiseTodaysBookings(){

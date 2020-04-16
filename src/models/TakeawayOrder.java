@@ -39,6 +39,12 @@ public class TakeawayOrder extends Order {
         return new TakeawayOrder(rs.getInt(1), rs.getTimestamp(2), rs.getInt(3), rs.getBoolean(4), rs.getDouble(5), OrderType.Takeaway, rs.getTimestamp(6), rs.getBoolean(7));
     }
 
+    public void confirmCollected(Connection conn) throws SQLException{
+        PreparedStatement st = conn.prepareStatement("UPDATE TakeawayOrders SET Collected =1 WHERE OrderId = ?");
+        st.setInt(1, this.getOrderId());
+        st.executeUpdate();
+    }
+
 
 
     public static TakeawayOrder createTakeawayOrder(ArrayList<Integer> items, int customerId, Date pickupTime) {
