@@ -45,7 +45,7 @@
                         </AnchorPane>
                     </content>
                 </Tab>
-                <Tab text="Add Menu Item">
+                <Tab closable="false" text="Add Menu Item">
                     <content>
                         <AnchorPane>
                             <children>

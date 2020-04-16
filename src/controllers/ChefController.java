@@ -103,8 +103,7 @@ public class ChefController implements Initializable {
     }
 
     public void addMenuItem(ActionEvent event){
-        if(newItemName.getText() == ""){
-
+        if(newItemName.getText().equals("") || newItemType.getValue()==null){
         }
         else {
             String newName = newItemName.getText();
