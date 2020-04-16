@@ -9,6 +9,53 @@
    <center>
       <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
          <tabs>
+            <Tab text="My Details">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0">
+                     <children>
+                        <HBox prefHeight="371.0" prefWidth="604.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <children>
+                              <VBox prefHeight="371.0" prefWidth="300.0">
+                                 <children>
+                                    <Label text="Label" />
+                                    <Label text="Label" />
+                                    <Label text="Label" />
+                                    <Label text="Label" />
+                                 </children>
+                                 <padding>
+                                    <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
+                                 </padding>
+                              </VBox>
+                              <VBox prefHeight="371.0" prefWidth="300.0" spacing="30.0">
+                                 <children>
+                                    <VBox prefHeight="127.0" prefWidth="300.0" spacing="5.0">
+                                       <children>
+                                          <Label text="Change Password" />
+                                          <PasswordField fx:id="currentPassword" promptText="Enter Current Password" />
+                                          <PasswordField fx:id="newPassword" promptText="Enter New Password" />
+                                          <PasswordField fx:id="confirmNewPassword" promptText="Confirm New Password" />
+                                          <Button mnemonicParsing="false" onAction="#changePassword" text="Change Password" />
+                                       </children>
+                                    </VBox>
+                                    <VBox spacing="5.0">
+                                       <children>
+                                          <Label text="Change Address" />
+                                          <TextField promptText="New City" />
+                                          <TextField promptText="New Address Line 1" />
+                                          <TextField promptText="New PostCode" />
+                                          <Button mnemonicParsing="false" text="Change Address" />
+                                       </children>
+                                    </VBox>
+                                 </children>
+                                 <padding>
+                                    <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
+                                 </padding>
+                              </VBox>
+                           </children>
+                        </HBox>
+                     </children></AnchorPane>
+               </content>
+            </Tab>
             
             <Tab text="Make Booking">
                <content>

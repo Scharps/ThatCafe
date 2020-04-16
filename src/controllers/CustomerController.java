@@ -75,6 +75,10 @@ public class CustomerController implements Initializable {
     @FXML private TextArea orderMessage;
     @FXML private ListView availableSlotsList;
 
+    @FXML private PasswordField currentPassword;
+    @FXML private PasswordField newPassword;
+    @FXML private PasswordField confirmNewPassword;
+
     private final ObservableList<MenuItem> fooditems = FXCollections.observableArrayList();
     private final ObservableList<MenuItem> orderitems = FXCollections.observableArrayList();
     private final ObservableList<MenuItem> drinksitems = FXCollections.observableArrayList();
@@ -91,6 +95,31 @@ public class CustomerController implements Initializable {
         Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
         window.setScene(loginScene);
         window.show();
+    }
+
+    public void changePassword(ActionEvent event){
+        if(currentPassword.getText().equals("") || newPassword.getText().equals("") || confirmNewPassword.getText().equals("")){
+
+        } else if(!newPassword.getText().equals(confirmNewPassword.getText())){
+
+        } else{
+            try{
+                Connection conn = DatabaseService.getConnection();
+                if(DatabaseService.confirmPassword(conn, currentPassword.getText(), appState.getUser().getId())){
+                    DatabaseService.updateCustomerPassword(conn, newPassword.getText(), appState.getUser().getId());
+                }
+                conn.close();
+                currentPassword.clear();
+                newPassword.clear();
+                confirmNewPassword.clear();
+            } catch (Exception se){
+
+            }
+
+
+        }
+
+
     }
 
     public void foodSelect(MouseEvent event){
