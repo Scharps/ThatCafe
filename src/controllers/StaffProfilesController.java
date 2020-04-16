@@ -59,13 +59,17 @@ public class StaffProfilesController implements Initializable{
                  window.setScene(waiterScene);
                  window.show();
              } else if (position == StaffPosition.Chef) {
-                 Parent waiterParent = FXMLLoader.load(getClass().getResource("/gui/chef_ui.fxml"));
+                 Parent waiterParent = FXMLLoader.load(getClass().getResource("/gui/Chef_ui.fxml"));
                  Scene waiterScene = new Scene(waiterParent);
                  Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
                  window.setScene(waiterScene);
                  window.show();
              } else if (position == StaffPosition.Driver) {
-                 //ToDo create DriverUI;
+                 Parent waiterParent = FXMLLoader.load(getClass().getResource("/gui/driver_ui.fxml"));
+                 Scene waiterScene = new Scene(waiterParent);
+                 Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                 window.setScene(waiterScene);
+                 window.show();
              }
 
         }

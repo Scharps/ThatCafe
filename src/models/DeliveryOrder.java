@@ -49,6 +49,12 @@ public class DeliveryOrder extends Order {
         return rs;
     }
 
+    public static ResultSet getUnassigned(Connection conn) throws SQLException {
+        PreparedStatement st = conn.prepareStatement("SELECT o.OrderId, o.OrderDate, o.CustomerId, o.Cooked, o.OrderTotal, d.Confirmed, d.DeliveryTime, d.DriverId, d.Delivered FROM Orders o, DeliveryOrders d WHERE o.OrderId = d.OrderId AND o.Cooked = 1 AND d.DriverId IS NULL ");
+        ResultSet rs = st.executeQuery();
+        return rs;
+    }
+
     public static DeliveryOrder orderFromRS(ResultSet rs) throws SQLException{
         return new DeliveryOrder(rs.getInt(1), rs.getTimestamp(2), rs.getInt(3), rs.getBoolean(4), rs.getDouble(5), OrderType.Delivery, rs.getBoolean(6), rs.getTimestamp(7), rs.getInt(8), rs.getBoolean(9));
     }
@@ -57,6 +63,10 @@ public class DeliveryOrder extends Order {
         PreparedStatement st = conn.prepareStatement("UPDATE DeliveryOrders SET Confirmed = 1 WHERE OrderID = ?");
         st.setInt(1, this.getOrderId());
         st.executeUpdate();
+    }
+
+    public String toString() {
+        return String.format("%s : %s", getOrderId(), getEstimatedDeliveryTime());
     }
 
     public Timestamp getEstimatedDeliveryTime() {

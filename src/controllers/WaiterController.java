@@ -46,7 +46,6 @@ public class WaiterController implements Initializable {
     @FXML private TableColumn<MenuItem, String> ordereditem;
     @FXML private ComboBox<Integer> tableno;
     @FXML private TextArea orderError;
-    @FXML private TableView<DeliveryOrder> deliverytable;
     @FXML private Label namelabel;
 
     @FXML private TableView<Booking> bookingTable;
