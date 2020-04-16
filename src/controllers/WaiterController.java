@@ -405,10 +405,11 @@ public class WaiterController implements Initializable {
             Connection conn = DatabaseService.getConnection();
             ResultSet rs = Booking.getUncomfirmedBooking(conn);
             while(rs.next()){
-                unconfirmedBookings.add(Booking.createBooking(rs.getInt(1), rs.getInt(2), rs.getInt(4), rs.getDate(5), rs.getInt(3), rs.getInt(6), rs.getBoolean(7)));
+                unconfirmedBookings.add(Booking.getBooking(conn, rs.getInt("BookingId")));
             }
             conn.close();
         }catch (SQLException se){
+            se.printStackTrace();
         }
     }
 
@@ -479,7 +480,7 @@ public class WaiterController implements Initializable {
             Connection conn = DatabaseService.getConnection();
             ResultSet rs = Booking.getTodaysBookings(conn);
             while(rs.next()){
-                todaysBookings.add(Booking.createBooking(rs.getInt(1), rs.getInt(2), rs.getInt(4), rs.getDate(5), rs.getInt(3), rs.getInt(6), rs.getBoolean(7)));
+                todaysBookings.add(Booking.getBooking(conn, rs.getInt("BookingId")));
             }
             conn.close();
         }catch (SQLException se){

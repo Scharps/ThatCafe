@@ -27,10 +27,6 @@ public class Booking {
         this.isApproved = approved;
     }
 
-    public static Booking createBooking(int id, int tableId, int hourOfBooking, Date dateOfBooking, int customerId, int numberOfGuests, boolean approved){
-        return new Booking(id,  tableId, hourOfBooking, dateOfBooking, customerId, numberOfGuests, approved);
-    }
-
     @Override
     public String toString() {
         return "Booking{" +
@@ -106,14 +102,10 @@ public class Booking {
         }
     }
 
-    public static ResultSet getUncomfirmedBooking(Connection conn){
-        try{
-            PreparedStatement st = conn.prepareStatement("SELECT * FROM Bookings WHERE Approved = 0");
-            ResultSet rs = st.executeQuery();
-            return rs;
-        }catch (SQLException se){
-            return null;
-        }
+    public static ResultSet getUncomfirmedBooking(Connection conn) throws SQLException{
+        PreparedStatement st = conn.prepareStatement("SELECT * FROM Bookings WHERE Approved = 0");
+        ResultSet rs = st.executeQuery();
+        return rs;
     }
 
     public static void confirmBooking(Connection conn, int id){
