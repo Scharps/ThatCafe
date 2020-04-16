@@ -29,6 +29,22 @@ public class ManagerController {
     @FXML private TextField surnameTextField;
     @FXML private PasswordField passwordField;
 
+    @FXML private ComboBox staffMemberCombo;
+    @FXML private ComboBox monStartCombo;
+    @FXML private ComboBox monEndCombo;
+    @FXML private ComboBox tueStartCombo;
+    @FXML private ComboBox tueEndCombo;
+    @FXML private ComboBox wedStartCombo;
+    @FXML private ComboBox wedEndCombo;
+    @FXML private ComboBox thuStartCombo;
+    @FXML private ComboBox thuEndCombo;
+    @FXML private ComboBox friStartCombo;
+    @FXML private ComboBox friEndCombo;
+    @FXML private ComboBox satStartCombo;
+    @FXML private ComboBox satEndCombo;
+    @FXML private ComboBox sunStartCombo;
+    @FXML private ComboBox sunEndCombo;
+
     public void initializeStaffMembersTab() {
         try {
             staffMembersListView.getItems().clear();
@@ -46,6 +62,27 @@ public class ManagerController {
                 JOptionPane.ERROR_MESSAGE
             );
         }
+    }
+
+    public void initializeRotaTab() {
+        try {
+            staffMemberCombo.getItems().clear();
+            staffMemberCombo.getItems().addAll(
+                StaffMember.getAllStaffMembers(
+                    DatabaseService.getConnection()
+                )
+            );
+        } catch(SQLException e) {
+
+        }
+    }
+
+    public void onStaffMemberChosen() {
+
+    }
+
+    public void saveHours() {
+
     }
 
     public void logoutPushed(ActionEvent event) throws IOException {

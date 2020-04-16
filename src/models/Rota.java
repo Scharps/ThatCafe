@@ -15,10 +15,6 @@ public class Rota {
     private Shift saturdayShift;
     private Shift sundayShift;
 
-    private Rota(int rotaId) {
-
-    }
-
     private Rota(int rotaId, Shift mondayShift, Shift tuesdayShift, Shift wednesdayShift, Shift thursdayShift, Shift fridayShift, Shift saturdayShift, Shift sundayShift) {
         this.rotaId = rotaId;
         this.mondayShift = mondayShift;
@@ -73,7 +69,7 @@ public class Rota {
         return rotaFromResultSet(rs);
     }
 
-    public static Rota createRota(
+    public static Rota createRota (
             Connection conn,
             Shift mondayShift,
             Shift tuesdayShift,

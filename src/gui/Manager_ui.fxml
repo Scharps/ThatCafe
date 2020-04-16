@@ -88,9 +88,119 @@
                   </AnchorPane>
                </content>
                 </Tab>
-                <Tab text="Rota">
+                <Tab onSelectionChanged="#initializeRotaTab" text="Rota">
                <content>
-                  <AnchorPane prefHeight="200.0" prefWidth="200.0" />
+                  <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                     <children>
+                        <VBox prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <children>
+                              <HBox alignment="CENTER_LEFT" prefWidth="200.0">
+                                 <children>
+                                    <Label text="Staff Member: ">
+                                       <HBox.margin>
+                                          <Insets left="10.0" />
+                                       </HBox.margin>
+                                    </Label>
+                                    <ComboBox fx:id="staffMemberCombo" onAction="#onStaffMemberChosen" prefHeight="25.0" HBox.hgrow="ALWAYS" />
+                                    <Region HBox.hgrow="ALWAYS" />
+                                 </children>
+                                 <VBox.margin>
+                                    <Insets top="10.0" />
+                                 </VBox.margin>
+                              </HBox>
+                              <HBox alignment="CENTER" VBox.vgrow="ALWAYS">
+                                 <children>
+                                    <VBox alignment="CENTER">
+                                       <children>
+                                          <Label text="Monday" />
+                                          <ComboBox fx:id="monStartCombo" prefWidth="75.0">
+                                             <VBox.margin>
+                                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                             </VBox.margin>
+                                          </ComboBox>
+                                          <ComboBox fx:id="monEndCombo" prefWidth="75.0" />
+                                       </children>
+                                    </VBox>
+                                    <VBox alignment="CENTER" layoutX="270.0" layoutY="10.0">
+                                       <children>
+                                          <Label text="Tuesday" />
+                                          <ComboBox fx:id="tueStartCombo" prefWidth="75.0">
+                                             <VBox.margin>
+                                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                             </VBox.margin>
+                                          </ComboBox>
+                                          <ComboBox fx:id="tueEndCombo" prefWidth="75.0" />
+                                       </children>
+                                    </VBox>
+                                    <VBox alignment="CENTER" layoutX="312.0" layoutY="10.0">
+                                       <children>
+                                          <Label text="Wednesday" />
+                                          <ComboBox fx:id="wedStartCombo" prefWidth="75.0">
+                                             <VBox.margin>
+                                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                             </VBox.margin>
+                                          </ComboBox>
+                                          <ComboBox fx:id="wedEndCombo" prefWidth="75.0" />
+                                       </children>
+                                    </VBox>
+                                    <VBox alignment="CENTER" layoutX="355.0" layoutY="10.0">
+                                       <children>
+                                          <Label text="Thursday" />
+                                          <ComboBox fx:id="thuStartCombo" prefWidth="75.0">
+                                             <VBox.margin>
+                                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                             </VBox.margin>
+                                          </ComboBox>
+                                          <ComboBox fx:id="thuEndCombo" prefWidth="75.0" />
+                                       </children>
+                                    </VBox>
+                                    <VBox alignment="CENTER" layoutX="397.0" layoutY="10.0">
+                                       <children>
+                                          <Label text="Friday" />
+                                          <ComboBox fx:id="friStartCombo" prefWidth="75.0">
+                                             <VBox.margin>
+                                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                             </VBox.margin>
+                                          </ComboBox>
+                                          <ComboBox fx:id="friEndCombo" prefWidth="75.0" />
+                                       </children>
+                                    </VBox>
+                                    <VBox alignment="CENTER" layoutX="440.0" layoutY="10.0">
+                                       <children>
+                                          <Label text="Saturday" />
+                                          <ComboBox fx:id="satStartCombo" prefWidth="75.0">
+                                             <VBox.margin>
+                                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                             </VBox.margin>
+                                          </ComboBox>
+                                          <ComboBox fx:id="satEndCombo" prefWidth="75.0" />
+                                       </children>
+                                    </VBox>
+                                    <VBox alignment="CENTER" layoutX="482.0" layoutY="10.0">
+                                       <children>
+                                          <Label text="Sunday" />
+                                          <ComboBox fx:id="sunStartCombo" prefWidth="75.0">
+                                             <VBox.margin>
+                                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                             </VBox.margin>
+                                          </ComboBox>
+                                          <ComboBox fx:id="sunEndCombo" prefWidth="75.0" />
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                              <Region VBox.vgrow="ALWAYS" />
+                              <HBox alignment="CENTER_RIGHT">
+                                 <children>
+                                    <Button mnemonicParsing="false" onAction="#saveHours" text="Save Hours" />
+                                 </children>
+                                 <VBox.margin>
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                 </VBox.margin>
+                              </HBox>
+                           </children>
+                        </VBox>
+                     </children></AnchorPane>
                </content>
                 </Tab>
                 <Tab text="Reports">
