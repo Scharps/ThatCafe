@@ -36,7 +36,7 @@ FriFinish Integer default -1,
 SatStart Integer default -1,
 SatFinish Integer default -1,
 SunStart Integer default -1,
-SunFinishSt Integer default -1,
+SunFinish Integer default -1,
 Primary Key (RotaId)
 );
 
@@ -81,6 +81,7 @@ Create Table Orders(
 CustomerId Integer not null,
 Cooked Boolean not null default 0,
 OrderTotal Decimal(5,2) not null default 0,
+OrderType enum('EatIn','Takeaway','Delivery') not null, 
 Primary key (OrderId),
 Foreign Key (CustomerId) references Customers(CustomerId)
 );
