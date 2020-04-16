@@ -4,7 +4,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.NodeOrientation;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -12,6 +11,7 @@ import javafx.scene.chart.BarChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import javafx.util.Pair;
 import models.*;
 import models.MenuItem;
 import services.AppState;
@@ -20,41 +20,63 @@ import services.DatabaseService;
 import javax.swing.*;
 import java.io.IOException;
 import java.net.URL;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 
 
 public class ManagerController implements Initializable {
-    @FXML private ListView staffMembersListView;
-    @FXML private ComboBox positionCombo;
-    @FXML private TextField nameTextField;
-    @FXML private TextField surnameTextField;
-    @FXML private PasswordField passwordField;
+    @FXML
+    private ListView staffMembersListView;
+    @FXML
+    private ComboBox positionCombo;
+    @FXML
+    private TextField nameTextField;
+    @FXML
+    private TextField surnameTextField;
+    @FXML
+    private PasswordField passwordField;
 
-    @FXML private Label statusLabel;
-    @FXML private ComboBox staffMemberCombo;
-    @FXML private ComboBox monStartCombo;
-    @FXML private ComboBox monEndCombo;
-    @FXML private ComboBox tueStartCombo;
-    @FXML private ComboBox tueEndCombo;
-    @FXML private ComboBox wedStartCombo;
-    @FXML private ComboBox wedEndCombo;
-    @FXML private ComboBox thuStartCombo;
-    @FXML private ComboBox thuEndCombo;
-    @FXML private ComboBox friStartCombo;
-    @FXML private ComboBox friEndCombo;
-    @FXML private ComboBox satStartCombo;
-    @FXML private ComboBox satEndCombo;
-    @FXML private ComboBox sunStartCombo;
-    @FXML private ComboBox sunEndCombo;
+    @FXML
+    private ComboBox staffMemberCombo;
+    @FXML
+    private ComboBox monStartCombo;
+    @FXML
+    private ComboBox monEndCombo;
+    @FXML
+    private ComboBox tueStartCombo;
+    @FXML
+    private ComboBox tueEndCombo;
+    @FXML
+    private ComboBox wedStartCombo;
+    @FXML
+    private ComboBox wedEndCombo;
+    @FXML
+    private ComboBox thuStartCombo;
+    @FXML
+    private ComboBox thuEndCombo;
+    @FXML
+    private ComboBox friStartCombo;
+    @FXML
+    private ComboBox friEndCombo;
+    @FXML
+    private ComboBox satStartCombo;
+    @FXML
+    private ComboBox satEndCombo;
+    @FXML
+    private ComboBox sunStartCombo;
+    @FXML
+    private ComboBox sunEndCombo;
     private Rota staffMemberRota;
 
-    @FXML ListView popularItemsListView;
-    @FXML BarChart barChart;
-    @FXML Label mostActiveCustomerLabel;
-    @FXML Label highestHoursWorkedLabel;
+    @FXML
+    ListView popularItemsListView;
+    @FXML
+    BarChart barChart;
+    @FXML
+    Label mostActiveCustomerLabel;
+    @FXML
+    Label highestHoursWorkedLabel;
 
     private final static String[] TIMES = {
             "None",
@@ -82,16 +104,16 @@ public class ManagerController implements Initializable {
             staffMembersListView.getItems().clear();
             positionCombo.getItems().clear();
             staffMembersListView.getItems().addAll(
-                StaffMember.getAllStaffMembers(DatabaseService.getConnection())
+                    StaffMember.getAllStaffMembers(DatabaseService.getConnection())
             );
             positionCombo.getItems().addAll(StaffPosition.values());
             positionCombo.getSelectionModel().selectFirst();
-        } catch(SQLException e) {
+        } catch (SQLException e) {
             JOptionPane.showMessageDialog(
-                null,
-                "Error in getting staff members.\n" + e.getMessage(),
-                "Error",
-                JOptionPane.ERROR_MESSAGE
+                    null,
+                    "Error in getting staff members.\n" + e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
             );
         }
     }
@@ -100,9 +122,9 @@ public class ManagerController implements Initializable {
         try {
             staffMemberCombo.getItems().clear();
             staffMemberCombo.getItems().addAll(
-                StaffMember.getAllStaffMembers(
-                    DatabaseService.getConnection()
-                )
+                    StaffMember.getAllStaffMembers(
+                            DatabaseService.getConnection()
+                    )
             );
             monStartCombo.getItems().addAll(TIMES);
             monStartCombo.getSelectionModel().selectFirst();
@@ -132,7 +154,7 @@ public class ManagerController implements Initializable {
             sunStartCombo.getSelectionModel().selectFirst();
             sunEndCombo.getItems().addAll(TIMES);
             sunEndCombo.getSelectionModel().selectFirst();
-        } catch(SQLException e) {
+        } catch (SQLException e) {
             JOptionPane.showMessageDialog(
                     null,
                     "Error in getting staff member rota details. " + e.getMessage(),
@@ -144,14 +166,14 @@ public class ManagerController implements Initializable {
     public void onStaffMemberChosen() {
         try {
             StaffMember staffMember = (StaffMember) staffMemberCombo.getSelectionModel().getSelectedItem();
-            if(staffMember != null) {
+            if (staffMember != null) {
                 staffMemberRota = Rota.getRota(
                         DatabaseService.getConnection(),
                         staffMember.getRota().getRotaId()
                 );
                 updateRotaCombos();
             }
-        } catch(SQLException e) {
+        } catch (SQLException e) {
             JOptionPane.showMessageDialog(
                     null,
                     "Error in getting staff member rota details. " + e.getMessage(),
@@ -181,38 +203,38 @@ public class ManagerController implements Initializable {
         StaffMember staffMember = (StaffMember) staffMemberCombo.getSelectionModel().getSelectedItem();
         try {
             Rota.updateRota(
-                DatabaseService.getConnection(),
-                staffMember.getRota().getRotaId(),
-                new Shift(
-                    monStartCombo.getSelectionModel().getSelectedItem().toString(),
-                    monEndCombo.getSelectionModel().getSelectedItem().toString()
-                ),
-                new Shift(
-                    tueStartCombo.getSelectionModel().getSelectedItem().toString(),
-                    tueEndCombo.getSelectionModel().getSelectedItem().toString()
-                ),
-                new Shift(
-                    wedStartCombo.getSelectionModel().getSelectedItem().toString(),
-                    wedEndCombo.getSelectionModel().getSelectedItem().toString()
-                ),
-                new Shift(
-                    thuStartCombo.getSelectionModel().getSelectedItem().toString(),
-                    thuEndCombo.getSelectionModel().getSelectedItem().toString()
-                ),
-                new Shift(
-                    friStartCombo.getSelectionModel().getSelectedItem().toString(),
-                    friEndCombo.getSelectionModel().getSelectedItem().toString()
-                ),
-                new Shift(
-                    satStartCombo.getSelectionModel().getSelectedItem().toString(),
-                    satEndCombo.getSelectionModel().getSelectedItem().toString()
-                ),
-                new Shift(
-                    sunStartCombo.getSelectionModel().getSelectedItem().toString(),
-                    sunEndCombo.getSelectionModel().getSelectedItem().toString()
-                )
+                    DatabaseService.getConnection(),
+                    staffMember.getRota().getRotaId(),
+                    new Shift(
+                            monStartCombo.getSelectionModel().getSelectedItem().toString(),
+                            monEndCombo.getSelectionModel().getSelectedItem().toString()
+                    ),
+                    new Shift(
+                            tueStartCombo.getSelectionModel().getSelectedItem().toString(),
+                            tueEndCombo.getSelectionModel().getSelectedItem().toString()
+                    ),
+                    new Shift(
+                            wedStartCombo.getSelectionModel().getSelectedItem().toString(),
+                            wedEndCombo.getSelectionModel().getSelectedItem().toString()
+                    ),
+                    new Shift(
+                            thuStartCombo.getSelectionModel().getSelectedItem().toString(),
+                            thuEndCombo.getSelectionModel().getSelectedItem().toString()
+                    ),
+                    new Shift(
+                            friStartCombo.getSelectionModel().getSelectedItem().toString(),
+                            friEndCombo.getSelectionModel().getSelectedItem().toString()
+                    ),
+                    new Shift(
+                            satStartCombo.getSelectionModel().getSelectedItem().toString(),
+                            satEndCombo.getSelectionModel().getSelectedItem().toString()
+                    ),
+                    new Shift(
+                            sunStartCombo.getSelectionModel().getSelectedItem().toString(),
+                            sunEndCombo.getSelectionModel().getSelectedItem().toString()
+                    )
             );
-        } catch(SQLException e) {
+        } catch (SQLException e) {
             JOptionPane.showMessageDialog(
                     null,
                     "Error in updating staff member rota details. " + e.getMessage(),
@@ -224,59 +246,59 @@ public class ManagerController implements Initializable {
     public void logoutPushed(ActionEvent event) throws IOException {
         Parent loginParent = FXMLLoader.load(getClass().getResource("/gui/StaffProfiles.fxml"));
         Scene loginScene = new Scene(loginParent);
-        Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
+        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
         window.setScene(loginScene);
         window.show();
     }
 
     public void removeSelected() {
         StaffMember selectedStaffMember = (StaffMember) staffMembersListView.getSelectionModel().getSelectedItem();
-        if(selectedStaffMember != null) {
+        if (selectedStaffMember != null) {
             try {
-                if(selectedStaffMember.getId() != AppState.getAppState().getStaff().getId()) {
+                if (selectedStaffMember.getId() != AppState.getAppState().getStaff().getId()) {
                     StaffMember.deleteStaffMember(DatabaseService.getConnection(), selectedStaffMember.getId());
                     staffMembersListView.getItems().remove(selectedStaffMember);
                 } else {
                     JOptionPane.showMessageDialog(
-                        null,
-                        "Cannot remove yourself!",
-                        "Info", JOptionPane.INFORMATION_MESSAGE
+                            null,
+                            "Cannot remove yourself!",
+                            "Info", JOptionPane.INFORMATION_MESSAGE
                     );
                 }
-            } catch(SQLException e) {
+            } catch (SQLException e) {
                 JOptionPane.showMessageDialog(
-                    null,
-                    "Error in removing staff member. " + e.getMessage(),
-                    "Error", JOptionPane.ERROR_MESSAGE
+                        null,
+                        "Error in removing staff member. " + e.getMessage(),
+                        "Error", JOptionPane.ERROR_MESSAGE
                 );
             }
         } else {
             JOptionPane.showMessageDialog(
-                null,
-                "Select a staff member from the list to remove.",
-                "Info", JOptionPane.INFORMATION_MESSAGE
+                    null,
+                    "Select a staff member from the list to remove.",
+                    "Info", JOptionPane.INFORMATION_MESSAGE
             );
         }
     }
 
     public void createStaffMember() {
-        if(
-            !nameTextField.getText().isEmpty() ||
-            !surnameTextField.getText().isEmpty() ||
-            !passwordField.getText().isEmpty()
-        ) {
+        if (
+                !nameTextField.getText().isEmpty() ||
+                        !surnameTextField.getText().isEmpty() ||
+                        !passwordField.getText().isEmpty()
+                ) {
             try {
                 staffMembersListView.getItems().add(
-                    StaffMember.createStaffMember(
-                        DatabaseService.getConnection(),
-                        passwordField.getText(),
-                        nameTextField.getText(),
-                        surnameTextField.getText(),
-                        (StaffPosition) positionCombo.getSelectionModel().getSelectedItem(),
-                        Rota.createRota(DatabaseService.getConnection())
-                    )
+                        StaffMember.createStaffMember(
+                                DatabaseService.getConnection(),
+                                passwordField.getText(),
+                                nameTextField.getText(),
+                                surnameTextField.getText(),
+                                (StaffPosition) positionCombo.getSelectionModel().getSelectedItem(),
+                                Rota.createRota(DatabaseService.getConnection())
+                        )
                 );
-            } catch(SQLException e) {
+            } catch (SQLException e) {
                 JOptionPane.showMessageDialog(
                         null,
                         "Error in creating a staff member. " + e.getMessage(),
@@ -285,9 +307,9 @@ public class ManagerController implements Initializable {
             }
         } else {
             JOptionPane.showMessageDialog(
-                null,
-                "A field is empty.",
-                "Info", JOptionPane.INFORMATION_MESSAGE
+                    null,
+                    "A field is empty.",
+                    "Info", JOptionPane.INFORMATION_MESSAGE
             );
         }
     }
@@ -303,14 +325,14 @@ public class ManagerController implements Initializable {
         try {
             popularItemsListView.getItems().clear();
             popularItemsListView.getItems().addAll(
-                MenuItem.getTopMostSold(
-                    DatabaseService.getConnection(),
-                    5
-                )
+                    MenuItem.getTopMostSold(
+                            DatabaseService.getConnection(),
+                            5
+                    )
             );
             initializeBarChart();
             initializeStats();
-        } catch(SQLException e) {
+        } catch (SQLException e) {
             JOptionPane.showMessageDialog(
                     null,
                     "Error retrieving report information.",
@@ -321,12 +343,18 @@ public class ManagerController implements Initializable {
 
     private void initializeStats() throws SQLException {
         Customer mostActive = Customer.getMostActive(DatabaseService.getConnection());
-        if(mostActive != null) {
+        if (mostActive != null) {
             mostActiveCustomerLabel.setText(
                     String.format("%s %s", mostActive.getFirstName(), mostActive.getLastName())
             );
         } else {
             mostActiveCustomerLabel.setText("No customers!");
+        }
+        Pair<StaffMember, Integer> mostHours = StaffMember.getTopStaffMemberPast7Days(DatabaseService.getConnection());
+        if(mostHours != null) {
+            highestHoursWorkedLabel.setText(String.format("%s: %s %s, %d hours", mostHours.getKey().getPosition(), mostHours.getKey().getFirstName(), mostHours.getKey().getLastName(), mostHours.getValue()));
+        } else {
+            highestHoursWorkedLabel.setText("Your staff haven't worked any hours\n in the past week.");
         }
     }
 

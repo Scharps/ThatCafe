@@ -1,9 +1,6 @@
 package models;
 
-import com.mysql.cj.protocol.Resultset;
 import services.DatabaseService;
-
-import javax.xml.crypto.Data;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

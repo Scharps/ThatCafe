@@ -270,16 +270,12 @@
                                           <Insets bottom="20.0" />
                                        </VBox.margin>
                                     </HBox>
-                                    <HBox layoutX="20.0" layoutY="20.0">
+                                    <VBox>
                                        <children>
                                           <Label text="Highest hours worked:" />
-                                          <Label fx:id="highestHoursWorkedLabel">
-                                             <HBox.margin>
-                                                <Insets left="5.0" />
-                                             </HBox.margin>
-                                          </Label>
+                                          <Label fx:id="highestHoursWorkedLabel" />
                                        </children>
-                                    </HBox>
+                                    </VBox>
                                     <Region VBox.vgrow="ALWAYS" />
                                     <Button mnemonicParsing="false" onAction="#initializeReports" text="Refresh" />
                                  </children>

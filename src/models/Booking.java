@@ -3,10 +3,8 @@ package models;
 import java.sql.*;
 import java.time.Instant;
 import java.time.Period;
-import java.time.temporal.TemporalAmount;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.PropertyPermission;
 
 public class Booking {
     private int id;

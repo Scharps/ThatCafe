@@ -1,12 +1,13 @@
 package models;
 
+import javafx.util.Pair;
 import services.DatabaseService;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.time.Instant;
+import java.time.Period;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class StaffMember extends User {
     private StaffPosition position;
@@ -50,33 +51,32 @@ public class StaffMember extends User {
         ResultSet rs = st.executeQuery();
         rs.next();
         return staffMemberFromResultSet(rs);
+    }
 
+    public static Pair<StaffMember, Integer> getTopStaffMemberPast7Days(Connection conn) throws SQLException {
+        PreparedStatement st = conn.prepareStatement("SELECT StaffId, WorkedHours\n" +
+                "FROM HoursWorked\n" +
+                "WHERE DateWorked >= ?\n" +
+                "GROUP BY StaffId\n" +
+                "ORDER BY WorkedHours DESC\n" +
+                "LIMIT 1");
+        st.setDate(1, new Date(Date.from(Instant.now().minus(Period.ofWeeks(1))).getTime()));
+        ResultSet rs = st.executeQuery();
+        Pair<StaffMember, Integer> hoursWorked = null;
+        while(rs.next()) {
+            hoursWorked = new Pair<>(
+                StaffMember.getStaffMember(conn, rs.getInt("StaffId")),
+                rs.getInt("WorkedHours")
+            );
+        }
+        return hoursWorked;
     }
 
     public static StaffMember getStaffMember(Connection conn, int id) throws SQLException {
-        StaffMember staffMember = null;
         PreparedStatement st = conn.prepareStatement("SELECT * FROM Staff WHERE StaffID = ?");
         st.setInt(1, id);
         ResultSet rs = st.executeQuery();
         if(rs.next()) {
-            String p = rs.getString("StaffPos");
-            StaffPosition position;
-            switch (p) {
-                case "Chef":
-                    position = StaffPosition.Chef;
-                    break;
-                case "Driver":
-                    position = StaffPosition.Driver;
-                    break;
-                case "Manager":
-                    position = StaffPosition.Manager;
-                    break;
-                case "Waiter":
-                    position = StaffPosition.Waiter;
-                    break;
-                default:
-                    position = StaffPosition.Waiter;
-            }
             return staffMemberFromResultSet(rs);
         }
         else{
