@@ -106,7 +106,7 @@ public class Customer extends User {
                 "LIMIT 1");
         ResultSet rs = st.executeQuery();
         if(rs.next()) {
-            return customerFromResultSet(rs);
+            return getCustomer(conn, rs.getInt("CustomerId"));
         } else {
             return null;
         }

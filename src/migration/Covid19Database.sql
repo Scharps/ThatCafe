@@ -13,7 +13,7 @@ CREATE TABLE Address(
 Create Table Customers (
     CustomerId Integer auto_increment,  
     Username varchar(255) not null unique,  
-    Password varchar(255) not null unique,  
+    Password varchar(255) not null,  
     FName varchar(255) not null,  
     LName varchar(255) not null,
     AddressId Integer not  null,  
@@ -80,6 +80,7 @@ Create Table Orders(
     CustomerId Integer not null,  
     Cooked Boolean not null default 0,
     OrderTotal Decimal(5,2) not null default 0,
+    OrderType enum('Eatin','Takeaway','Delivery') not null,
     Primary key (OrderId),  
     Foreign Key (CustomerId) references Customers(CustomerId)
 );
