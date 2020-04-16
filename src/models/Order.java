@@ -11,7 +11,7 @@ public class Order {
     private int orderId;
     private Timestamp orderDate;
     private int customerId;
-    private boolean cooked = false;
+    private boolean cooked;
     private double orderTotal;
     private OrderType orderType;
 
@@ -85,9 +85,6 @@ public class Order {
         return this.orderDate;
     }
 
-    public boolean isCompleted() {
-        return this.cooked;
-    }
 
     public double getOrderTotal() {
         return orderTotal;
@@ -102,4 +99,7 @@ public class Order {
     }
 
 
+    public boolean isCooked() {
+        return cooked;
+    }
 }

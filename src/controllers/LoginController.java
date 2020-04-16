@@ -90,7 +90,6 @@ public class LoginController {
         registerpassword.setStyle("");
         confirmpassword.setStyle("");
         boolean check = true;
-
         if(registerusername.getText().equals("")) {
             registererror.appendText("Please input username \n");
             registerusername.setStyle("-fx-border-color: red;");
@@ -137,7 +136,6 @@ public class LoginController {
             confirmpassword.setStyle("-fx-border-color: red;");
             check = false;
         }
-
         if(check == true) {
             try {
                 Connection conn = DatabaseService.getConnection();
@@ -163,7 +161,6 @@ public class LoginController {
             catch(Exception ex) {
                 registererror.setText("ERROR");
             }
-
         }
     }
 

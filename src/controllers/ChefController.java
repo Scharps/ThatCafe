@@ -13,10 +13,8 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+import models.*;
 import models.MenuItem;
-import models.MenuItemType;
-import models.Order;
-import models.OrderType;
 import services.AppState;
 import services.DatabaseService;
 
@@ -30,6 +28,7 @@ import java.util.ResourceBundle;
 
 public class ChefController implements Initializable {
     private AppState appState = AppState.getAppState();
+    private StaffMember currentStaff = appState.getStaff();
 
     @FXML private TableView<Order> currentOrderTable;
     @FXML private TableColumn<Order, Integer> currentOrderNo;
@@ -184,8 +183,14 @@ public class ChefController implements Initializable {
         try{
             Connection conn = DatabaseService.getConnection();
             ResultSet rs = Order.getUncookedOrders(conn);
-            while(rs.next()){
-                currentOrders.add(Order.createOrder(rs.getInt(1), rs.getTimestamp(2), rs.getInt(3), rs.getBoolean(4), rs.getDouble(5), OrderType.valueOf(rs.getString(6))));
+            while(rs.next()) {
+                if (rs.getString(6) == "Delivery") {
+                    if (DeliveryOrder.isApproved(conn, rs.getInt(1))) {
+                        currentOrders.add(Order.createOrder(rs.getInt(1), rs.getTimestamp(2), rs.getInt(3), rs.getBoolean(4), rs.getDouble(5), OrderType.valueOf(rs.getString(6))));
+                    }
+                } else {
+                    currentOrders.add(Order.createOrder(rs.getInt(1), rs.getTimestamp(2), rs.getInt(3), rs.getBoolean(4), rs.getDouble(5), OrderType.valueOf(rs.getString(6))));
+                }
             }
             conn.close();
         }catch (SQLException se){

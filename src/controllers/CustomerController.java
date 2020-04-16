@@ -179,12 +179,12 @@ public class CustomerController implements Initializable {
             sum += item.getPrice();
         }
 
-        if(orderType.getValue() == "Delivery" || orderType.getValue() == "Takeaway"){
+        if(orderType.getValue().equals("Delivery") || orderType.getValue().equals("Takeaway")){
             try {
                 Connection conn = DatabaseService.getConnection();
                 Order.createOrder(conn, sqlordertime, customerId, sum, OrderType.valueOf(orderType.getValue()));
                 int orderId = DatabaseService.getLastInsert(conn);
-                if(orderType.getValue() == "Delivery"){
+                if(orderType.getValue().equals("Delivery")){
                     Timestamp sqldeliverytime = DeliveryOrder.estimateDeliveryTime(ordertime);
                     DeliveryOrder.createDeliveryOrder(conn, orderId, sqldeliverytime);
                     orderMessage.setText("Thank you for your order: \nEstimated Delivery time will be " + sqldeliverytime);
@@ -310,6 +310,7 @@ public class CustomerController implements Initializable {
             addressLine1.setText(address.getFirstLine());
             city.setText(address.getCity());
             postCode.setText(address.getPostCode());
+            conn.close();
         }catch (SQLException se){
 
         }
@@ -446,6 +447,7 @@ public class CustomerController implements Initializable {
 
         if(selectedTable != null) {
             try {
+
                 Booking.createBooking(
                     DatabaseService.getConnection(),
                     selectedTable.getId(),
