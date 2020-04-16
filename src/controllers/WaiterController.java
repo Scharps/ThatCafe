@@ -193,6 +193,14 @@ public class WaiterController implements Initializable {
         initialiseCurrentEatInOrders();
     }
 
+    public void refreshTakeaway(ActionEvent event) {
+        initialiseCurrentTakeawayOrders();
+    }
+
+    public void refreshDelivery(ActionEvent event) {
+        initialiseCurrentDeliveryOrders();
+    }
+
     public void confirmServed(ActionEvent event){
         EatInOrder selectedOrder = currentEatinTable.getSelectionModel().getSelectedItem();
         if(selectedOrder != null) {
