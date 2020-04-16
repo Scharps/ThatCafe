@@ -111,6 +111,7 @@ Foreign Key (CustomerId) references Customers(CustomerId)
 create table EatinOrders(
   OrderID Integer,
 TableID Integer not null,
+Served Boolean default 0,
 Primary Key (OrderId),
 Foreign Key (OrderId) references Orders(OrderId),
 Foreign Key (TableId) references CafeTables(TableId)

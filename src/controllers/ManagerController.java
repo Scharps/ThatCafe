@@ -219,7 +219,7 @@ public class ManagerController implements Initializable {
         StaffMember selectedStaffMember = (StaffMember) staffMembersListView.getSelectionModel().getSelectedItem();
         if(selectedStaffMember != null) {
             try {
-                if(selectedStaffMember.getId() != AppState.getAppState().getUser().getId()) {
+                if(selectedStaffMember.getId() != AppState.getAppState().getStaff().getId()) {
                     StaffMember.deleteStaffMember(DatabaseService.getConnection(), selectedStaffMember.getId());
                     staffMembersListView.getItems().remove(selectedStaffMember);
                 } else {

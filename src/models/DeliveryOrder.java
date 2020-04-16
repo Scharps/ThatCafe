@@ -33,6 +33,17 @@ public class DeliveryOrder extends Order {
         }
     }
 
+    public static boolean isApproved(Connection conn, int orderId) throws SQLException{
+        PreparedStatement st = conn.prepareStatement("SELECT Approved FROM DeliveryOrders WHERE OrderId = ?");
+        st.setInt(1, orderId);
+        ResultSet rs = st.executeQuery();
+        if(rs.next()){
+            return rs.getBoolean(1);
+        }
+        else return false;
+
+    }
+
     public Timestamp getEstimatedDeliveryTime() {
         return this.estimatedDeliveryTime;
     }

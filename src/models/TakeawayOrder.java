@@ -29,9 +29,17 @@ public class TakeawayOrder extends Order {
         }
     }
 
-    public Timestamp getPickUpTime() {
-        return this.pickupTime;
+    public static ResultSet getUncollected(Connection conn) throws SQLException{
+        PreparedStatement st = conn.prepareStatement("SELECT o.OrderId, o.OrderDate, o.CustomerId, o.Cooked, o.OrderTotal, t.PickUpTime, t.Collected FROM Orders o, TakeawayOrders t WHERE o.OrderId = t.OrderId AND t.Collected = 0 ");
+        ResultSet rs = st.executeQuery();
+        return rs;
     }
+
+    public static TakeawayOrder orderFromRS(ResultSet rs) throws SQLException{
+        return new TakeawayOrder(rs.getInt(1), rs.getTimestamp(2), rs.getInt(3), rs.getBoolean(4), rs.getDouble(5), OrderType.Takeaway, rs.getTimestamp(6), rs.getBoolean(7));
+    }
+
+
 
     public static TakeawayOrder createTakeawayOrder(ArrayList<Integer> items, int customerId, Date pickupTime) {
         throw new UnsupportedOperationException("createTakeawayOrder() is not yet implemented");
@@ -47,5 +55,13 @@ public class TakeawayOrder extends Order {
 
     public static boolean updateTakeawayOrder(int id, ArrayList<Integer> items, int customerId, Date pickupTime) {
         throw new UnsupportedOperationException("updateTakeawayOrder() is not yet implemented");
+    }
+
+    public Timestamp getPickupTime() {
+        return pickupTime;
+    }
+
+    public boolean isCollected() {
+        return collected;
     }
 }

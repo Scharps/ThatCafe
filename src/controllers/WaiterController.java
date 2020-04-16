@@ -18,6 +18,7 @@ import models.MenuItem;
 import services.AppState;
 import services.DatabaseService;
 
+import javax.print.DocFlavor;
 import java.io.IOException;
 import java.io.PipedReader;
 import java.net.URL;
@@ -29,6 +30,8 @@ import java.util.Calendar;
 import java.util.ResourceBundle;
 
 public class WaiterController implements Initializable {
+    private AppState appState = AppState.getAppState();
+    private StaffMember currentStaff = appState.getStaff();
     @FXML private TableView<MenuItem> foodTable;
     @FXML private TableColumn<MenuItem, String> foodName;
     @FXML private TableColumn<MenuItem, Double> foodPrice;
@@ -58,6 +61,17 @@ public class WaiterController implements Initializable {
     @FXML private TableColumn<Booking, Integer> todayTableNo;
     @FXML private TableColumn<Booking, Integer> todayGuestNo;
 
+    @FXML private TableView<EatInOrder> currentEatinTable;
+    @FXML private TableColumn<EatInOrder, Integer> eatinNo;
+    @FXML private TableColumn<EatInOrder, Timestamp> eatinTime;
+    @FXML private TableColumn<EatInOrder, Integer> eatinTableNo;
+    @FXML private TableColumn<EatInOrder, Boolean> eatinCooked;
+
+    @FXML private TableView<TakeawayOrder> currentTakeawayTable;
+    @FXML private TableColumn<TakeawayOrder, Integer> takeawayNo;
+    @FXML private TableColumn<TakeawayOrder, Timestamp> pickUp;
+    @FXML private TableColumn<TakeawayOrder, Boolean> takeawayCooked;
+
     private final ObservableList<MenuItem> fooditems = FXCollections.observableArrayList();
     private final ObservableList<MenuItem> orderitems = FXCollections.observableArrayList();
     private final ObservableList<MenuItem> specialitems = FXCollections.observableArrayList();
@@ -65,7 +79,9 @@ public class WaiterController implements Initializable {
     private final ObservableList<MenuItem> drinksitems = FXCollections.observableArrayList();
     private final ObservableList<Booking> unconfirmedBookings = FXCollections.observableArrayList();
     private final ObservableList<Booking> todaysBookings = FXCollections.observableArrayList();
-    //private ObservableList<String> deliveryorders = FXCollections.observableArrayList();
+    private ObservableList<EatInOrder> eatinOrders = FXCollections.observableArrayList();
+    private ObservableList<TakeawayOrder> takeawayOrders = FXCollections.observableArrayList();
+    private ObservableList<DeliveryOrder> deliveryOrders = FXCollections.observableArrayList();
 
     public void logoutPushed(ActionEvent event) throws IOException {
         Parent loginParent = FXMLLoader.load(getClass().getResource("/gui/StaffProfiles.fxml"));
@@ -150,16 +166,39 @@ public class WaiterController implements Initializable {
         }
     }
 
+    public void refreshEatIn(ActionEvent event){
+        initialiseCurrentEatInOrders();
+    }
+
+    public void confirmServed(ActionEvent event){
+        EatInOrder selectedOrder = currentEatinTable.getSelectionModel().getSelectedItem();
+        if(selectedOrder != null) {
+            if (!selectedOrder.isCooked()) {
+
+            } else {
+                try {
+                    Connection conn = DatabaseService.getConnection();
+                    EatInOrder.confirmedServed(conn, selectedOrder.getOrderId());
+                    conn.close();
+                    initialiseCurrentEatInOrders();
+                } catch (SQLException se) {
+
+                }
+            }
+        }
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        AppState appState = AppState.getAppState();
-        namelabel.setText(appState.getUser().getFirstName());
+
+        namelabel.setText(currentStaff.getFirstName());
 
         tableno.setItems(tables);
         initialiseMenu();
         initialiseUnconfirmedBookings();
         initialiseTodaysBookings();
-
+        initialiseCurrentEatInOrders();
+        initialiseCurrentTakeawayOrders();
         try {
             Connection conn = DatabaseService.getConnection();
             Statement st = conn.createStatement();
@@ -230,8 +269,48 @@ public class WaiterController implements Initializable {
             }
             conn.close();
         }catch (SQLException se){
+        }
+    }
+
+    public void initialiseCurrentEatInOrders(){
+        eatinOrders.clear();
+        eatinNo.setCellValueFactory(new PropertyValueFactory<EatInOrder, Integer>("orderId"));
+        eatinTime.setCellValueFactory(new PropertyValueFactory<EatInOrder, Timestamp>("orderTime"));
+        eatinTableNo.setCellValueFactory(new PropertyValueFactory<EatInOrder, Integer>("tableId"));
+        eatinCooked.setCellValueFactory(new PropertyValueFactory<EatInOrder, Boolean>("served"));
+        currentEatinTable.setItems(eatinOrders);
+        try{
+            Connection conn = DatabaseService.getConnection();
+            ResultSet rs = EatInOrder.getUnServed(conn);
+            while (rs.next()){
+                eatinOrders.add(EatInOrder.orderFromRS(rs));
+            }
+            conn.close();
+        } catch (SQLException se){}
+    }
+
+
+
+    public void initialiseCurrentTakeawayOrders(){
+        takeawayOrders.clear();
+
+        takeawayNo.setCellValueFactory(new PropertyValueFactory<TakeawayOrder, Integer>("orderId"));
+        pickUp.setCellValueFactory(new PropertyValueFactory<TakeawayOrder, Timestamp>("pickupTime"));
+        takeawayCooked.setCellValueFactory(new PropertyValueFactory<TakeawayOrder, Boolean>("cooked"));
+        currentTakeawayTable.setItems(takeawayOrders);
+        try{
+            Connection conn = DatabaseService.getConnection();
+            ResultSet rs = TakeawayOrder.getUncollected(conn);
+            while(rs.next()){
+                takeawayOrders.add(TakeawayOrder.orderFromRS(rs));
+            }
+            conn.close();
+        } catch (SQLException se){
 
         }
+    }
+
+    public void initialiseCurrentDeliveryOrders(){
 
     }
 
