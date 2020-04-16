@@ -11,32 +11,32 @@ Primary key(AddressId)
 );
 
 Create Table Customers (
-    CustomerId Integer auto_increment,  
-    Username varchar(255) not null unique,  
-    Password varchar(255) not null unique,  
-    FName varchar(255) not null,  
+    CustomerId Integer auto_increment,
+    Username varchar(255) not null unique,
+    Password varchar(255) not null unique,
+    FName varchar(255) not null,
     LName varchar(255) not null,
-    AddressId Integer not  null,
-    Primary key (CustomerId),
-    Foreign Key (AddressId) references Address(AddressId)
+AddressId Integer not  null,
+Primary key (CustomerId),
+Foreign Key (AddressId) references Address(AddressId)
 );
 
 create table Rota(
-  RotaId Integer AUTO_INCREMENT,
-MonStart Integer default -1,
-MonFinish Integer default -1,
-TueStart Integer default -1,
-TueFinish Integer default -1,
-WedStart Integer default -1,
-WedFinish Integer default -1,
-ThuStart Integer default -1,
-ThuFinish Integer default -1,
-FriStart Integer default -1,
-FriFinish Integer default -1,
-SatStart Integer default -1,
-SatFinish Integer default -1,
-SunStart Integer default -1,
-SunFinish Integer default -1,
+	RotaId Integer AUTO_INCREMENT,
+	MonStart VARCHAR(5) default "None",
+	MonFinish VARCHAR(5) default "None",
+	TueStart VARCHAR(5) default "None",
+	TueFinish VARCHAR(5) default "None",
+	WedStart VARCHAR(5) default "None",
+	WedFinish VARCHAR(5) default "None",
+	ThuStart VARCHAR(5) default "None",
+	ThuFinish VARCHAR(5) default "None",
+	FriStart VARCHAR(5) default "None",
+	FriFinish VARCHAR(5) default "None",
+	SatStart VARCHAR(5) default "None",
+	SatFinish VARCHAR(5) default "None",
+	SunStart VARCHAR(5) default "None",
+	SunFinish VARCHAR(5) default "None",
 Primary Key (RotaId)
 );
 
@@ -81,7 +81,6 @@ Create Table Orders(
 CustomerId Integer not null,
 Cooked Boolean not null default 0,
 OrderTotal Decimal(5,2) not null default 0,
-OrderType enum('EatIn','Takeaway','Delivery') not null, 
 Primary key (OrderId),
 Foreign Key (CustomerId) references Customers(CustomerId)
 );
