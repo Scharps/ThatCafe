@@ -25,7 +25,7 @@ public class MenuItem {
 
     public static void createNewItem(Connection conn, String name, String itemType, double price, boolean special){
         try{
-            PreparedStatement st = conn.prepareStatement("INSERT INTO MenuItems (ItemName, ItemType, Price, SpecialSpecial) VALUES (?,?,?,?)");
+            PreparedStatement st = conn.prepareStatement("INSERT INTO MenuItems (ItemName, ItemType, Price, Special) VALUES (?,?,?,?)");
             st.setString(1, name);
             st.setString(2, itemType);
             st.setDouble(3, price);
@@ -47,7 +47,7 @@ public class MenuItem {
 
     public static ResultSet getOrderItems(Connection conn, int orderId){
         try{
-            PreparedStatement st = conn.prepareStatement("SELECT m.ItemId, m.ItemName, m.ItemType, m.Price, m.Sold, m.SpecialSpecial FROM OrderedItems o, MenuItems m WHERE o.OrderId=? AND m.ItemId=o.ItemId");
+            PreparedStatement st = conn.prepareStatement("SELECT m.ItemId, m.ItemName, m.ItemType, m.Price, m.Sold, m.Special FROM OrderedItems o, MenuItems m WHERE o.OrderId=? AND m.ItemId=o.ItemId");
             st.setInt(1,orderId);
             ResultSet rs = st.executeQuery();
             return rs;
