@@ -1,5 +1,6 @@
 package models;
 
+import com.mysql.cj.protocol.Resultset;
 import services.DatabaseService;
 
 import javax.xml.crypto.Data;
@@ -72,11 +73,11 @@ public class Customer extends User {
         ResultSet rs = st.executeQuery();
         if(rs.next()) {
             return new Customer(
-                    rs.getInt("CustomerId"),
-                    rs.getString("Username"),
-                    rs.getString("FName"),
-                    rs.getString("LName"),
-                    Address.getAddress(DatabaseService.getConnection(), rs.getInt("AddressId"))
+                rs.getInt("CustomerId"),
+                rs.getString("Username"),
+                rs.getString("FName"),
+                rs.getString("LName"),
+                Address.getAddress(DatabaseService.getConnection(), rs.getInt("AddressId"))
             );
         } else {
             return null;
@@ -100,6 +101,21 @@ public class Customer extends User {
         }
     }
 
+    public static Customer getMostActive(Connection conn) throws SQLException {
+        PreparedStatement st = conn.prepareStatement("SELECT CustomerId, COUNT(CustomerId) AS 'Count'\n" +
+                "FROM Orders\n" +
+                "GROUP BY CustomerId\n" +
+                "ORDER BY 'Count' DESC\n" +
+                "LIMIT 1");
+        ResultSet rs = st.executeQuery();
+        if(rs.next()) {
+            return customerFromResultSet(rs);
+        } else {
+            return null;
+        }
+
+    }
+
     public static void deleteCustomer(Connection conn, int id) throws SQLException {
         PreparedStatement st = conn.prepareStatement("DELETE FROM Customers WHERE CustomerId = ?");
         st.setInt(1, id);
@@ -117,5 +133,15 @@ public class Customer extends User {
         st.setInt(5, address.getId());
         st.setInt(6, id);
         st.executeUpdate();
+    }
+
+    private static Customer customerFromResultSet(ResultSet rs) throws SQLException {
+        return new Customer(
+                rs.getInt("CustomerId"),
+                rs.getString("Username"),
+                rs.getString("FName"),
+                rs.getString("LName"),
+                Address.getAddress(DatabaseService.getConnection(), rs.getInt("AddressId"))
+        );
     }
 }

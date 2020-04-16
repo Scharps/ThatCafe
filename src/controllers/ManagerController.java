@@ -4,22 +4,25 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.NodeOrientation;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
-import models.Rota;
-import models.Shift;
-import models.StaffMember;
-import models.StaffPosition;
+import models.*;
+import models.MenuItem;
 import services.AppState;
 import services.DatabaseService;
 
 import javax.swing.*;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.ResourceBundle;
 
 
@@ -48,6 +51,11 @@ public class ManagerController implements Initializable {
     @FXML private ComboBox sunEndCombo;
     private Rota staffMemberRota;
 
+    @FXML ListView popularItemsListView;
+    @FXML BarChart barChart;
+    @FXML Label mostActiveCustomerLabel;
+    @FXML Label highestHoursWorkedLabel;
+
     private final static String[] TIMES = {
             "None",
             "8:00",
@@ -69,7 +77,7 @@ public class ManagerController implements Initializable {
             "00:00"
     };
 
-    public void initializeStaffMembersTab() {
+    private void initializeStaffMembersTab() {
         try {
             staffMembersListView.getItems().clear();
             positionCombo.getItems().clear();
@@ -125,18 +133,24 @@ public class ManagerController implements Initializable {
             sunEndCombo.getItems().addAll(TIMES);
             sunEndCombo.getSelectionModel().selectFirst();
         } catch(SQLException e) {
-
+            JOptionPane.showMessageDialog(
+                    null,
+                    "Error in getting staff member rota details. " + e.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE
+            );
         }
     }
 
     public void onStaffMemberChosen() {
         try {
             StaffMember staffMember = (StaffMember) staffMemberCombo.getSelectionModel().getSelectedItem();
-            staffMemberRota = Rota.getRota(
-                    DatabaseService.getConnection(),
-                    staffMember.getRota().getRotaId()
-            );
-            updateRotaCombos();
+            if(staffMember != null) {
+                staffMemberRota = Rota.getRota(
+                        DatabaseService.getConnection(),
+                        staffMember.getRota().getRotaId()
+                );
+                updateRotaCombos();
+            }
         } catch(SQLException e) {
             JOptionPane.showMessageDialog(
                     null,
@@ -282,5 +296,50 @@ public class ManagerController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         initializeStaffMembersTab();
         initializeRotaTab();
+        initializeReports();
     }
+
+    public void initializeReports() {
+        try {
+            popularItemsListView.getItems().clear();
+            popularItemsListView.getItems().addAll(
+                MenuItem.getTopMostSold(
+                    DatabaseService.getConnection(),
+                    5
+                )
+            );
+            initializeBarChart();
+            initializeStats();
+        } catch(SQLException e) {
+            JOptionPane.showMessageDialog(
+                    null,
+                    "Error retrieving report information.",
+                    "Error", JOptionPane.ERROR_MESSAGE
+            );
+        }
+    }
+
+    private void initializeStats() throws SQLException {
+        Customer mostActive = Customer.getMostActive(DatabaseService.getConnection());
+        if(mostActive != null) {
+            mostActiveCustomerLabel.setText(
+                    String.format("%s %s", mostActive.getFirstName(), mostActive.getLastName())
+            );
+        } else {
+            mostActiveCustomerLabel.setText("No customers!");
+        }
+    }
+
+    private void initializeBarChart() throws SQLException {
+        barChart.getXAxis().setLabel("Date");
+        barChart.getXAxis().setTickLabelRotation(70);
+        barChart.getYAxis().setLabel("Number of Bookings");
+        barChart.setLegendVisible(false);
+        HashMap<String, Integer> bookings = Booking.getBusyPeriods(DatabaseService.getConnection());
+        barChart.getData().clear();
+        XYChart.Series dataSeries = new XYChart.Series();
+        bookings.forEach((k, v) -> dataSeries.getData().add(new XYChart.Data<>(k, v)));
+        barChart.getData().add(dataSeries);
+    }
+
 }

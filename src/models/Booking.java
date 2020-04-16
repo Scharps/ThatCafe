@@ -1,6 +1,9 @@
 package models;
 
 import java.sql.*;
+import java.time.Instant;
+import java.time.Period;
+import java.time.temporal.TemporalAmount;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.PropertyPermission;
@@ -218,6 +221,25 @@ public class Booking {
             bookings.add(bookingFromResultSet(rs));
         }
         return bookings;
+    }
+
+    public static HashMap<String, Integer> getBusyPeriods(Connection conn) throws SQLException {
+        PreparedStatement st = conn.prepareStatement("SELECT BookingDate, Count(*) Count\n" +
+                "FROM Bookings\n" +
+                "WHERE BookingDate >= ? AND BookingDate <= ?\n" +
+                "GROUP BY BookingDate\n" +
+                "ORDER BY BookingDate");
+        st.setDate(1, new Date(Date.from(Instant.now().minus(Period.ofWeeks(1))).getTime()));
+        st.setDate(2, new Date(Date.from(Instant.now().plus(Period.ofWeeks(1))).getTime()));
+        ResultSet rs = st.executeQuery();
+        HashMap<String, Integer> periods = new HashMap<>();
+        while(rs.next()) {
+            periods.put(
+                    rs.getDate("BookingDate").toString(),
+                    rs.getInt("Count")
+            );
+        }
+        return periods;
     }
 
     private static Booking bookingFromResultSet(ResultSet rs) throws SQLException {

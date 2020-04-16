@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class MenuItem {
     private int id;
@@ -57,7 +58,7 @@ public class MenuItem {
 
     public static ResultSet getMenuItems(Connection conn, boolean special){
         try{
-            PreparedStatement st = conn.prepareStatement("SELECT * FROM MenuItems WHERE SpecialSpecial = ?");
+            PreparedStatement st = conn.prepareStatement("SELECT * FROM MenuItems WHERE Special = ?");
             st.setBoolean(1, special);
             ResultSet rs = st.executeQuery();
             return rs;
@@ -73,7 +74,6 @@ public class MenuItem {
     public String getName() {
         return this.name;
     }
-
 
     public MenuItemType getMenuItemType() {
         return this.itemType;
@@ -107,7 +107,33 @@ public class MenuItem {
         throw new UnsupportedOperationException("getMenuItem() is not yet implemented");
     }
 
+    public static ArrayList<MenuItem> getTopMostSold(Connection conn, int top) throws SQLException {
+        PreparedStatement st = conn.prepareStatement("SELECT * FROM MenuItems ORDER BY Sold DESC");
+        ResultSet rs = st.executeQuery();
+        int i = 0;
+        ArrayList<MenuItem> mostSold = new ArrayList<>();
+        while(rs.next() && i < top) {
+            mostSold.add(menuItemFromResultSet(rs));
+            ++i;
+        }
+        return mostSold;
+    }
 
+    private static MenuItem menuItemFromResultSet(ResultSet rs) throws SQLException{
+        return new MenuItem(
+            rs.getInt("ItemId"),
+            rs.getString("ItemName"),
+            MenuItemType.valueOf(rs.getString("ItemType")),
+            rs.getDouble("Price"),
+            rs.getInt("Sold"),
+            rs.getBoolean("Special")
+        );
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Name: %s\t\tAmount Sold: %s", name, numberSold);
+    }
 
     public static boolean updateMenuItem(int id, String name, String description, MenuItemType itemType, double price, int numberSold) {
         throw new UnsupportedOperationException("updateMenuItem() is not yet implemented");
