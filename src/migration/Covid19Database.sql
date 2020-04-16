@@ -81,6 +81,7 @@ Create Table Orders(
 CustomerId Integer not null,
 Cooked Boolean not null default 0,
 OrderTotal Decimal(5,2) not null default 0,
+OrderType enum('Eatin','Takeaway','Delivery'),
 Primary key (OrderId),
 Foreign Key (CustomerId) references Customers(CustomerId)
 );
