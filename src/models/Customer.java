@@ -48,6 +48,23 @@ public class Customer extends User {
         return customer;
     }
 
+    public int getAddressId(Connection conn){
+        try{
+            PreparedStatement st = conn.prepareStatement("Select AddressId FROM Customers WHERE CustomerId = ?");
+            st.setInt(1, this.getId());
+            ResultSet rs = st.executeQuery();
+            if(rs.next()) {
+                return rs.getInt(1);
+            }
+            else{
+                return 0;
+            }
+        }catch (SQLException se){
+            System.out.println("HFGDH");
+            return 0;
+
+        }
+    }
     public static Customer customerLogin(Connection conn, String username, String password) throws SQLException{
         PreparedStatement st = conn.prepareStatement("select * from Customers where Username = ? and Password = ?");
         st.setString(1, username);

@@ -1,5 +1,6 @@
 package controllers;
 
+import com.mysql.cj.conf.ConnectionPropertiesTransform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -75,6 +76,20 @@ public class CustomerController implements Initializable {
     @FXML private TextArea orderMessage;
     @FXML private ListView availableSlotsList;
 
+    @FXML private Label username;
+    @FXML private Label firstName;
+    @FXML private Label lastName;
+    @FXML private Label addressLine1;
+    @FXML private Label city;
+    @FXML private Label postCode;
+
+    @FXML private PasswordField currentPassword;
+    @FXML private PasswordField newPassword;
+    @FXML private PasswordField confirmNewPassword;
+    @FXML private TextField newLine1;
+    @FXML private TextField newCity;
+    @FXML private TextField newPostCode;
+
     private final ObservableList<MenuItem> fooditems = FXCollections.observableArrayList();
     private final ObservableList<MenuItem> orderitems = FXCollections.observableArrayList();
     private final ObservableList<MenuItem> drinksitems = FXCollections.observableArrayList();
@@ -84,6 +99,7 @@ public class CustomerController implements Initializable {
     private final ObservableList<MenuItem> orderHistoryItems = FXCollections.observableArrayList();
 
     private AppState appState = AppState.getAppState();
+    private Customer currentCustomer = appState.getCustomer();
 
     public void logoutPushed(ActionEvent event) throws IOException {
         Parent loginParent = FXMLLoader.load(getClass().getResource("/gui/Login_ui.fxml"));
@@ -91,6 +107,41 @@ public class CustomerController implements Initializable {
         Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
         window.setScene(loginScene);
         window.show();
+    }
+
+    public void changePassword(ActionEvent event){
+        if(currentPassword.getText().equals("") || newPassword.getText().equals("") || confirmNewPassword.getText().equals("")){
+        } else if(!newPassword.getText().equals(confirmNewPassword.getText())){
+        } else{
+            try{
+                Connection conn = DatabaseService.getConnection();
+                if(DatabaseService.confirmPassword(conn, currentPassword.getText(), currentCustomer.getId())){
+                    DatabaseService.updateCustomerPassword(conn, newPassword.getText(), currentCustomer.getId());
+                }
+                conn.close();
+                currentPassword.clear();
+                newPassword.clear();
+                confirmNewPassword.clear();
+            } catch (Exception se){
+
+            }
+        }
+    }
+
+    public void changeAddress(ActionEvent event){
+        if(newLine1.getText().equals("") || newCity.getText().equals("") || newPostCode.getText().equals("")){
+        } else {
+            try{
+                Connection conn = DatabaseService.getConnection();
+                Address.updateAddress(conn, currentCustomer.getAddressId(conn), newLine1.getText(), newCity.getText(), newPostCode.getText());
+                conn.close();
+                newLine1.clear();
+                newCity.clear();
+                newPostCode.clear();
+                initialiseDetails();
+            }catch (SQLException se){
+            }
+        }
     }
 
     public void foodSelect(MouseEvent event){
@@ -121,7 +172,7 @@ public class CustomerController implements Initializable {
     }
 
     public void confirmOrder(ActionEvent event){
-        int customerId = appState.getUser().getId();
+        int customerId = currentCustomer.getId();
         LocalDateTime ordertime = LocalDateTime.now();
         Timestamp sqlordertime = Timestamp.valueOf(ordertime);
         double sum = 0.0;
@@ -132,7 +183,7 @@ public class CustomerController implements Initializable {
         if(orderType.getValue() == "Delivery" || orderType.getValue() == "Takeaway"){
             try {
                 Connection conn = DatabaseService.getConnection();
-                Order.createOrder(conn, sqlordertime, customerId, sum);
+                Order.createOrder(conn, sqlordertime, customerId, sum, OrderType.valueOf(orderType.getValue()));
                 int orderId = DatabaseService.getLastInsert(conn);
                 if(orderType.getValue() == "Delivery"){
                     Timestamp sqldeliverytime = DeliveryOrder.estimateDeliveryTime(ordertime);
@@ -159,7 +210,7 @@ public class CustomerController implements Initializable {
     }
 
     public void confirmReOrder(ActionEvent event){
-        int customerId = appState.getUser().getId();
+        int customerId = currentCustomer.getId();
         LocalDateTime ordertime = LocalDateTime.now();
         Timestamp sqlordertime = Timestamp.valueOf(ordertime);
         double sum = 0.0;
@@ -170,7 +221,7 @@ public class CustomerController implements Initializable {
         if(reorderType.getValue() == "Delivery" || reorderType.getValue() == "Takeaway"){
             try {
                 Connection conn = DatabaseService.getConnection();
-                Order.createOrder(conn, sqlordertime, customerId, sum);
+                Order.createOrder(conn, sqlordertime, customerId, sum , OrderType.valueOf(reorderType.getValue()));
                 int orderId = DatabaseService.getLastInsert(conn);
                 if(reorderType.getValue() == "Delivery"){
                     Timestamp sqldeliverytime = DeliveryOrder.estimateDeliveryTime(ordertime);
@@ -230,14 +281,15 @@ public class CustomerController implements Initializable {
         orderType.setItems(orderOption);
         reorderType.setItems(orderOption);
 
+        initialiseDetails();
         initializeBookingTab();
         initialiseMenu();
 
         try {
             Connection conn = DatabaseService.getConnection();
-            ResultSet rs = Order.getOrderHistory(conn, appState.getUser().getId());
+            ResultSet rs = Order.getOrderHistory(conn, currentCustomer.getId());
             while(rs.next()){
-                orderHistory.add(Order.createOrder(rs.getInt(1), rs.getTimestamp(2), rs.getInt(3), rs.getBoolean(4), rs.getDouble(5)));
+                orderHistory.add(Order.createOrder(rs.getInt(1), rs.getTimestamp(2), rs.getInt(3), rs.getBoolean(4), rs.getDouble(5), OrderType.valueOf(rs.getString(6))));
             }
             conn.close();
 
@@ -248,7 +300,23 @@ public class CustomerController implements Initializable {
         }
 
     }
+    public void initialiseDetails(){
+        username.setText(currentCustomer.getUsername());
+        firstName.setText(currentCustomer.getFirstName());
+        lastName.setText(currentCustomer.getLastName());
+        try{
+            Connection conn = DatabaseService.getConnection();
+            int addressId = currentCustomer.getAddressId(conn);
+            Address address = Address.getAddress(conn, addressId);
+            addressLine1.setText(address.getFirstLine());
+            city.setText(address.getCity());
+            postCode.setText(address.getPostCode());
+        }catch (SQLException se){
 
+        }
+
+
+    }
     public void initialiseMenu(){
         fooditems.clear();
         drinksitems.clear();
@@ -319,7 +387,7 @@ public class CustomerController implements Initializable {
         try {
             customerBookings = Booking.getBookingsForCustomer(
                     DatabaseService.getConnection(),
-                    appState.getUser().getId()
+                    currentCustomer.getId()
             );
             myBookingsStatus.setText("Status: Retrieved bookings.");
             myBookingsList.getItems().clear();
@@ -384,7 +452,7 @@ public class CustomerController implements Initializable {
                     selectedTable.getId(),
                     hourChosen,
                     Date.valueOf(dateChosen),
-                    appState.getUser().getId(),
+                    currentCustomer.getId(),
                     guestCount
                 );
                 bookingStatusLabel.setText("Booking requested!");

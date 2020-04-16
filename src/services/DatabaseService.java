@@ -1,5 +1,7 @@
 package services;
 
+import javafx.scene.control.PasswordField;
+
 import java.sql.*;
 
 public class DatabaseService {
@@ -32,5 +34,32 @@ public class DatabaseService {
             System.out.println(e);
         }
         return conn;
+    }
+
+    public static Boolean confirmPassword(Connection conn, String password, int customerId){
+        try{
+            PreparedStatement st = conn.prepareStatement("SELECT * FROM Customers WHERE Password = ? AND CustomerId = ?");
+            st.setString(1, password);
+            st.setInt(2, customerId);
+            ResultSet rs = st.executeQuery();
+            if(rs.next()){
+                return true;
+            } else {
+                return false;
+            }
+        }catch (SQLException se){
+            return false;
+        }
+    }
+
+    public static void updateCustomerPassword(Connection conn, String newPassword, int customerId){
+        try{
+            PreparedStatement st = conn.prepareStatement("UPDATE Customers SET Password = ? WHERE CustomerId = ?");
+            st.setString(1, newPassword);
+            st.setInt(2, customerId);
+            st.executeUpdate();
+        }catch (SQLException se){
+
+        }
     }
 }

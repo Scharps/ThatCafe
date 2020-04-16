@@ -16,6 +16,7 @@ import javafx.stage.Stage;
 import models.MenuItem;
 import models.MenuItemType;
 import models.Order;
+import models.OrderType;
 import services.AppState;
 import services.DatabaseService;
 
@@ -33,6 +34,7 @@ public class ChefController implements Initializable {
     @FXML private TableView<Order> currentOrderTable;
     @FXML private TableColumn<Order, Integer> currentOrderNo;
     @FXML private TableColumn<Order, Timestamp> currentOrderDate;
+    @FXML private TableColumn<Order, String> currentOrderType;
 
     @FXML private TableView<MenuItem> currentItemTable;
     @FXML private TableColumn<MenuItem, String> currentOrderItem;
@@ -175,14 +177,15 @@ public class ChefController implements Initializable {
 
     public void initialiseCurrentOrders(){
         currentOrderNo.setCellValueFactory(new PropertyValueFactory<Order, Integer>("orderId"));
-        currentOrderDate.setCellValueFactory((new PropertyValueFactory<Order, Timestamp>("orderDate")));
+        currentOrderDate.setCellValueFactory(new PropertyValueFactory<Order, Timestamp>("orderDate"));
+        currentOrderType.setCellValueFactory(new PropertyValueFactory<Order, String>("orderType"));
         currentOrderTable.setItems(currentOrders);
 
         try{
             Connection conn = DatabaseService.getConnection();
             ResultSet rs = Order.getUncookedOrders(conn);
             while(rs.next()){
-                currentOrders.add(Order.createOrder(rs.getInt(1), rs.getTimestamp(2), rs.getInt(3), rs.getBoolean(4), rs.getDouble(5)));
+                currentOrders.add(Order.createOrder(rs.getInt(1), rs.getTimestamp(2), rs.getInt(3), rs.getBoolean(4), rs.getDouble(5), OrderType.valueOf(rs.getString(6))));
             }
             conn.close();
         }catch (SQLException se){

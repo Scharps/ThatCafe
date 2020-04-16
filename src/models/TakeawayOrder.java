@@ -8,8 +8,8 @@ public class TakeawayOrder extends Order {
     private Timestamp pickupTime;
     private boolean collected;
 
-    private TakeawayOrder(int orderId, Timestamp orderDate, int customerId, boolean cooked, double orderTotal, Timestamp pickupTime, boolean collected) {
-        super(orderId, orderDate, customerId, cooked, orderTotal);
+    private TakeawayOrder(int orderId, Timestamp orderDate, int customerId, boolean cooked, double orderTotal, OrderType orderType, Timestamp pickupTime, boolean collected) {
+        super(orderId, orderDate, customerId, cooked, orderTotal, orderType);
         this.pickupTime = pickupTime;
         this.collected = collected;
     }

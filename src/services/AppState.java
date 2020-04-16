@@ -1,12 +1,16 @@
 package services;
 
+import models.StaffMember;
 import models.User;
+import models.Customer;
 
 public final class AppState {
 
     private static AppState appState_;
     private User user_;
     private AppState(){};
+    private Customer customer_;
+    private StaffMember staff_;
 
     public static AppState getAppState() {
         if(appState_ == null) {
@@ -18,8 +22,15 @@ public final class AppState {
     public void setUser(User user) {
         user_ = user;
     }
-
+    public void setCustomer(Customer customer){
+        customer_ = customer;
+    }
+    public void setStaff(StaffMember staff){
+        staff_ = staff;
+    }
     public User getUser() {
         return user_;
     }
+    public Customer getCustomer(){return customer_;}
+    public StaffMember getStaff(){return staff_;}
 }

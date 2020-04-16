@@ -6,8 +6,8 @@ import java.util.ArrayList;
 public class EatInOrder extends Order {
     private int tableId;
 
-    private EatInOrder(int orderId, Timestamp orderDate, int customerId, boolean cooked, double orderTotal, int tableId) {
-        super(orderId, orderDate, customerId, cooked, orderTotal);
+    private EatInOrder(int orderId, Timestamp orderDate, int customerId, boolean cooked, double orderTotal, OrderType orderType, int tableId) {
+        super(orderId, orderDate, customerId, cooked, orderTotal, orderType);
         this.tableId = tableId;     
     }
 

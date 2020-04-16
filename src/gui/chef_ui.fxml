@@ -12,12 +12,13 @@
                <content>
                   <AnchorPane>
                      <children>
-                        <HBox alignment="CENTER" prefHeight="500.0" prefWidth="800.0" spacing="50.0">
+                        <HBox alignment="CENTER" prefHeight="500.0" prefWidth="966.0" spacing="50.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
-                              <TableView fx:id="currentOrderTable" onMouseClicked="#selectOrder" prefHeight="470.0" prefWidth="294.0">
+                              <TableView fx:id="currentOrderTable" onMouseClicked="#selectOrder" prefHeight="470.0" prefWidth="435.0">
                                 <columns>
-                                  <TableColumn fx:id="currentOrderNo" prefWidth="106.0" text="Order No" />
-                                  <TableColumn fx:id="currentOrderDate" prefWidth="103.0" text="Order Time" />
+                                  <TableColumn fx:id="currentOrderNo" prefWidth="91.0" text="Order No" />
+                                  <TableColumn fx:id="currentOrderDate" prefWidth="118.0" text="Order Time" />
+                                    <TableColumn fx:id="currentOrderType" prefWidth="117.0" text="Order Type" />
                                 </columns>
                               </TableView>
                               <VBox spacing="15.0">
