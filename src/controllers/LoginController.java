@@ -61,7 +61,7 @@ public class LoginController {
                 conn.close();
                 if(confirmLogin != null) {
                     AppState appState = AppState.getAppState();
-                    appState.setUser(confirmLogin);
+                    appState.setCustomer(confirmLogin);
                     Parent customerParent = FXMLLoader.load(getClass().getResource("/gui/CustomerUI.fxml"));
                     Scene customerScene = new Scene(customerParent);
                     Stage window = (Stage)((Node) event.getSource()).getScene().getWindow();

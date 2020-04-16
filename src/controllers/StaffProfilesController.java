@@ -43,7 +43,7 @@ public class StaffProfilesController implements Initializable{
             StaffMember staff = StaffMember.getStaffMember(conn, selected_id);
             conn.close();
             StaffPosition position = staff.getPosition();
-            appState.setUser(staff);
+            appState.setStaff(staff);
 
              if (position == StaffPosition.Manager) {
                  Parent waiterParent = FXMLLoader.load(getClass().getResource("/gui/Manager_ui.fxml"));
