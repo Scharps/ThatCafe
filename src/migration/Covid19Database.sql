@@ -36,7 +36,7 @@ FriFinish Integer default -1,
 SatStart Integer default -1,
 SatFinish Integer default -1,
 SunStart Integer default -1,
-SunFinishSt Integer default -1,
+SunFinish Integer default -1,
 Primary Key (RotaId)
 );
 
