@@ -13,7 +13,7 @@ CREATE TABLE Address(
 Create Table Customers (
     CustomerId Integer auto_increment,  
     Username varchar(255) not null unique,  
-    Password varchar(255) not null unique,  
+    Password varchar(255) not null,  
     FName varchar(255) not null,  
     LName varchar(255) not null,
     AddressId Integer not  null,  
