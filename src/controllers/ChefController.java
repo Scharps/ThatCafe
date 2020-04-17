@@ -293,10 +293,10 @@ public class ChefController implements Initializable {
             while(rs.next()) {
                 if (rs.getString(6) == "Delivery") {
                     if (DeliveryOrder.isApproved(conn, rs.getInt(1))) {
-                        currentOrders.add(Order.createOrder(rs.getInt(1), rs.getTimestamp(2), rs.getInt(3), rs.getBoolean(4), rs.getDouble(5), OrderType.valueOf(rs.getString(6))));
+                        currentOrders.add(Order.orderFromRS(rs));
                     }
                 } else {
-                    currentOrders.add(Order.createOrder(rs.getInt(1), rs.getTimestamp(2), rs.getInt(3), rs.getBoolean(4), rs.getDouble(5), OrderType.valueOf(rs.getString(6))));
+                    currentOrders.add(Order.orderFromRS(rs));
                 }
             }
             conn.close();
