@@ -41,6 +41,11 @@ public class LoginController {
     @FXML private TextField stafflogin;
     @FXML private TextField staffpassword;
 
+    /**
+     * Loads CustomerUI if correct credentials are input to Customer login TextFields
+     * @param event
+     * @throws IOException
+     */
     public void loginpushed(ActionEvent event) throws IOException {
         customerloginerror.setText("");
         customerusername.setStyle("");
@@ -85,6 +90,9 @@ public class LoginController {
         }
     }
 
+    /**
+     * Registers Customer account if suitable information is input into Register TextFields.
+     */
     public void registerPushed() {
         registererror.setText("");
         registerusername.setStyle("");
@@ -170,6 +178,11 @@ public class LoginController {
     }
 
 
+    /**
+     * Login for Staff Members, if correct credentials then loads StaffProfiles page.
+     * @param event
+     * @throws IOException
+     */
     public void staffLogin(ActionEvent event) throws IOException{
         String LOGIN = "Staff";
         String PASSWORD = "1234";

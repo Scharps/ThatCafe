@@ -144,6 +144,9 @@ public class ManagerController implements Initializable {
             "00:00"
     };
 
+    /**
+     * Initialises list of Staff members.
+     */
     private void initializeStaffMembersTab() {
         try {
             staffMembersListView.getItems().clear();
@@ -166,6 +169,9 @@ public class ManagerController implements Initializable {
         }
     }
 
+    /**
+     * Edit details of staff members in Staff members list.
+     */
     public void updateDetails() {
         if(staffMembersListView.getSelectionModel().getSelectedItem() != null) {
             StaffMember sm = (StaffMember) staffMembersListView.getSelectionModel().getSelectedItem();
@@ -175,6 +181,9 @@ public class ManagerController implements Initializable {
         }
     }
 
+    /**
+     * Safe changes to Staff members details made in updateDetails method.
+     */
     public void saveDetails() {
         if(staffMembersListView.getSelectionModel().getSelectedItem() != null) {
             StaffMember sm = (StaffMember) staffMembersListView.getSelectionModel().getSelectedItem();
@@ -205,6 +214,9 @@ public class ManagerController implements Initializable {
         }
     }
 
+    /**
+     * Initialises information in rota tab.
+     */
     public void initializeRotaTab() {
         try {
             staffMemberCombo.getItems().clear();
@@ -250,6 +262,9 @@ public class ManagerController implements Initializable {
         }
     }
 
+    /**
+     * Displays current rota for staff member selected.
+     */
     public void onStaffMemberChosen() {
         try {
             StaffMember staffMember = (StaffMember) staffMemberCombo.getSelectionModel().getSelectedItem();
@@ -269,6 +284,9 @@ public class ManagerController implements Initializable {
         }
     }
 
+    /**
+     * Update rota information
+     */
     private void updateRotaCombos() {
         monStartCombo.getSelectionModel().select(staffMemberRota.getMondayShift().getStartTime());
         monEndCombo.getSelectionModel().select(staffMemberRota.getMondayShift().getFinishTime());
@@ -286,6 +304,9 @@ public class ManagerController implements Initializable {
         sunEndCombo.getSelectionModel().select(staffMemberRota.getSundayShift().getFinishTime());
     }
 
+    /**
+     * Allows staff member to input their hours worked for a specified day.
+     */
     public void saveWorkedHours() {
         if(!workedHoursDatePicker.getValue().isAfter(LocalDate.now())) {
             try {
@@ -311,6 +332,10 @@ public class ManagerController implements Initializable {
         }
     }
 
+    /**
+     * Initialises Rota information for current Staff member.
+     * @throws SQLException
+     */
     public void initializeMyRota() throws SQLException {
         Rota myRota = Rota.getRota(
             DatabaseService.getConnection(),
@@ -333,6 +358,9 @@ public class ManagerController implements Initializable {
         workedHoursDatePicker.getChronology().dateNow();
     }
 
+    /**
+     * Save Rota for Staff member selected.
+     */
     public void saveHours() {
         StaffMember staffMember = (StaffMember) staffMemberCombo.getSelectionModel().getSelectedItem();
         try {
@@ -377,7 +405,11 @@ public class ManagerController implements Initializable {
         }
     }
 
-
+    /**
+     * Returns user to previous page.
+     * @param event
+     * @throws IOException
+     */
     public void logoutPushed(ActionEvent event) throws IOException {
         Parent loginParent = FXMLLoader.load(getClass().getResource("/gui/StaffProfiles.fxml"));
         Scene loginScene = new Scene(loginParent);
@@ -386,6 +418,9 @@ public class ManagerController implements Initializable {
         window.show();
     }
 
+    /**
+     * Delete selected staff member.
+     */
     public void removeSelected() {
         StaffMember selectedStaffMember = (StaffMember) staffMembersListView.getSelectionModel().getSelectedItem();
         if (selectedStaffMember != null) {
@@ -416,6 +451,9 @@ public class ManagerController implements Initializable {
         }
     }
 
+    /**
+     * Creates a staff member with inputted details and selected staff position.
+     */
     public void createStaffMember() {
         if (
             !nameTextField.getText().isEmpty() ||
@@ -449,6 +487,11 @@ public class ManagerController implements Initializable {
         }
     }
 
+    /**
+     * Initialises information when page is loaded.
+     * @param url
+     * @param resourceBundle
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         initializeStaffMembersTab();
@@ -456,6 +499,9 @@ public class ManagerController implements Initializable {
         initializeReports();
     }
 
+    /**
+     * Initialises information on reports tab, gets list of most sold items.
+     */
     public void initializeReports() {
         try {
             popularItemsListView.getItems().clear();
@@ -477,7 +523,10 @@ public class ManagerController implements Initializable {
         }
     }
 
-
+    /**
+     * Initialises report information for most active customer and staff member with highest hours worked.
+     * @throws SQLException
+     */
     private void initializeStats() throws SQLException {
         Customer mostActive = Customer.getMostActive(DatabaseService.getConnection());
         if (mostActive != null) {
@@ -495,6 +544,10 @@ public class ManagerController implements Initializable {
         }
     }
 
+    /**
+     * Initialises bar chart that displays busiest restaurant periods.
+     * @throws SQLException
+     */
     private void initializeBarChart() throws SQLException {
         barChart.getXAxis().setLabel("Date");
         barChart.getXAxis().setTickLabelRotation(70);

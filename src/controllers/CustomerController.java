@@ -127,6 +127,11 @@ public class CustomerController implements Initializable {
     private final AppState appState = AppState.getAppState();
     private final Customer currentCustomer = appState.getCustomer();
 
+    /**
+     * Returns user to previous page.
+     * @param event
+     * @throws IOException
+     */
     public void logoutPushed(ActionEvent event) throws IOException {
         Parent loginParent = FXMLLoader.load(getClass().getResource("/gui/Login_ui.fxml"));
         Scene loginScene = new Scene(loginParent);
@@ -135,6 +140,9 @@ public class CustomerController implements Initializable {
         window.show();
     }
 
+    /**
+     * Changes Customer Password based on information input to change-password PasswordFields
+     */
     public void changePassword() {
         if (currentPassword.getText().equals("") || newPassword.getText().equals("") || confirmNewPassword.getText().equals("")) {
         } else if (!newPassword.getText().equals(confirmNewPassword.getText())) {
@@ -160,6 +168,9 @@ public class CustomerController implements Initializable {
         }
     }
 
+    /**
+     * Updates address details linked to customer.
+     */
     public void changeAddress() {
         if (newLine1.getText().equals("") || newCity.getText().equals("") || newPostCode.getText().equals("")) {
         } else {
@@ -182,6 +193,9 @@ public class CustomerController implements Initializable {
         }
     }
 
+    /**
+     * Adds MenuItem from FoodItems table to OrderItems table.
+     */
     public void foodSelect() {
         MenuItem itemSelected = foodTable.getSelectionModel().getSelectedItem();
         orderitems.add(itemSelected);
@@ -189,6 +203,9 @@ public class CustomerController implements Initializable {
         ordertable.setItems(orderitems);
     }
 
+    /**
+     * Adds MenuItem from drinksItems table to OrderItems table.
+     */
     public void drinkSelect() {
         MenuItem itemSelected = drinkTable.getSelectionModel().getSelectedItem();
         orderitems.add(itemSelected);
@@ -196,6 +213,9 @@ public class CustomerController implements Initializable {
         ordertable.setItems(orderitems);
     }
 
+    /**
+     * Adds MenuItem from SpecialItems table to OrderItems table.
+     */
     public void specialSelect() {
         MenuItem itemSelected = specialsTable.getSelectionModel().getSelectedItem();
         orderitems.add(itemSelected);
@@ -203,12 +223,18 @@ public class CustomerController implements Initializable {
         ordertable.setItems(orderitems);
     }
 
+    /**
+     * Removes MenuItem from OrderItems table.
+     */
     public void itemRemove() {
         MenuItem itemSelected = ordertable.getSelectionModel().getSelectedItem();
         orderitems.remove(itemSelected);
         ordertable.setItems(orderitems);
     }
 
+    /**
+     * Places Takeaway or Delivery order for MenuItems in orderItems table, depending on selected orderType.
+     */
     public void confirmOrder() {
         int customerId = currentCustomer.getId();
         LocalDateTime ordertime = LocalDateTime.now();
@@ -251,6 +277,9 @@ public class CustomerController implements Initializable {
         }
     }
 
+    /**
+     * Reorders a previous Order from Order History. Order Type depends on type selected.
+     */
     public void confirmReOrder() {
         int customerId = currentCustomer.getId();
         LocalDateTime ordertime = LocalDateTime.now();
@@ -293,6 +322,9 @@ public class CustomerController implements Initializable {
         }
     }
 
+    /**
+     * Select previous order from Order History table, displays MenuItems of that order.
+     */
     public void selectHistoricOrder() {
         Order selectedOrder = orderHistoryTable.getSelectionModel().getSelectedItem();
         orderHistoryItems.clear();
@@ -319,7 +351,11 @@ public class CustomerController implements Initializable {
 
     }
 
-
+    /**
+     * Initialises page when loaded.
+     * @param url
+     * @param resourceBundle
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         orderHistoryNo.setCellValueFactory(new PropertyValueFactory<>("orderId"));
@@ -356,6 +392,9 @@ public class CustomerController implements Initializable {
 
     }
 
+    /**
+     * Initialise information in My Details tab.
+     */
     private void initialiseDetails() {
         username.setText(currentCustomer.getUsername());
         firstName.setText(currentCustomer.getFirstName());
@@ -380,6 +419,9 @@ public class CustomerController implements Initializable {
 
     }
 
+    /**
+     * Initialises MenuItems in Menu Tables.
+     */
     private void initialiseMenu() {
         fooditems.clear();
         drinksitems.clear();
@@ -421,7 +463,9 @@ public class CustomerController implements Initializable {
 
     }
 
-
+    /**
+     * Allows customer to cancel selected Booking from their my Bookings table.
+     */
     public void cancelSelectedBooking() {
         int selectedIndex = myBookingsList.getSelectionModel().getSelectedIndex();
         if (selectedIndex != -1) {
@@ -452,6 +496,9 @@ public class CustomerController implements Initializable {
         }
     }
 
+    /**
+     *
+     */
     public void updateMyBookings() {
         try {
             customerBookings = Booking.getBookingsForCustomer(
@@ -482,7 +529,9 @@ public class CustomerController implements Initializable {
         }
     }
 
-
+    /**
+     * Displays tables available to book at a specified time and date.
+     */
     public void viewAvailableSlots() {
         String stringInt = timeCombo.getValue().toString();
         int count = 0;
@@ -512,6 +561,9 @@ public class CustomerController implements Initializable {
         }
     }
 
+    /**
+     * Requests a booking for chosen table and timeslot.
+     */
     public void requestBooking() {
         Table selectedTable = (Table) availableSlotsList.getSelectionModel().getSelectedItem();
         if (selectedTable != null) {
@@ -534,6 +586,9 @@ public class CustomerController implements Initializable {
         }
     }
 
+    /**
+     * Initialises the times available to book for.
+     */
     private void initializeBookingTab() {
         for (int i = Booking.OPENING_TIME; i < Booking.CLOSING_TIME; i++) {
             timeCombo.getItems().add(String.format("%d:00", i));

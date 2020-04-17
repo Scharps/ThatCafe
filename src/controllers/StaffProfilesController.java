@@ -29,6 +29,11 @@ public class StaffProfilesController implements Initializable{
     @FXML private ListView stProfiles;
     private final ObservableList<String> items = FXCollections.observableArrayList();
 
+    /**
+     * Returns user to previous page.
+     * @param event
+     * @throws IOException
+     */
     public void logoutpushed(ActionEvent event) throws IOException {
         Parent loginParent = FXMLLoader.load(getClass().getResource("/gui/Login_ui.fxml"));
         Scene loginScene = new Scene(loginParent);
@@ -37,6 +42,10 @@ public class StaffProfilesController implements Initializable{
         window.show();
     }
 
+    /**
+     * Selects profile from List of Staff Members, depending on Staff Position of selected profile loads next page.
+     * @param event
+     */
     public void profileSelect(MouseEvent event) {
         AppState appState = AppState.getAppState();
         Object profileSelected = stProfiles.getSelectionModel().getSelectedItem();
@@ -82,6 +91,11 @@ public class StaffProfilesController implements Initializable{
         }
     }
 
+    /**
+     * Initialises list of Staff Members when page is loaded.
+     * @param url
+     * @param resourceBundle
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 

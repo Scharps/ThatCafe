@@ -137,6 +137,11 @@ public class WaiterController implements Initializable {
     @FXML
     private Button saveButton;
 
+    /**
+     * Returns user to previous page.
+     * @param event
+     * @throws IOException
+     */
     public void logoutPushed(ActionEvent event) throws IOException {
         Parent loginParent = FXMLLoader.load(getClass().getResource("/gui/StaffProfiles.fxml"));
         Scene loginScene = new Scene(loginParent);
@@ -145,6 +150,9 @@ public class WaiterController implements Initializable {
         window.show();
     }
 
+    /**
+     * Adds MenuItem from FoodItems table to OrderItems table.
+     */
     public void foodSelect(){
         MenuItem itemSelected = foodTable.getSelectionModel().getSelectedItem();
         orderitems.add(itemSelected);
@@ -152,6 +160,9 @@ public class WaiterController implements Initializable {
         ordertable.setItems(orderitems);
     }
 
+    /**
+     * Adds MenuItem from drinksItems table to OrderItems table.
+     */
     public void drinkSelect(){
         MenuItem itemSelected = drinkTable.getSelectionModel().getSelectedItem();
         orderitems.add(itemSelected);
@@ -159,6 +170,9 @@ public class WaiterController implements Initializable {
         ordertable.setItems(orderitems);
     }
 
+    /**
+     * Adds MenuItem from SpecialItems table to OrderItems table.
+     */
     public void specialSelect(){
         MenuItem itemSelected = specialsTable.getSelectionModel().getSelectedItem();
         orderitems.add(itemSelected);
@@ -166,12 +180,18 @@ public class WaiterController implements Initializable {
         ordertable.setItems(orderitems);
     }
 
+    /**
+     * Removes MenuItem from OrderItems table.
+     */
     public void itemRemove(){
         MenuItem itemSelected = ordertable.getSelectionModel().getSelectedItem();
         orderitems.remove(itemSelected);
         ordertable.setItems(orderitems);
     }
 
+    /**
+     * Places Eatin Order for customer seated at specified table.
+     */
     public void confirmOrder(){
         LocalDateTime orderTime = LocalDateTime.now();
         LocalDate bookingDate = LocalDate.now();
@@ -206,6 +226,9 @@ public class WaiterController implements Initializable {
         }
     }
 
+    /**
+     * Sets selected unConfirmed booking as confirmed.
+     */
     public void confirmBooking(){
         Booking selectedBooking = bookingTable.getSelectionModel().getSelectedItem();
         if(selectedBooking != null){
@@ -221,18 +244,30 @@ public class WaiterController implements Initializable {
         }
     }
 
+    /**
+     * Refresh current Eatin orders table.
+     */
     public void refreshEatIn(){
         initialiseCurrentEatInOrders();
     }
 
+    /**
+     * Refresh current Takeaway orders table.
+     */
     public void refreshTakeaway() {
         initialiseCurrentTakeawayOrders();
     }
 
+    /**
+     * Refresh current Delivery orders table.
+     */
     public void refreshDelivery() {
         initialiseCurrentDeliveryOrders();
     }
 
+    /**
+     * Allows waiter to confirm an Eatin Order as Served, only if it has been Cooked.
+     */
     public void confirmServed(){
         EatInOrder selectedOrder = currentEatinTable.getSelectionModel().getSelectedItem();
         if(selectedOrder != null) {
@@ -252,6 +287,9 @@ public class WaiterController implements Initializable {
         }
     }
 
+    /**
+     * Select Eatin Order from current Eatin Orders table. Displays MenuItems for that order.
+     */
     public void eatinSelect(){
         EatInOrder selectedOrder = currentEatinTable.getSelectionModel().getSelectedItem();
         orderItemsList.clear();
@@ -274,6 +312,9 @@ public class WaiterController implements Initializable {
         }
     }
 
+    /**
+     * Allows waiter to confirm a Takeaway order as having been Collected, only if order has been Cooked.
+     */
     public void confirmCollected(){
         TakeawayOrder selectedOrder = currentTakeawayTable.getSelectionModel().getSelectedItem();
         if(selectedOrder != null) {
@@ -293,6 +334,9 @@ public class WaiterController implements Initializable {
         }
     }
 
+    /**
+     * Select Takeaway Order from current Takeaway Orders table. Displays details for that order.
+     */
     public void takeawaySelect(){
         TakeawayOrder selectedOrder = currentTakeawayTable.getSelectionModel().getSelectedItem();
         orderItemsList.clear();
@@ -318,6 +362,9 @@ public class WaiterController implements Initializable {
         }
     }
 
+    /**
+     * Allows staff member to input their hours worked for a specified day.
+     */
     public void saveWorkedHours() {
         if(!workedHoursDatePicker.getValue().isAfter(LocalDate.now())) {
             try {
@@ -343,6 +390,10 @@ public class WaiterController implements Initializable {
         }
     }
 
+    /**
+     * Initialises Rota information for current Staff member.
+     * @throws SQLException
+     */
     public void initializeMyRota() throws SQLException {
         Rota myRota = Rota.getRota(
                 DatabaseService.getConnection(),
@@ -365,6 +416,9 @@ public class WaiterController implements Initializable {
         workedHoursDatePicker.getChronology().dateNow();
     }
 
+    /**
+     * Allows waiter to approve a request for a delivery order made by a customer.
+     */
     public void approveDelivery(){
         DeliveryOrder selectedOrder = currentDeliveryTable.getSelectionModel().getSelectedItem();
         if(selectedOrder != null) {
@@ -380,6 +434,9 @@ public class WaiterController implements Initializable {
         }
     }
 
+    /**
+     * Select Delivery Order from current Delivery Orders table. Displays details for that order.
+     */
     public void deliverySelect(){
         DeliveryOrder selectedOrder = currentDeliveryTable.getSelectionModel().getSelectedItem();
         orderItemsList.clear();
@@ -407,6 +464,11 @@ public class WaiterController implements Initializable {
         }
     }
 
+    /**
+     * Initialises information when page is loaded.
+     * @param url
+     * @param resourceBundle
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
@@ -439,6 +501,9 @@ public class WaiterController implements Initializable {
 
     }
 
+    /**
+     * Initialises MenuItems in Menu Tables.
+     */
     private void initialiseMenu(){
         fooditems.clear();
         drinksitems.clear();
@@ -475,6 +540,9 @@ public class WaiterController implements Initializable {
 
     }
 
+    /**
+     * Initialises unconfirmed Bookings in Confirm Bookings table.
+     */
     private void initialiseUnconfirmedBookings(){
         unconfirmedBookings.clear();
 
@@ -497,6 +565,9 @@ public class WaiterController implements Initializable {
         }
     }
 
+    /**
+     * Initialises unserved Eatin orders in current Eatin orders table.
+     */
     private void initialiseCurrentEatInOrders(){
         eatinOrders.clear();
         eatinNo.setCellValueFactory(new PropertyValueFactory<>("orderId"));
@@ -516,8 +587,9 @@ public class WaiterController implements Initializable {
         }
     }
 
-
-
+    /**
+     * Initialises uncollected Takeaway orders in current Takeaway orders table.
+     */
     private void initialiseCurrentTakeawayOrders(){
         takeawayOrders.clear();
         takeawayNo.setCellValueFactory(new PropertyValueFactory<>("orderId"));
@@ -536,6 +608,9 @@ public class WaiterController implements Initializable {
         }
     }
 
+    /**
+     * Initialises Delivery orders not yet assigned to a driver in current Delivery orders table.
+     */
     private void initialiseCurrentDeliveryOrders(){
         deliveryOrders.clear();
         deliveryNo.setCellValueFactory(new PropertyValueFactory<>("orderId"));
@@ -554,6 +629,9 @@ public class WaiterController implements Initializable {
         }
     }
 
+    /**
+     * Initialises confirmed bookings for todays date in Todays bookings table.
+     */
     private void initialiseTodaysBookings(){
         todaysBookings.clear();
 

@@ -69,6 +69,11 @@ public class DriverController implements Initializable {
     @FXML
     private Button saveButton;
 
+    /**
+     * Initialises information when page is loaded.
+     * @param url
+     * @param resourceBundle
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
@@ -83,6 +88,10 @@ public class DriverController implements Initializable {
         }
     }
 
+    /**
+     * Initialises Delivery orders that are yet to be assigned a driver in Available orders list.
+     * @throws SQLException
+     */
     public void initializeAvailable() throws SQLException {
         availableList.getItems().clear();
         Connection conn = DatabaseService.getConnection();
@@ -93,6 +102,9 @@ public class DriverController implements Initializable {
         conn.close();
     }
 
+    /**
+     * Assign a selected order in Available orders list to current driver.
+     */
     public void assignToDriver() {
         DeliveryOrder deliveryOrder = (DeliveryOrder) availableList.getSelectionModel().getSelectedItem();
         if(deliveryOrder != null) {
@@ -108,6 +120,9 @@ public class DriverController implements Initializable {
         }
     }
 
+    /**
+     * Unassign assigned Delivery order from current driver.
+     */
     public void unassignFromDriver() {
         DeliveryOrder deliveryOrder = (DeliveryOrder) assignedList.getSelectionModel().getSelectedItem();
         if(deliveryOrder != null) {
@@ -123,6 +138,9 @@ public class DriverController implements Initializable {
         }
     }
 
+    /**
+     * Mark assigned delivery order as having been delivered.
+     */
     public void markDelivered() {
         DeliveryOrder deliveryOrder = (DeliveryOrder) assignedList.getSelectionModel().getSelectedItem();
         if(deliveryOrder != null) {
@@ -137,6 +155,9 @@ public class DriverController implements Initializable {
         }
     }
 
+    /**
+     * Allows staff member to input their hours worked for a specified day.
+     */
     public void saveWorkedHours() {
         if(!workedHoursDatePicker.getValue().isAfter(LocalDate.now())) {
             try {
@@ -162,6 +183,10 @@ public class DriverController implements Initializable {
         }
     }
 
+    /**
+     * Initialises Rota information for current Staff member.
+     * @throws SQLException
+     */
     public void initializeMyRota() throws SQLException {
         Rota myRota = Rota.getRota(
                 DatabaseService.getConnection(),
@@ -184,7 +209,11 @@ public class DriverController implements Initializable {
         workedHoursDatePicker.getChronology().dateNow();
     }
 
-
+    /**
+     * Returns user to previous page.
+     * @param event
+     * @throws IOException
+     */
     public void logoutPushed(ActionEvent event) throws IOException {
         Parent loginParent = FXMLLoader.load(getClass().getResource("/gui/StaffProfiles.fxml"));
         Scene loginScene = new Scene(loginParent);

@@ -97,6 +97,11 @@ public class ChefController implements Initializable {
     @FXML
     private Button saveButton;
 
+    /**
+     * Returns user to previous page.
+     * @param event
+     * @throws IOException
+     */
     public void logoutPushed(ActionEvent event) throws IOException {
         Parent loginParent = FXMLLoader.load(getClass().getResource("/gui/StaffProfiles.fxml"));
         Scene loginScene = new Scene(loginParent);
@@ -105,6 +110,9 @@ public class ChefController implements Initializable {
         window.show();
     }
 
+    /**
+     * Select order from list of uncooked orders, displays MenuItems for that order.
+     */
     public void selectOrder(){
         Order selectedOrder = currentOrderTable.getSelectionModel().getSelectedItem();
         currentOrderItems.clear();
@@ -124,6 +132,9 @@ public class ChefController implements Initializable {
         }
     }
 
+    /**
+     * Allows chef to confirm selected order as Cooked.
+     */
     public void confirmCooked(){
         Order selectedOrder = currentOrderTable.getSelectionModel().getSelectedItem();
         try{
@@ -139,6 +150,9 @@ public class ChefController implements Initializable {
 
     }
 
+    /**
+     * Allows chef add MenuItems to menu, depending on inputted information.
+     */
     public void addMenuItem(){
         if(newItemName.getText().equals("") || newItemType.getValue()==null){
         }
@@ -166,6 +180,9 @@ public class ChefController implements Initializable {
         }
     }
 
+    /**
+     * Removes selected FoodItem from the Menu.
+     */
     public void removeFoodItem(){
         MenuItem selectedItem = foodTable.getSelectionModel().getSelectedItem();
         try{
@@ -177,6 +194,10 @@ public class ChefController implements Initializable {
         }
         initialiseMenu();
     }
+
+    /**
+     * Removes selected DrinkItem from the Menu.
+     */
     public void removeDrinkItem(){
         MenuItem selectedItem = drinkTable.getSelectionModel().getSelectedItem();
         try{
@@ -188,6 +209,10 @@ public class ChefController implements Initializable {
         }
         initialiseMenu();
     }
+
+    /**
+     * Removes selected SpecialsItem from the Menu.
+     */
     public void removeSpecialItem(){
         MenuItem selectedItem = specialsTable.getSelectionModel().getSelectedItem();
         try{
@@ -200,6 +225,11 @@ public class ChefController implements Initializable {
         initialiseMenu();
     }
 
+    /**
+     * Initialises information when page is loaded.
+     * @param url
+     * @param resourceBundle
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         initialiseCurrentOrders();
@@ -220,6 +250,9 @@ public class ChefController implements Initializable {
 
     }
 
+    /**
+     * Allows staff member to input their hours worked for a specified day.
+     */
     public void saveWorkedHours() {
         if(!workedHoursDatePicker.getValue().isAfter(LocalDate.now())) {
             try {
@@ -245,6 +278,9 @@ public class ChefController implements Initializable {
         }
     }
 
+    /**
+     * Initialises current uncooked orders in current Orders table.
+     */
     private void initialiseCurrentOrders(){
         currentOrderNo.setCellValueFactory(new PropertyValueFactory<>("orderId"));
         currentOrderDate.setCellValueFactory(new PropertyValueFactory<>("orderDate"));
@@ -270,6 +306,10 @@ public class ChefController implements Initializable {
 
     }
 
+    /**
+     * Initialises Rota information for current Staff member.
+     * @throws SQLException
+     */
     public void initializeMyRota() throws SQLException {
         Rota myRota = Rota.getRota(
                 DatabaseService.getConnection(),
@@ -292,6 +332,9 @@ public class ChefController implements Initializable {
         workedHoursDatePicker.getChronology().dateNow();
     }
 
+    /**
+     * Initialises MenuItems in Menu Tables.
+     */
     private void initialiseMenu(){
         fooditems.clear();
         drinksitems.clear();
