@@ -17,10 +17,20 @@ public class EatInOrder extends Order {
         boolean served1 = served;
     }
 
+    /**
+     * Gets the Table of the EatInOrder
+     * @return Table of Order
+     */
     public int getTable() {
         return this.tableId;
     }
 
+    /**
+     * Creates an EatInOrder in the database
+     * @param conn Database Connection
+     * @param orderId OrderID
+     * @param tableId TableID
+     */
     public static void createEatInOrder(Connection conn, int orderId, int tableId){
         try{
             PreparedStatement st = conn.prepareStatement("INSERT INTO EatinOrders (OrderId, TableId) VALUES (?,?)");
@@ -32,35 +42,37 @@ public class EatInOrder extends Order {
         }
     }
 
+    /**
+     * Gets all unserved EatInOrders
+     * @param conn Database connection
+     * @return ResultSet of Unserved Orders
+     * @throws SQLException
+     */
     public static ResultSet getUnServed(Connection conn) throws SQLException {
         PreparedStatement st = conn.prepareStatement("SELECT o.OrderId, o.OrderDate, o.CustomerId, o.Cooked, o.OrderTotal, e.TableId, e.Served FROM Orders o, EatinOrders e WHERE e.Served = 0 ");
         ResultSet rs = st.executeQuery();
         return rs;
     }
 
+    /**
+     * Creates an EatInOrder from a ResultSet
+     * @param rs ResultSet
+     * @return EatInOrder
+     * @throws SQLException
+     */
     public static EatInOrder orderFromRS(ResultSet rs) throws SQLException{
         return new EatInOrder(rs.getInt(1), rs.getTimestamp(2), rs.getInt(3), rs.getBoolean(4), rs.getDouble(5), rs.getInt(6), rs.getBoolean(7));
     }
 
+    /**
+     * Confirms that an EatInOrder is served
+     * @param conn Database connection
+     * @param orderId The ID of the Order that is served
+     * @throws SQLException
+     */
     public static void confirmedServed(Connection conn, int orderId) throws SQLException{
         PreparedStatement st = conn.prepareStatement("UPDATE EatinOrders SET Served = 1 WHERE OrderId = ?");
         st.setInt(1, orderId);
         st.executeUpdate();
-    }
-
-    public static EatInOrder createEatInOrder(ArrayList<Integer> items, int customerId, int tableId) {
-        throw new UnsupportedOperationException("createEatInOrder() is not yet implemented");
-    }
-
-    public static EatInOrder getEatInOrder(int id) {
-        throw new UnsupportedOperationException("getEatInOrder() is not yet implemented");
-    }
-
-    public static boolean deleteEatInOrder(int id) {
-        throw new UnsupportedOperationException("deleteEatInOrder() is not yet implemented");
-    }
-
-    public static boolean updateEatInOrder(int id, ArrayList<Integer> items, int customerId, int tableId) {
-        throw new UnsupportedOperationException("updateEatInOrder() is not yet implemented");
     }
 }

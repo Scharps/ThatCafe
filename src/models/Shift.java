@@ -8,20 +8,28 @@ public class Shift {
     private final String startTime;
     private final String finishTime;
 
-    public Shift() {
-        startTime = "None";
-        finishTime = "None";
-    }
-
+    /**
+     * Constructor for Shift
+     * @param startTime Start time of shift
+     * @param finishTime Finish time of shift
+     */
     public Shift(String startTime, String finishTime) {
         this.startTime = startTime;
         this.finishTime = finishTime;
     }
 
+    /**
+     * Gets the start time of the shift
+     * @return Shift start time
+     */
     public String getStartTime() {
         return startTime;
     }
 
+    /**
+     * Gets the finish time of the shift
+     * @return Shift finish time
+     */
     public String getFinishTime() {
         return finishTime;
     }

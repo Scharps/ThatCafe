@@ -9,6 +9,11 @@ import java.sql.*;
  */
 public class DatabaseService {
 
+    /**
+     * Gets the last insert in a database
+     * @param conn Database connection
+     * @return Last insert
+     */
     public static int getLastInsert(Connection conn){
         try {
             Statement st = conn.createStatement();
@@ -27,6 +32,10 @@ public class DatabaseService {
         }
     }
 
+    /**
+     * Gets predefined database connection
+     * @return Database connection
+     */
     public static Connection getConnection(){
         Connection conn = null;
         try {
@@ -39,6 +48,13 @@ public class DatabaseService {
         return conn;
     }
 
+    /**
+     * Confirms customer credentials
+     * @param conn Database connection
+     * @param password Customer password
+     * @param customerId Customer ID
+     * @return True - Correct, False - Incorrect
+     */
     public static Boolean confirmPassword(Connection conn, String password, int customerId){
         try{
             PreparedStatement st = conn.prepareStatement("SELECT * FROM Customers WHERE Password = ? AND CustomerId = ?");
@@ -51,6 +67,12 @@ public class DatabaseService {
         }
     }
 
+    /**
+     * Updates a customer's password
+     * @param conn Database connection
+     * @param newPassword New password
+     * @param customerId Customer whose password is to be updated.
+     */
     public static void updateCustomerPassword(Connection conn, String newPassword, int customerId){
         try{
             PreparedStatement st = conn.prepareStatement("UPDATE Customers SET Password = ? WHERE CustomerId = ?");

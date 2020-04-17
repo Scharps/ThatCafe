@@ -30,38 +30,76 @@ public class Rota {
         this.sundayShift = sundayShift;
     }
 
+    /**
+     * Gets the ID of the Rota
+     * @return ID of the Rota
+     */
     public int getRotaId() {
         return rotaId;
     }
 
+    /**
+     * Gets Monday's shift
+     * @return Monday's Shift
+     */
     public Shift getMondayShift() {
         return mondayShift;
     }
 
+    /**
+     * Gets Tuesday's shift
+     * @return Tuesday's Shift
+     */
     public Shift getTuesdayShift() {
         return tuesdayShift;
     }
 
+    /**
+     * Gets Wednesday's shift
+     * @return Wednesday's shift
+     */
     public Shift getWednesdayShift() {
         return wednesdayShift;
     }
 
+    /**
+     * Gets Thursday's shift
+     * @return Thursday's shift
+     */
     public Shift getThursdayShift() {
         return thursdayShift;
     }
 
+    /**
+     * Gets Friday's shift
+     * @return Friday's shift
+     */
     public Shift getFridayShift() {
         return fridayShift;
     }
 
+    /**
+     * Gets Saturday's shift
+     * @return Saturday's shift
+     */
     public Shift getSaturdayShift() {
         return saturdayShift;
     }
 
+    /**
+     * Gets Sunday's shift
+     * @return Sunday's shift
+     */
     public Shift getSundayShift() {
         return sundayShift;
     }
 
+    /**
+     * Creates a Rota in the database and returns the created Rota as an object
+     * @param conn Database connection
+     * @return Created Rota
+     * @throws SQLException
+     */
     public static Rota createRota(Connection conn) throws SQLException {
         PreparedStatement st = conn.prepareStatement("INSERT INTO Rota() VALUES ()");
         st.executeUpdate();
@@ -73,6 +111,19 @@ public class Rota {
         return rotaFromResultSet(rs);
     }
 
+    /**
+     * Updates a Rota in the database
+     * @param conn Database connection
+     * @param rotaId The Rota ID to update
+     * @param mondayShift New Monday shift
+     * @param tuesdayShift New Tueday shift
+     * @param wednesdayShift New Wednesday shift
+     * @param thursdayShift New Thursday shift
+     * @param fridayShift New Friday shift
+     * @param saturdayShift New Saturday shift
+     * @param sundayShift New Sunday shift
+     * @throws SQLException
+     */
     public static void updateRota(
             Connection conn,
             int rotaId,
@@ -113,6 +164,13 @@ public class Rota {
             st.executeUpdate();
     }
 
+    /**
+     * Gets a Rota from ID
+     * @param conn Database connection
+     * @param rotaId Rota ID of Rota to be retrieved
+     * @return Rota
+     * @throws SQLException
+     */
     public static Rota getRota(Connection conn, int rotaId) throws SQLException {
         PreparedStatement st = conn.prepareStatement(
             "SELECT * " +
