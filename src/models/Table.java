@@ -17,33 +17,26 @@ public class Table {
         this.capacity = capacity;
     }
 
+    /**
+     * Gets the ID of the Table
+     * @return Table ID
+     */
     public int getId() {
         return this.id;
     }
 
-    public int getCapacity(){
-        return this.capacity;
-    }
-
-    public static Table getTable(Connection conn, int id) throws SQLException {
-        PreparedStatement st = conn.prepareStatement("SELECT * FROM CafeTables WHERE TableId = ?");
-        st.setInt(1, id);
-        ResultSet rs = st.executeQuery();
-        if(rs.next()) {
-            return new Table(
-                    rs.getInt("TableId"),
-                    rs.getInt("Capacity")
-            );
-        } else {
-            return null;
-        }
-    }
 
     @Override
     public String toString() {
         return "Table: " + id +", Capacity: " + capacity;
     }
 
+    /**
+     * Gets all Tables registered on the database.
+     * @param conn
+     * @return All Tables
+     * @throws SQLException
+     */
     private static ArrayList<Table> getAllTables(Connection conn) throws SQLException {
         PreparedStatement st = conn.prepareStatement("SELECT * FROM CafeTables");
         ResultSet rs = st.executeQuery();
@@ -57,6 +50,16 @@ public class Table {
         return tables;
     }
 
+    /**
+     * Gets available tables based on the day, time, duration and size of the booking.
+     * @param conn Database connection
+     * @param day Day for availability
+     * @param startHour Booking start hour
+     * @param duration Booking duration
+     * @param capacity Booking capcity
+     * @return Available tables for potential booking.
+     * @throws SQLException
+     */
     public static ArrayList<Table> getAvailableTables(Connection conn, Date day, int startHour, int duration, int capacity) throws SQLException {
         StringBuilder sqlStatement = new StringBuilder("SELECT *\n" +
                 "FROM Bookings b, CafeTables t\n" +

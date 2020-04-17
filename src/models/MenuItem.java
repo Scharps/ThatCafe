@@ -27,6 +27,14 @@ public class MenuItem {
         Boolean special1 = special;
     }
 
+    /**
+     * Creates a new menu item in the database
+     * @param conn Database connection
+     * @param name Name of the item
+     * @param itemType The Item Type
+     * @param price The price of the item
+     * @param special Is it a special
+     */
     public static void createNewItem(Connection conn, String name, String itemType, double price, boolean special){
         try{
             PreparedStatement st = conn.prepareStatement("INSERT INTO MenuItems (ItemName, ItemType, Price, Special) VALUES (?,?,?,?)");
@@ -40,6 +48,12 @@ public class MenuItem {
         }
     }
 
+    /**
+     * Created an Ordered Item in the OrderedItems table
+     * @param conn Database Connection
+     * @param orderId The Orders' ID
+     * @param itemId The Item ID
+     */
     public static void createOrderedItem(Connection conn, int orderId, int itemId){
         try {
             PreparedStatement st = conn.prepareStatement("INSERT INTO OrderedItems (OrderId, ItemId, Quantity) VALUES (?, ?, 1)");
@@ -51,6 +65,12 @@ public class MenuItem {
         }
     }
 
+    /**
+     * Gets A ResultSet of an Ordered Items specified by the Order ID
+     * @param conn Database Connection
+     * @param orderId The Order ID
+     * @return Ordered Items
+     */
     public static ResultSet getOrderItems(Connection conn, int orderId){
         try{
             PreparedStatement st = conn.prepareStatement("SELECT m.ItemId, m.ItemName, m.ItemType, m.Price, m.Sold, m.Special FROM OrderedItems o, MenuItems m WHERE o.OrderId=? AND m.ItemId=o.ItemId");
@@ -62,6 +82,12 @@ public class MenuItem {
         }
     }
 
+    /**
+     * Gets a ResultSet of all MenuItems that are a Special or not
+     * @param conn Database connection
+     * @param special True = Special, False = Not
+     * @return Result set of MenuItems Special/Not special
+     */
     public static ResultSet getMenuItems(Connection conn, boolean special){
         try{
             PreparedStatement st = conn.prepareStatement("SELECT * FROM MenuItems WHERE Special = ?");
@@ -73,31 +99,66 @@ public class MenuItem {
         }
     }
 
+    /**
+     * Gets the MenuItem ID
+     * @return MenuItem ID
+     */
     public int getId() {
         return this.id;
     }
 
+    /**
+     * Gets the name of the MenuItem
+     * @return MenuItem name
+     */
     public String getName() {
         return this.name;
     }
 
+    /**
+     * Gets the MenuItemType
+     * @return MenuItemType
+     */
     public MenuItemType getMenuItemType() {
         return this.itemType;
     }
-    
+
+    /**
+     * Gets the price of the MenuItem
+     * @return MenuItem price
+     */
     public double getPrice() {
         return this.price;
     }
 
+    /**
+     * Gets the number of MenuItems sold
+     * @return MenuItems sold
+     */
     public int getNumberSold() {
         return this.numberSold;
     }
 
+    /**
+     * Creates a MenuItem
+     * @param id MenuItem ID
+     * @param name MenuItem
+     * @param itemType MenuItem Type
+     * @param price Price of MenuItem
+     * @param numberSold Number of MenuItems sold
+     * @param special Special or not
+     * @return
+     */
     public static MenuItem createMenuItem(int id, String name, MenuItemType itemType, double price, int numberSold, boolean special) {
         return new MenuItem(id, name, itemType, price, numberSold, special);
         //throw new UnsupportedOperationException("createMenuItem() is not yet implemented");
     }
 
+    /**
+     * Deletes a MenuItem entry from the database
+     * @param conn Database Copnnection
+     * @param id MenuItem ID
+     */
     public static void deleteMenuItem(Connection conn, int id) {
         try{
             PreparedStatement st = conn.prepareStatement("DELETE FROM MenuItems WHERE ItemId = ?");

@@ -15,6 +15,15 @@ public class Order {
     private final double orderTotal;
     private final OrderType orderType;
 
+    /**
+     * Constructor of Order
+     * @param orderId OrderID
+     * @param orderDate Date of the Order
+     * @param customerId Customer ID whom made the order
+     * @param cooked Cooked status
+     * @param orderTotal The total price of the Order
+     * @param orderType The Order Type
+     */
     Order(int orderId, Timestamp orderDate, int customerId, boolean cooked, double orderTotal, OrderType orderType) {
         this.orderId = orderId;
         this.orderDate = orderDate;
@@ -24,10 +33,14 @@ public class Order {
         this.orderType = orderType;
     }
 
-    public static Order createOrder(int orderId, Timestamp orderDate, int customerId, boolean cooked, double orderTotal, OrderType orderType){
-        return new Order(orderId, orderDate, customerId, cooked, orderTotal, orderType);
-    }
-
+    /**
+     * Creates an Order entry in the database
+     * @param conn Database Connection
+     * @param orderDate Date of the Order
+     * @param customerId CustomerID
+     * @param orderTotal Price Total
+     * @param orderType Order TYpe
+     */
     public static void createOrder(Connection conn, Timestamp orderDate, int customerId, double orderTotal, OrderType orderType){
         try{
             PreparedStatement st = conn.prepareStatement("INSERT INTO Orders (OrderDate, CustomerId, OrderTotal, OrderType) VALUES (?,?,?, ?)");
@@ -41,6 +54,12 @@ public class Order {
         }
     }
 
+    /**
+     * Gets the order history of a specified customer
+     * @param conn Database connection
+     * @param customerId Customer's ID
+     * @return A ResultSet of the customer's history
+     */
     public static ResultSet getOrderHistory(Connection conn, int customerId){
         try{
             PreparedStatement st = conn.prepareStatement("SELECT * FROM Orders WHERE CustomerId = ? AND Cooked = 1");
@@ -52,6 +71,11 @@ public class Order {
         }
     }
 
+    /**
+     * Gets all uncooked ordered as a ResultSet
+     * @param conn Database connection.
+     * @return ResultSet of uncooked orders.
+     */
     public static ResultSet getUncookedOrders(Connection conn){
         try{
             Statement st = conn.createStatement();
@@ -62,6 +86,10 @@ public class Order {
         }
     }
 
+    /**
+     * Sets the cooked status of the Order to true.
+     * @param conn Database connection
+     */
     public void setCooked(Connection conn){
         try {
             PreparedStatement st = conn.prepareStatement("UPDATE Orders SET Cooked =1 WHERE OrderId = ?");
@@ -73,31 +101,26 @@ public class Order {
     }
 
 
+    /**
+     * Gets the ID of the Order
+     * @return ID of the Order
+     */
     public int getOrderId() {
         return this.orderId;
     }
 
+    /**
+     * Gets the Customer ID
+     * @return ID of the Customer
+     */
     public int getCustomerId() {
         return this.customerId;
     }
 
-    public Timestamp getOrderDate() {
-        return this.orderDate;
-    }
-
-    public double getOrderTotal() {
-        return orderTotal;
-    }
-
-    public String getOrderType(){
-        return String.valueOf(this.orderType);
-    }
-
-    public boolean markCompleted() {
-        throw new UnsupportedOperationException("markCompleted() is not yet implemented");
-    }
-
-
+    /**
+     * Gets the cooked status of the order.
+     * @return Cooked status
+     */
     public boolean isCooked() {
         return cooked;
     }

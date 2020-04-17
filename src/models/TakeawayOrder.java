@@ -19,11 +19,22 @@ public class TakeawayOrder extends Order {
         this.collected = collected;
     }
 
+    /**
+     * Returns the estimated pickup time based on time ordered
+     * @param orderTime Time ordered
+     * @return Estimated pickup time
+     */
     public static Timestamp estimatePickUpTime(LocalDateTime orderTime){
         orderTime = orderTime.withSecond(0).withNano(0);
         return Timestamp.valueOf(orderTime.plusMinutes(20));
     }
 
+    /**
+     * Creates a takeaway order in the database
+     * @param conn Database connection
+     * @param orderId OrderId
+     * @param pickupTime PickupTime
+     */
     public static void createTakeawayOrder(Connection conn, int orderId, Timestamp pickupTime) {
         try {
             PreparedStatement st = conn.prepareStatement("INSERT INTO TakeawayOrders (OrderId, PickUpTime) VALUES (?,?)");
@@ -35,45 +46,44 @@ public class TakeawayOrder extends Order {
         }
     }
 
+    /**
+     * Gets a ResultSet containing all uncollected TakeawayOrders
+     * @param conn Database connection
+     * @return ResultSet containing all uncollected TakeawayOrders
+     * @throws SQLException
+     */
     public static ResultSet getUncollected(Connection conn) throws SQLException{
         PreparedStatement st = conn.prepareStatement("SELECT o.OrderId, o.OrderDate, o.CustomerId, o.Cooked, o.OrderTotal, t.PickUpTime, t.Collected FROM Orders o, TakeawayOrders t WHERE o.OrderId = t.OrderId AND t.Collected = 0 ");
         ResultSet rs = st.executeQuery();
         return rs;
     }
 
+    /**
+     * Creates a TakeawayOrder from a ResultSet
+     * @param rs ResultSet
+     * @return TakeawayOrder
+     * @throws SQLException
+     */
     public static TakeawayOrder orderFromRS(ResultSet rs) throws SQLException{
         return new TakeawayOrder(rs.getInt(1), rs.getTimestamp(2), rs.getInt(3), rs.getBoolean(4), rs.getDouble(5), rs.getTimestamp(6), rs.getBoolean(7));
     }
 
+    /**
+     * Confirms an order as collected in a database.
+     * @param conn Database connection
+     * @throws SQLException
+     */
     public void confirmCollected(Connection conn) throws SQLException{
         PreparedStatement st = conn.prepareStatement("UPDATE TakeawayOrders SET Collected =1 WHERE OrderId = ?");
         st.setInt(1, this.getOrderId());
         st.executeUpdate();
     }
 
-
-
-    public static TakeawayOrder createTakeawayOrder(ArrayList<Integer> items, int customerId, Date pickupTime) {
-        throw new UnsupportedOperationException("createTakeawayOrder() is not yet implemented");
-    }
-
-    public static TakeawayOrder getTakeawayOrder(int id) {
-        throw new UnsupportedOperationException("getTakeawayOrder() is not yet implemented");
-    }
-
-    public static boolean deleteTakeawayOrder(int id) {
-        throw new UnsupportedOperationException("deleteTakeawayOrder() is not yet implemented");
-    }
-
-    public static boolean updateTakeawayOrder(int id, ArrayList<Integer> items, int customerId, Date pickupTime) {
-        throw new UnsupportedOperationException("updateTakeawayOrder() is not yet implemented");
-    }
-
+    /**
+     * Gets the pickup time of a Takeaway
+     * @return Pickup time.
+     */
     public Timestamp getPickupTime() {
         return pickupTime;
-    }
-
-    public boolean isCollected() {
-        return collected;
     }
 }
