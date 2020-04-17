@@ -377,7 +377,7 @@ public class CustomerController implements Initializable {
             Connection conn = DatabaseService.getConnection();
             ResultSet rs = Order.getOrderHistory(conn, currentCustomer.getId());
             while (rs.next()) {
-                orderHistory.add(Order.createOrder(rs.getInt(1), rs.getTimestamp(2), rs.getInt(3), rs.getBoolean(4), rs.getDouble(5), OrderType.valueOf(rs.getString(6))));
+                orderHistory.add(Order.orderFromRS(rs));
             }
             conn.close();
 

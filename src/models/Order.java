@@ -72,6 +72,16 @@ public class Order {
     }
 
     /**
+     * Creates Order object from ResultSet from Orders table in the Database
+     * @param rs
+     * @return Order object created from a ResultSet
+     * @throws SQLException
+     */
+    public static Order orderFromRS(ResultSet rs) throws SQLException{
+        return new Order(rs.getInt(1), rs.getTimestamp(2), rs.getInt(3), rs.getBoolean(4), rs.getDouble(5), OrderType.valueOf(rs.getString(6)));
+    }
+
+    /**
      * Gets all uncooked ordered as a ResultSet
      * @param conn Database connection.
      * @return ResultSet of uncooked orders.
