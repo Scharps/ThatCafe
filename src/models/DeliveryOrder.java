@@ -73,36 +73,41 @@ public class DeliveryOrder extends Order {
         return this.estimatedDeliveryTime;
     }
 
-    public boolean isConfirmed() {
-        return this.confirmed;
-    }
-
     public boolean isDelivered() {
         return this.delivered;
     }
 
-
-    public boolean markApproved() {
-        throw new UnsupportedOperationException("markApproved() not yet implemented");
+    public int getDriverID() {
+        return this.driverID;
     }
 
-    public boolean markDelivered() {
-        throw new UnsupportedOperationException("markDelivered() not yet implemented");
+    public void assignDriver(Connection conn, int driverId) throws SQLException {
+        PreparedStatement st = conn.prepareStatement("UPDATE DeliveryOrders\n" +
+                "SET DriverId = ?\n" +
+                "WHERE OrderId = ?"
+        );
+        st.setInt(1, driverId);
+        st.setInt(2, this.getOrderId());
+        st.executeUpdate();
+        this.driverID = driverId;
     }
 
-    public static DeliveryOrder createDeliveryOrder(ArrayList<Integer> items, int customerId, Date estimatedDeliveryTime, Address address) {
-        throw new UnsupportedOperationException("createDeliveryOrder() is not yet implemented");
+    public void unassign(Connection conn) throws SQLException {
+        PreparedStatement st = conn.prepareStatement("UPDATE DeliveryOrders\n" +
+                "SET DriverId = NULL\n" +
+                "WHERE OrderId = ?"
+        );
+        st.setInt(1, this.getOrderId());
+        st.executeUpdate();
+        this.driverID = -1;
     }
 
-    public static DeliveryOrder getDeliveryOrder(int id) {
-        throw new UnsupportedOperationException("getDeliveryOrder() is not yet implemented");
-    }
-
-    public static boolean deleteDeliveryOrder(int id) {
-        throw new UnsupportedOperationException("deleteDeliveryOrder() is not yet implemented");
-    }
-
-    public static boolean updateDeliveryOrder(int id, ArrayList<Integer> items, int customerId, Date estimatedDeliveryTime, Address address) {
-        throw new UnsupportedOperationException("updateDeliveryOrder() is not yet implemented");
+    public void markDelivered(Connection conn) throws SQLException {
+        PreparedStatement st = conn.prepareStatement("UPDATE DeliveryOrders\n" +
+                "SET Delivered = TRUE\n" +
+                "WHERE OrderId = ?");
+        st.setInt(1, this.getOrderId());
+        st.executeUpdate();
+        this.delivered = true;
     }
 }

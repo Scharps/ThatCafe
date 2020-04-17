@@ -30,10 +30,7 @@ import java.util.ResourceBundle;
 public class DriverController implements Initializable {
     AppState appState = AppState.getAppState();
     @FXML private ListView availableList;
-    @FXML private ListView myList;
-
-    ObservableList<DeliveryOrder> availableOrders = FXCollections.observableArrayList();
-    ObservableList<DeliveryOrder> myOrders = FXCollections.observableArrayList();
+    @FXML private ListView assignedList;
 
     @FXML
     private Label monStartLabel;
@@ -73,7 +70,7 @@ public class DriverController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
-            initialiseAvailable();
+            initializeAvailable();
             initializeMyRota();
         }catch(SQLException e) {
             JOptionPane.showMessageDialog(
@@ -84,15 +81,58 @@ public class DriverController implements Initializable {
         }
     }
 
-    public void initialiseAvailable() throws SQLException {
-        availableOrders.clear();
+    public void initializeAvailable() throws SQLException {
+        availableList.getItems().clear();
         Connection conn = DatabaseService.getConnection();
         ResultSet rs = DeliveryOrder.getUnassigned(conn);
         while(rs.next()){
-            availableOrders.add(DeliveryOrder.orderFromRS(rs));
+            availableList.getItems().add(DeliveryOrder.orderFromRS(rs));
         }
         conn.close();
-        availableList.getItems().addAll(availableOrders);
+    }
+
+    public void assignToDriver() {
+        DeliveryOrder deliveryOrder = (DeliveryOrder) availableList.getSelectionModel().getSelectedItem();
+        if(deliveryOrder != null) {
+            try {
+                deliveryOrder.assignDriver(DatabaseService.getConnection(), appState.getStaff().getId());
+                availableList.getItems().remove(deliveryOrder);
+                assignedList.getItems().add(deliveryOrder);
+            }catch(SQLException e) {
+                JOptionPane.showMessageDialog(null, "Error adding order. " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Please select an order","Info", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
+
+    public void unassignFromDriver() {
+        DeliveryOrder deliveryOrder = (DeliveryOrder) assignedList.getSelectionModel().getSelectedItem();
+        if(deliveryOrder != null) {
+            try {
+                deliveryOrder.unassign(DatabaseService.getConnection());
+                assignedList.getItems().remove(deliveryOrder);
+                availableList.getItems().add(deliveryOrder);
+            }catch(SQLException e) {
+                JOptionPane.showMessageDialog(null, "Error unassigning order. " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Please select an order","Info", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
+
+    public void markDelivered() {
+        DeliveryOrder deliveryOrder = (DeliveryOrder) assignedList.getSelectionModel().getSelectedItem();
+        if(deliveryOrder != null) {
+            try {
+                deliveryOrder.markDelivered(DatabaseService.getConnection());
+                assignedList.getItems().remove(deliveryOrder);
+            }catch(SQLException e) {
+                JOptionPane.showMessageDialog(null, "Error marking delivered. " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Please select an order","Info", JOptionPane.INFORMATION_MESSAGE);
+        }
     }
 
     public void saveWorkedHours() {
@@ -141,6 +181,7 @@ public class DriverController implements Initializable {
         sunEndLabel.setText(myRota.getSundayShift().getFinishTime());
         workedHoursDatePicker.getChronology().dateNow();
     }
+
 
     public void logoutPushed(ActionEvent event) throws IOException {
         Parent loginParent = FXMLLoader.load(getClass().getResource("/gui/StaffProfiles.fxml"));

@@ -442,7 +442,6 @@ public class CustomerController implements Initializable {
 
     public void requestBooking() {
         Table selectedTable = (Table) availableSlotsList.getSelectionModel().getSelectedItem();
-
         if(selectedTable != null) {
             try {
 
@@ -456,7 +455,7 @@ public class CustomerController implements Initializable {
                 );
                 bookingStatusLabel.setText("Booking requested!");
             } catch (SQLException e) {
-
+                JOptionPane.showMessageDialog(null, e.getMessage(),"Error", JOptionPane.ERROR_MESSAGE);
             }
         } else {
             bookingStatusLabel.setText("Please select a table.");
