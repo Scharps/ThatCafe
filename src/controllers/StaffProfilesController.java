@@ -15,12 +15,16 @@ import services.DatabaseService;
 import models.StaffMember;
 import models.StaffPosition;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.*;
 import java.util.ResourceBundle;
 
-
+/**
+ * Responsible for carrying out the functionality of the Staff Profile user interface.
+ * @author Ashley Forster
+ */
 public class StaffProfilesController implements Initializable{
     @FXML private ListView stProfiles;
     private final ObservableList<String> items = FXCollections.observableArrayList();
@@ -73,9 +77,8 @@ public class StaffProfilesController implements Initializable{
              }
 
         }
-        catch(Exception se){
-            se.printStackTrace();
-            System.out.println(se);
+        catch(Exception e){
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -94,7 +97,7 @@ public class StaffProfilesController implements Initializable{
 
         }
         catch (SQLException se){
-
+            JOptionPane.showMessageDialog(null, se.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
 
 

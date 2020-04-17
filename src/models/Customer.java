@@ -1,6 +1,8 @@
 package models;
 
 import services.DatabaseService;
+
+import javax.swing.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -8,8 +10,8 @@ import java.sql.SQLException;
 
 public class Customer extends User {
 
-    private Address address;
-    private String username;
+    private final Address address;
+    private final String username;
 
     private Customer(int id, String username, String firstName, String lastName, Address address) {
         super(id, firstName, lastName);
@@ -23,7 +25,7 @@ public class Customer extends User {
 
     public String getUsername() { return this.username;}
 
-    public static Customer createCustomer(Connection conn, String username, String password, String firstName, String lastName, Address address) throws SQLException{
+    public static void createCustomer(Connection conn, String username, String password, String firstName, String lastName, Address address) throws SQLException{
         PreparedStatement st = conn.prepareStatement("INSERT INTO Customers(Username, Password, FName, LName, AddressId)  VALUES(?, ?, ?, ?, ?)");
         st.setString(1, username);
         st.setString(2, password);
@@ -36,9 +38,8 @@ public class Customer extends User {
                 "WHERE CustomerId = (SELECT MAX(CustomerId) FROM Customers)");
         ResultSet rs = st.executeQuery();
         if(rs.next()){
-            return customerFromResultSet(rs);
+            customerFromResultSet(rs);
         } else {
-            return null;
         }
     }
 
@@ -54,7 +55,7 @@ public class Customer extends User {
                 return 0;
             }
         }catch (SQLException se){
-            System.out.println("HFGDH");
+            JOptionPane.showMessageDialog(null, se.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             return 0;
 
         }

@@ -1,8 +1,12 @@
 package models;
 
+/**
+ * This represents a simple shift for a day. Contains a start and finish time.
+ * @author Sam James
+ */
 public class Shift {
-    private String startTime;
-    private String finishTime;
+    private final String startTime;
+    private final String finishTime;
 
     public Shift() {
         startTime = "None";

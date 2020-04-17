@@ -1,18 +1,20 @@
 package models;
 
-import javafx.beans.binding.BooleanBinding;
-
+import javax.swing.*;
 import java.sql.*;
 import java.util.ArrayList;
 
+/**
+ * This represents an eat-in order which is made by a customer.
+ * @author Ashley Forster
+ */
 public class EatInOrder extends Order {
-    private int tableId;
-    private boolean served;
+    private final int tableId;
 
-    private EatInOrder(int orderId, Timestamp orderDate, int customerId, boolean cooked, double orderTotal, OrderType orderType, int tableId, boolean served) {
-        super(orderId, orderDate, customerId, cooked, orderTotal, orderType);
+    private EatInOrder(int orderId, Timestamp orderDate, int customerId, boolean cooked, double orderTotal, int tableId, boolean served) {
+        super(orderId, orderDate, customerId, cooked, orderTotal, OrderType.EatIn);
         this.tableId = tableId;
-        this.served = served;
+        boolean served1 = served;
     }
 
     public int getTable() {
@@ -26,6 +28,7 @@ public class EatInOrder extends Order {
             st.setInt(2, tableId);
             st.executeUpdate();
         } catch (SQLException se){
+            JOptionPane.showMessageDialog(null, se.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -36,7 +39,7 @@ public class EatInOrder extends Order {
     }
 
     public static EatInOrder orderFromRS(ResultSet rs) throws SQLException{
-        return new EatInOrder(rs.getInt(1), rs.getTimestamp(2), rs.getInt(3), rs.getBoolean(4), rs.getDouble(5), OrderType.EatIn, rs.getInt(6), rs.getBoolean(7));
+        return new EatInOrder(rs.getInt(1), rs.getTimestamp(2), rs.getInt(3), rs.getBoolean(4), rs.getDouble(5), rs.getInt(6), rs.getBoolean(7));
     }
 
     public static void confirmedServed(Connection conn, int orderId) throws SQLException{

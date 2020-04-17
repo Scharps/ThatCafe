@@ -1,15 +1,20 @@
 package models;
 
+import javax.swing.*;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
+/**
+ * This represents a takeaway order which is made by a customer.
+ * @author Ashley Forster
+ */
 public class TakeawayOrder extends Order {
-    private Timestamp pickupTime;
-    private boolean collected;
+    private final Timestamp pickupTime;
+    private final boolean collected;
 
-    private TakeawayOrder(int orderId, Timestamp orderDate, int customerId, boolean cooked, double orderTotal, OrderType orderType, Timestamp pickupTime, boolean collected) {
-        super(orderId, orderDate, customerId, cooked, orderTotal, orderType);
+    private TakeawayOrder(int orderId, Timestamp orderDate, int customerId, boolean cooked, double orderTotal, Timestamp pickupTime, boolean collected) {
+        super(orderId, orderDate, customerId, cooked, orderTotal, OrderType.Takeaway);
         this.pickupTime = pickupTime;
         this.collected = collected;
     }
@@ -26,6 +31,7 @@ public class TakeawayOrder extends Order {
             st.setTimestamp(2, pickupTime);
             st.executeUpdate();
         } catch (SQLException se){
+            JOptionPane.showMessageDialog(null, se.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -36,7 +42,7 @@ public class TakeawayOrder extends Order {
     }
 
     public static TakeawayOrder orderFromRS(ResultSet rs) throws SQLException{
-        return new TakeawayOrder(rs.getInt(1), rs.getTimestamp(2), rs.getInt(3), rs.getBoolean(4), rs.getDouble(5), OrderType.Takeaway, rs.getTimestamp(6), rs.getBoolean(7));
+        return new TakeawayOrder(rs.getInt(1), rs.getTimestamp(2), rs.getInt(3), rs.getBoolean(4), rs.getDouble(5), rs.getTimestamp(6), rs.getBoolean(7));
     }
 
     public void confirmCollected(Connection conn) throws SQLException{

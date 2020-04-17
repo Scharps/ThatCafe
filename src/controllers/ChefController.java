@@ -25,6 +25,10 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
 
+/**
+ * Responsible for carrying out the functionality of the Chef user interface.
+ * @author Ashley Forster, Sam James
+ */
 public class ChefController implements Initializable {
 
     @FXML private TableView<Order> currentOrderTable;
@@ -101,7 +105,7 @@ public class ChefController implements Initializable {
         window.show();
     }
 
-    public void selectOrder(MouseEvent event){
+    public void selectOrder(){
         Order selectedOrder = currentOrderTable.getSelectionModel().getSelectedItem();
         currentOrderItems.clear();
         try{
@@ -111,7 +115,7 @@ public class ChefController implements Initializable {
                 while (rs.next()) {
                     currentOrderItems.add(MenuItem.createMenuItem(rs.getInt(1), rs.getString(2), MenuItemType.valueOf(rs.getString(3)), rs.getDouble(4), rs.getInt(5), rs.getBoolean(6)));
                 }
-                currentOrderItem.setCellValueFactory(new PropertyValueFactory<MenuItem, String>("name"));
+                currentOrderItem.setCellValueFactory(new PropertyValueFactory<>("name"));
                 currentItemTable.setItems(currentOrderItems);
             }
             conn.close();
@@ -120,13 +124,14 @@ public class ChefController implements Initializable {
         }
     }
 
-    public void confirmCooked(ActionEvent event){
+    public void confirmCooked(){
         Order selectedOrder = currentOrderTable.getSelectionModel().getSelectedItem();
         try{
             Connection conn = DatabaseService.getConnection();
             selectedOrder.setCooked(conn);
             conn.close();
         }catch (SQLException se){
+            JOptionPane.showMessageDialog(null, se.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
         currentOrders.clear();
         currentOrderItems.clear();
@@ -134,7 +139,7 @@ public class ChefController implements Initializable {
 
     }
 
-    public void addMenuItem(ActionEvent event){
+    public void addMenuItem(){
         if(newItemName.getText().equals("") || newItemType.getValue()==null){
         }
         else {
@@ -148,9 +153,10 @@ public class ChefController implements Initializable {
                 MenuItem.createNewItem(conn, newName, newType, newPrice, special);
                 conn.close();
             } catch (NumberFormatException ne) {
+                JOptionPane.showMessageDialog(null, ne.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 
             } catch (SQLException se) {
-
+                JOptionPane.showMessageDialog(null, se.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
             newItemName.clear();
             newItemPrice.clear();
@@ -160,36 +166,36 @@ public class ChefController implements Initializable {
         }
     }
 
-    public void removeFoodItem(ActionEvent event){
+    public void removeFoodItem(){
         MenuItem selectedItem = foodTable.getSelectionModel().getSelectedItem();
         try{
             Connection conn = DatabaseService.getConnection();
             MenuItem.deleteMenuItem(conn, selectedItem.getId());
             conn.close();
         }catch (SQLException se){
-
+            JOptionPane.showMessageDialog(null, se.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
         initialiseMenu();
     }
-    public void removeDrinkItem(ActionEvent event){
+    public void removeDrinkItem(){
         MenuItem selectedItem = drinkTable.getSelectionModel().getSelectedItem();
         try{
             Connection conn = DatabaseService.getConnection();
             MenuItem.deleteMenuItem(conn, selectedItem.getId());
             conn.close();
         }catch (SQLException se){
-
+            JOptionPane.showMessageDialog(null, se.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
         initialiseMenu();
     }
-    public void removeSpecialItem(ActionEvent event){
+    public void removeSpecialItem(){
         MenuItem selectedItem = specialsTable.getSelectionModel().getSelectedItem();
         try{
             Connection conn = DatabaseService.getConnection();
             MenuItem.deleteMenuItem(conn, selectedItem.getId());
             conn.close();
         }catch (SQLException se){
-
+            JOptionPane.showMessageDialog(null, se.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
         initialiseMenu();
     }
@@ -239,10 +245,10 @@ public class ChefController implements Initializable {
         }
     }
 
-    public void initialiseCurrentOrders(){
-        currentOrderNo.setCellValueFactory(new PropertyValueFactory<Order, Integer>("orderId"));
-        currentOrderDate.setCellValueFactory(new PropertyValueFactory<Order, Timestamp>("orderDate"));
-        currentOrderType.setCellValueFactory(new PropertyValueFactory<Order, String>("orderType"));
+    private void initialiseCurrentOrders(){
+        currentOrderNo.setCellValueFactory(new PropertyValueFactory<>("orderId"));
+        currentOrderDate.setCellValueFactory(new PropertyValueFactory<>("orderDate"));
+        currentOrderType.setCellValueFactory(new PropertyValueFactory<>("orderType"));
         currentOrderTable.setItems(currentOrders);
 
         try{
@@ -259,6 +265,7 @@ public class ChefController implements Initializable {
             }
             conn.close();
         }catch (SQLException se){
+            JOptionPane.showMessageDialog(null, se.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
 
     }
@@ -285,19 +292,19 @@ public class ChefController implements Initializable {
         workedHoursDatePicker.getChronology().dateNow();
     }
 
-    public void initialiseMenu(){
+    private void initialiseMenu(){
         fooditems.clear();
         drinksitems.clear();
         specialitems.clear();
 
-        foodName.setCellValueFactory(new PropertyValueFactory<MenuItem, String>("name"));
-        foodPrice.setCellValueFactory(new PropertyValueFactory<MenuItem, Double>("price"));
+        foodName.setCellValueFactory(new PropertyValueFactory<>("name"));
+        foodPrice.setCellValueFactory(new PropertyValueFactory<>("price"));
         foodTable.setItems(fooditems);
-        drinkName.setCellValueFactory(new PropertyValueFactory<MenuItem, String>("name"));
-        drinkPrice.setCellValueFactory(new PropertyValueFactory<MenuItem, Double>("price"));
+        drinkName.setCellValueFactory(new PropertyValueFactory<>("name"));
+        drinkPrice.setCellValueFactory(new PropertyValueFactory<>("price"));
         drinkTable.setItems(drinksitems);
-        specialsName.setCellValueFactory(new PropertyValueFactory<MenuItem, String>("name"));
-        specialsPrice.setCellValueFactory(new PropertyValueFactory<MenuItem, Double>("price"));
+        specialsName.setCellValueFactory(new PropertyValueFactory<>("name"));
+        specialsPrice.setCellValueFactory(new PropertyValueFactory<>("price"));
         specialsTable.setItems(specialitems);
         try{
             Connection conn = DatabaseService.getConnection();
@@ -316,6 +323,7 @@ public class ChefController implements Initializable {
             }
             conn.close();
         }catch (SQLException se){
+            JOptionPane.showMessageDialog(null, se.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
 
     }

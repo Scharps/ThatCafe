@@ -1,18 +1,22 @@
 package models;
 
+import javax.swing.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+/**
+ * This represents a structure of a menu item.
+ * @author Ashley Forster
+ */
 public class MenuItem {
-    private int id;
-    private String name;
-    private MenuItemType itemType;
-    private double price; 
-    private int numberSold;
-    private Boolean special;
+    private final int id;
+    private final String name;
+    private final MenuItemType itemType;
+    private final double price;
+    private final int numberSold;
 
     private MenuItem(int id, String name, MenuItemType itemType, double price, int numberSold, boolean special) {
         this.id = id;
@@ -20,7 +24,7 @@ public class MenuItem {
         this.itemType = itemType;
         this.price = price;
         this.numberSold = numberSold;
-        this.special = special;
+        Boolean special1 = special;
     }
 
     public static void createNewItem(Connection conn, String name, String itemType, double price, boolean special){
@@ -32,6 +36,7 @@ public class MenuItem {
             st.setBoolean(4, special);
             st.executeUpdate();
         }catch (SQLException se){
+            JOptionPane.showMessageDialog(null, se.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -42,6 +47,7 @@ public class MenuItem {
             st.setInt(2, itemId);
             st.executeUpdate();
         } catch(SQLException se){
+            JOptionPane.showMessageDialog(null, se.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -98,6 +104,7 @@ public class MenuItem {
             st.setInt(1, id);
             st.executeUpdate();
         }catch (SQLException se){
+            JOptionPane.showMessageDialog(null, se.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 
         }
 

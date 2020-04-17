@@ -23,11 +23,13 @@ import java.net.URL;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 
-
+/**
+ * Responsible for carrying out the functionality of the Manager user interface.
+ * @author Sam James
+ */
 public class ManagerController implements Initializable {
     @FXML
     private ListView staffMembersListView;

@@ -1,12 +1,16 @@
 package models;
 
+/**
+ * This represents an abstract user class.
+ * @author Sam James
+ */
 public abstract class User {
 
-    private int id;
-    private String firstName;
-    private String lastName;
+    private final int id;
+    private final String firstName;
+    private final String lastName;
 
-    protected User(int id, String firstName, String lastName) {
+    User(int id, String firstName, String lastName) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;

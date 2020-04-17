@@ -26,6 +26,10 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
+/**
+ * Responsible for carrying out the functionality of the Customer user interface.
+ * @author Ashley Forster, Sam James
+ */
 public class CustomerController implements Initializable {
     private final ObservableList<MenuItem> fooditems = FXCollections.observableArrayList();
     private final ObservableList<MenuItem> orderitems = FXCollections.observableArrayList();
@@ -120,8 +124,8 @@ public class CustomerController implements Initializable {
     private TextField newCity;
     @FXML
     private TextField newPostCode;
-    private AppState appState = AppState.getAppState();
-    private Customer currentCustomer = appState.getCustomer();
+    private final AppState appState = AppState.getAppState();
+    private final Customer currentCustomer = appState.getCustomer();
 
     public void logoutPushed(ActionEvent event) throws IOException {
         Parent loginParent = FXMLLoader.load(getClass().getResource("/gui/Login_ui.fxml"));
@@ -181,21 +185,21 @@ public class CustomerController implements Initializable {
     public void foodSelect() {
         MenuItem itemSelected = foodTable.getSelectionModel().getSelectedItem();
         orderitems.add(itemSelected);
-        ordereditem.setCellValueFactory((new PropertyValueFactory<MenuItem, String>("name")));
+        ordereditem.setCellValueFactory((new PropertyValueFactory<>("name")));
         ordertable.setItems(orderitems);
     }
 
     public void drinkSelect() {
         MenuItem itemSelected = drinkTable.getSelectionModel().getSelectedItem();
         orderitems.add(itemSelected);
-        ordereditem.setCellValueFactory((new PropertyValueFactory<MenuItem, String>("name")));
+        ordereditem.setCellValueFactory((new PropertyValueFactory<>("name")));
         ordertable.setItems(orderitems);
     }
 
     public void specialSelect() {
         MenuItem itemSelected = specialsTable.getSelectionModel().getSelectedItem();
         orderitems.add(itemSelected);
-        ordereditem.setCellValueFactory((new PropertyValueFactory<MenuItem, String>("name")));
+        ordereditem.setCellValueFactory((new PropertyValueFactory<>("name")));
         ordertable.setItems(orderitems);
     }
 
@@ -299,8 +303,8 @@ public class CustomerController implements Initializable {
                 while (rs.next()) {
                     orderHistoryItems.add(MenuItem.createMenuItem(rs.getInt(1), rs.getString(2), MenuItemType.valueOf(rs.getString(3)), rs.getDouble(4), rs.getInt(5), rs.getBoolean(6)));
                 }
-                historyItemName.setCellValueFactory(new PropertyValueFactory<MenuItem, String>("name"));
-                historyItemPrice.setCellValueFactory(new PropertyValueFactory<MenuItem, Double>("price"));
+                historyItemName.setCellValueFactory(new PropertyValueFactory<>("name"));
+                historyItemPrice.setCellValueFactory(new PropertyValueFactory<>("price"));
                 historyItemsTable.setItems(orderHistoryItems);
             }
             conn.close();
@@ -318,9 +322,9 @@ public class CustomerController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        orderHistoryNo.setCellValueFactory(new PropertyValueFactory<Order, Integer>("orderId"));
-        orderHistoryDate.setCellValueFactory(new PropertyValueFactory<Order, Timestamp>("orderDate"));
-        orderHistoryTotal.setCellValueFactory(new PropertyValueFactory<Order, Double>("orderTotal"));
+        orderHistoryNo.setCellValueFactory(new PropertyValueFactory<>("orderId"));
+        orderHistoryDate.setCellValueFactory(new PropertyValueFactory<>("orderDate"));
+        orderHistoryTotal.setCellValueFactory(new PropertyValueFactory<>("orderTotal"));
         orderHistoryTable.setItems(orderHistory);
 
         orderOption.add("Takeaway");
@@ -352,7 +356,7 @@ public class CustomerController implements Initializable {
 
     }
 
-    public void initialiseDetails() {
+    private void initialiseDetails() {
         username.setText(currentCustomer.getUsername());
         firstName.setText(currentCustomer.getFirstName());
         lastName.setText(currentCustomer.getLastName());
@@ -376,19 +380,19 @@ public class CustomerController implements Initializable {
 
     }
 
-    public void initialiseMenu() {
+    private void initialiseMenu() {
         fooditems.clear();
         drinksitems.clear();
         specialitems.clear();
 
-        foodName.setCellValueFactory(new PropertyValueFactory<MenuItem, String>("name"));
-        foodPrice.setCellValueFactory(new PropertyValueFactory<MenuItem, Double>("price"));
+        foodName.setCellValueFactory(new PropertyValueFactory<>("name"));
+        foodPrice.setCellValueFactory(new PropertyValueFactory<>("price"));
         foodTable.setItems(fooditems);
-        drinkName.setCellValueFactory(new PropertyValueFactory<MenuItem, String>("name"));
-        drinkPrice.setCellValueFactory(new PropertyValueFactory<MenuItem, Double>("price"));
+        drinkName.setCellValueFactory(new PropertyValueFactory<>("name"));
+        drinkPrice.setCellValueFactory(new PropertyValueFactory<>("price"));
         drinkTable.setItems(drinksitems);
-        specialsName.setCellValueFactory(new PropertyValueFactory<MenuItem, String>("name"));
-        specialsPrice.setCellValueFactory(new PropertyValueFactory<MenuItem, Double>("price"));
+        specialsName.setCellValueFactory(new PropertyValueFactory<>("name"));
+        specialsPrice.setCellValueFactory(new PropertyValueFactory<>("price"));
         specialsTable.setItems(specialitems);
         try {
             Connection conn = DatabaseService.getConnection();

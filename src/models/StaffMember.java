@@ -7,11 +7,14 @@ import java.sql.*;
 import java.time.Instant;
 import java.time.Period;
 import java.util.ArrayList;
-import java.util.HashMap;
 
+/**
+ * Staff member structure
+ * @author Ashley Forster, Sam James
+ */
 public class StaffMember extends User {
-    private StaffPosition position;
-    private Rota rota;
+    private final StaffPosition position;
+    private final Rota rota;
 
     private StaffMember(int id, String firstName, String lastName, StaffPosition position, Rota rota) {
 		super(id, firstName, lastName);

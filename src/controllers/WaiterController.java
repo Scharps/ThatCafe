@@ -11,26 +11,24 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import models.*;
 import models.MenuItem;
 import services.AppState;
 import services.DatabaseService;
 
-import javax.print.DocFlavor;
 import javax.swing.*;
-import javax.xml.crypto.Data;
 import java.io.IOException;
-import java.io.PipedReader;
 import java.net.URL;
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.Calendar;
 import java.util.ResourceBundle;
 
+/**
+ * Responsible for carrying out the functionality of the Waiter user interface.
+ * @author Ashley Forster, Sam James
+ */
 public class WaiterController implements Initializable {
     @FXML private TableView<MenuItem> foodTable;
     @FXML private TableColumn<MenuItem, String> foodName;
@@ -147,34 +145,34 @@ public class WaiterController implements Initializable {
         window.show();
     }
 
-    public void foodSelect(MouseEvent event){
+    public void foodSelect(){
         MenuItem itemSelected = foodTable.getSelectionModel().getSelectedItem();
         orderitems.add(itemSelected);
-        ordereditem.setCellValueFactory((new PropertyValueFactory<MenuItem, String>("name")));
+        ordereditem.setCellValueFactory((new PropertyValueFactory<>("name")));
         ordertable.setItems(orderitems);
     }
 
-    public void drinkSelect(MouseEvent event){
+    public void drinkSelect(){
         MenuItem itemSelected = drinkTable.getSelectionModel().getSelectedItem();
         orderitems.add(itemSelected);
-        ordereditem.setCellValueFactory((new PropertyValueFactory<MenuItem, String>("name")));
+        ordereditem.setCellValueFactory((new PropertyValueFactory<>("name")));
         ordertable.setItems(orderitems);
     }
 
-    public void specialSelect(MouseEvent event){
+    public void specialSelect(){
         MenuItem itemSelected = specialsTable.getSelectionModel().getSelectedItem();
         orderitems.add(itemSelected);
-        ordereditem.setCellValueFactory((new PropertyValueFactory<MenuItem, String>("name")));
+        ordereditem.setCellValueFactory((new PropertyValueFactory<>("name")));
         ordertable.setItems(orderitems);
     }
 
-    public void itemRemove(MouseEvent event){
+    public void itemRemove(){
         MenuItem itemSelected = ordertable.getSelectionModel().getSelectedItem();
         orderitems.remove(itemSelected);
         ordertable.setItems(orderitems);
     }
 
-    public void confirmOrder(ActionEvent event){
+    public void confirmOrder(){
         LocalDateTime orderTime = LocalDateTime.now();
         LocalDate bookingDate = LocalDate.now();
         int bookingHour = LocalDateTime.now().getHour();
@@ -204,10 +202,11 @@ public class WaiterController implements Initializable {
 
             conn.close();
         }catch (SQLException se){
+            JOptionPane.showMessageDialog(null, se.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
-    public void confirmBooking(ActionEvent event){
+    public void confirmBooking(){
         Booking selectedBooking = bookingTable.getSelectionModel().getSelectedItem();
         if(selectedBooking != null){
             try{
@@ -217,24 +216,24 @@ public class WaiterController implements Initializable {
                 initialiseUnconfirmedBookings();
                 initialiseTodaysBookings();
             } catch(Exception se){
-
+                JOptionPane.showMessageDialog(null, se.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
 
-    public void refreshEatIn(ActionEvent event){
+    public void refreshEatIn(){
         initialiseCurrentEatInOrders();
     }
 
-    public void refreshTakeaway(ActionEvent event) {
+    public void refreshTakeaway() {
         initialiseCurrentTakeawayOrders();
     }
 
-    public void refreshDelivery(ActionEvent event) {
+    public void refreshDelivery() {
         initialiseCurrentDeliveryOrders();
     }
 
-    public void confirmServed(ActionEvent event){
+    public void confirmServed(){
         EatInOrder selectedOrder = currentEatinTable.getSelectionModel().getSelectedItem();
         if(selectedOrder != null) {
             if (!selectedOrder.isCooked()) {
@@ -247,13 +246,13 @@ public class WaiterController implements Initializable {
                     initialiseCurrentEatInOrders();
                     orderItemsList.clear();
                 } catch (SQLException se) {
-
+                    JOptionPane.showMessageDialog(null, se.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         }
     }
 
-    public void eatinSelect(MouseEvent event){
+    public void eatinSelect(){
         EatInOrder selectedOrder = currentEatinTable.getSelectionModel().getSelectedItem();
         orderItemsList.clear();
         if(selectedOrder != null) {
@@ -265,7 +264,7 @@ public class WaiterController implements Initializable {
                     while (rs.next()) {
                         orderItemsList.add(MenuItem.createMenuItem(rs.getInt(1), rs.getString(2), MenuItemType.valueOf(rs.getString(3)), rs.getDouble(4), rs.getInt(5), rs.getBoolean(6)));
                     }
-                    eatinItem.setCellValueFactory(new PropertyValueFactory<MenuItem, String>("name"));
+                    eatinItem.setCellValueFactory(new PropertyValueFactory<>("name"));
                     eatinItemsTable.setItems(orderItemsList);
                 }
                 conn.close();
@@ -275,7 +274,7 @@ public class WaiterController implements Initializable {
         }
     }
 
-    public void confirmCollected(ActionEvent event){
+    public void confirmCollected(){
         TakeawayOrder selectedOrder = currentTakeawayTable.getSelectionModel().getSelectedItem();
         if(selectedOrder != null) {
             if (!selectedOrder.isCooked()) {
@@ -288,13 +287,13 @@ public class WaiterController implements Initializable {
                     initialiseCurrentTakeawayOrders();
                     orderItemsList.clear();
                 } catch (SQLException se) {
-
+                    JOptionPane.showMessageDialog(null, se.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         }
     }
 
-    public void takeawaySelect(MouseEvent event){
+    public void takeawaySelect(){
         TakeawayOrder selectedOrder = currentTakeawayTable.getSelectionModel().getSelectedItem();
         orderItemsList.clear();
         if(selectedOrder != null) {
@@ -309,7 +308,7 @@ public class WaiterController implements Initializable {
                     while (rs.next()) {
                         orderItemsList.add(MenuItem.createMenuItem(rs.getInt(1), rs.getString(2), MenuItemType.valueOf(rs.getString(3)), rs.getDouble(4), rs.getInt(5), rs.getBoolean(6)));
                     }
-                    takeawayItem.setCellValueFactory(new PropertyValueFactory<MenuItem, String>("name"));
+                    takeawayItem.setCellValueFactory(new PropertyValueFactory<>("name"));
                     takeawayItemsTable.setItems(orderItemsList);
                 }
                 conn.close();
@@ -366,7 +365,7 @@ public class WaiterController implements Initializable {
         workedHoursDatePicker.getChronology().dateNow();
     }
 
-    public void approveDelivery(ActionEvent event){
+    public void approveDelivery(){
         DeliveryOrder selectedOrder = currentDeliveryTable.getSelectionModel().getSelectedItem();
         if(selectedOrder != null) {
             try {
@@ -376,11 +375,12 @@ public class WaiterController implements Initializable {
                 initialiseCurrentDeliveryOrders();
                 orderItemsList.clear();
             } catch (SQLException se) {
+                JOptionPane.showMessageDialog(null, se.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
 
-    public void deliverySelect(MouseEvent event){
+    public void deliverySelect(){
         DeliveryOrder selectedOrder = currentDeliveryTable.getSelectionModel().getSelectedItem();
         orderItemsList.clear();
         if(selectedOrder != null) {
@@ -397,7 +397,7 @@ public class WaiterController implements Initializable {
                     while (rs.next()) {
                         orderItemsList.add(MenuItem.createMenuItem(rs.getInt(1), rs.getString(2), MenuItemType.valueOf(rs.getString(3)), rs.getDouble(4), rs.getInt(5), rs.getBoolean(6)));
                     }
-                    deliveryItem.setCellValueFactory(new PropertyValueFactory<MenuItem, String>("name"));
+                    deliveryItem.setCellValueFactory(new PropertyValueFactory<>("name"));
                     deliveryItemsTable.setItems(orderItemsList);
                 }
                 conn.close();
@@ -439,19 +439,19 @@ public class WaiterController implements Initializable {
 
     }
 
-    public void initialiseMenu(){
+    private void initialiseMenu(){
         fooditems.clear();
         drinksitems.clear();
         specialitems.clear();
 
-        foodName.setCellValueFactory(new PropertyValueFactory<MenuItem, String>("name"));
-        foodPrice.setCellValueFactory(new PropertyValueFactory<MenuItem, Double>("price"));
+        foodName.setCellValueFactory(new PropertyValueFactory<>("name"));
+        foodPrice.setCellValueFactory(new PropertyValueFactory<>("price"));
         foodTable.setItems(fooditems);
-        drinkName.setCellValueFactory(new PropertyValueFactory<MenuItem, String>("name"));
-        drinkPrice.setCellValueFactory(new PropertyValueFactory<MenuItem, Double>("price"));
+        drinkName.setCellValueFactory(new PropertyValueFactory<>("name"));
+        drinkPrice.setCellValueFactory(new PropertyValueFactory<>("price"));
         drinkTable.setItems(drinksitems);
-        specialsName.setCellValueFactory(new PropertyValueFactory<MenuItem, String>("name"));
-        specialsPrice.setCellValueFactory(new PropertyValueFactory<MenuItem, Double>("price"));
+        specialsName.setCellValueFactory(new PropertyValueFactory<>("name"));
+        specialsPrice.setCellValueFactory(new PropertyValueFactory<>("price"));
         specialsTable.setItems(specialitems);
         try{
             Connection conn = DatabaseService.getConnection();
@@ -470,23 +470,24 @@ public class WaiterController implements Initializable {
             }
             conn.close();
         }catch (SQLException se){
+            JOptionPane.showMessageDialog(null, se.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
 
     }
 
-    public void initialiseUnconfirmedBookings(){
+    private void initialiseUnconfirmedBookings(){
         unconfirmedBookings.clear();
 
-        bookingNo.setCellValueFactory(new PropertyValueFactory<Booking, Integer>("id"));
-        bookingDate.setCellValueFactory(new PropertyValueFactory<Booking, Date>("dateOfBooking"));
-        bookingHour.setCellValueFactory(new PropertyValueFactory<Booking, Integer>("hourOfBooking"));
-        tableNo.setCellValueFactory(new PropertyValueFactory<Booking, Integer>("tableId"));
-        guestNo.setCellValueFactory(new PropertyValueFactory<Booking, Integer>("numberOfGuests"));
+        bookingNo.setCellValueFactory(new PropertyValueFactory<>("id"));
+        bookingDate.setCellValueFactory(new PropertyValueFactory<>("dateOfBooking"));
+        bookingHour.setCellValueFactory(new PropertyValueFactory<>("hourOfBooking"));
+        tableNo.setCellValueFactory(new PropertyValueFactory<>("tableId"));
+        guestNo.setCellValueFactory(new PropertyValueFactory<>("numberOfGuests"));
         bookingTable.setItems(unconfirmedBookings);
 
         try{
             Connection conn = DatabaseService.getConnection();
-            ResultSet rs = Booking.getUncomfirmedBooking(conn);
+            ResultSet rs = Booking.getUnconfirmedBookings(conn);
             while(rs.next()){
                 unconfirmedBookings.add(Booking.getBooking(conn, rs.getInt("BookingId")));
             }
@@ -496,12 +497,12 @@ public class WaiterController implements Initializable {
         }
     }
 
-    public void initialiseCurrentEatInOrders(){
+    private void initialiseCurrentEatInOrders(){
         eatinOrders.clear();
-        eatinNo.setCellValueFactory(new PropertyValueFactory<EatInOrder, Integer>("orderId"));
-        eatinTime.setCellValueFactory(new PropertyValueFactory<EatInOrder, Timestamp>("orderTime"));
-        eatinTableNo.setCellValueFactory(new PropertyValueFactory<EatInOrder, Integer>("tableId"));
-        eatinCooked.setCellValueFactory(new PropertyValueFactory<EatInOrder, Boolean>("served"));
+        eatinNo.setCellValueFactory(new PropertyValueFactory<>("orderId"));
+        eatinTime.setCellValueFactory(new PropertyValueFactory<>("orderTime"));
+        eatinTableNo.setCellValueFactory(new PropertyValueFactory<>("tableId"));
+        eatinCooked.setCellValueFactory(new PropertyValueFactory<>("served"));
         currentEatinTable.setItems(eatinOrders);
         try{
             Connection conn = DatabaseService.getConnection();
@@ -510,16 +511,18 @@ public class WaiterController implements Initializable {
                 eatinOrders.add(EatInOrder.orderFromRS(rs));
             }
             conn.close();
-        } catch (SQLException se){}
+        } catch (SQLException se){
+            JOptionPane.showMessageDialog(null, se.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
 
 
-    public void initialiseCurrentTakeawayOrders(){
+    private void initialiseCurrentTakeawayOrders(){
         takeawayOrders.clear();
-        takeawayNo.setCellValueFactory(new PropertyValueFactory<TakeawayOrder, Integer>("orderId"));
-        pickUp.setCellValueFactory(new PropertyValueFactory<TakeawayOrder, Timestamp>("pickupTime"));
-        takeawayCooked.setCellValueFactory(new PropertyValueFactory<TakeawayOrder, Boolean>("cooked"));
+        takeawayNo.setCellValueFactory(new PropertyValueFactory<>("orderId"));
+        pickUp.setCellValueFactory(new PropertyValueFactory<>("pickupTime"));
+        takeawayCooked.setCellValueFactory(new PropertyValueFactory<>("cooked"));
         currentTakeawayTable.setItems(takeawayOrders);
         try{
             Connection conn = DatabaseService.getConnection();
@@ -529,15 +532,15 @@ public class WaiterController implements Initializable {
             }
             conn.close();
         } catch (SQLException se){
-
+            JOptionPane.showMessageDialog(null, se.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
-    public void initialiseCurrentDeliveryOrders(){
+    private void initialiseCurrentDeliveryOrders(){
         deliveryOrders.clear();
-        deliveryNo.setCellValueFactory(new PropertyValueFactory<DeliveryOrder, Integer>("orderId"));
-        deliveryApproved.setCellValueFactory(new PropertyValueFactory<DeliveryOrder, Boolean>("confirmed"));
-        deliveryCooked.setCellValueFactory(new PropertyValueFactory<DeliveryOrder, Boolean>("cooked"));
+        deliveryNo.setCellValueFactory(new PropertyValueFactory<>("orderId"));
+        deliveryApproved.setCellValueFactory(new PropertyValueFactory<>("confirmed"));
+        deliveryCooked.setCellValueFactory(new PropertyValueFactory<>("cooked"));
         currentDeliveryTable.setItems(deliveryOrders);
         try{
             Connection conn = DatabaseService.getConnection();
@@ -547,17 +550,17 @@ public class WaiterController implements Initializable {
             }
             conn.close();
         }catch (SQLException se){
-
+            JOptionPane.showMessageDialog(null, se.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
-    public void initialiseTodaysBookings(){
+    private void initialiseTodaysBookings(){
         todaysBookings.clear();
 
-        todayBookingNo.setCellValueFactory(new PropertyValueFactory<Booking, Integer>("id"));
-        todayBookingHour.setCellValueFactory(new PropertyValueFactory<Booking, Integer>("hourOfBooking"));
-        todayTableNo.setCellValueFactory(new PropertyValueFactory<Booking, Integer>("tableId"));
-        todayGuestNo.setCellValueFactory(new PropertyValueFactory<Booking, Integer>("numberOfGuests"));
+        todayBookingNo.setCellValueFactory(new PropertyValueFactory<>("id"));
+        todayBookingHour.setCellValueFactory(new PropertyValueFactory<>("hourOfBooking"));
+        todayTableNo.setCellValueFactory(new PropertyValueFactory<>("tableId"));
+        todayGuestNo.setCellValueFactory(new PropertyValueFactory<>("numberOfGuests"));
         todayBookingTable.setItems(todaysBookings);
         try{
             Connection conn = DatabaseService.getConnection();
@@ -567,7 +570,7 @@ public class WaiterController implements Initializable {
             }
             conn.close();
         }catch (SQLException se){
-
+            JOptionPane.showMessageDialog(null, se.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
 
     }

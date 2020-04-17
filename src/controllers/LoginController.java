@@ -18,7 +18,12 @@ import models.Customer;
 import services.AppState;
 import services.DatabaseService;
 
+import javax.swing.*;
 
+/**
+ * Responsible for carrying out the functionality of the Login user interface.
+ * @author Ashley Forster
+ */
 public class LoginController {
 
     @FXML private TextField customerusername;
@@ -74,12 +79,13 @@ public class LoginController {
                     customerpassword.setStyle("-fx-border-color: red;");
                 }
             } catch(SQLException se){
+                JOptionPane.showMessageDialog(null, se.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
 
         }
     }
 
-    public void registerPushed(ActionEvent event) throws IOException {
+    public void registerPushed() {
         registererror.setText("");
         registerusername.setStyle("");
         registername.setStyle("");
@@ -154,9 +160,8 @@ public class LoginController {
             }
             catch(SQLIntegrityConstraintViolationException se) {
                 registererror.setText("Username is already in use");
-            } catch (SQLException se2) {
-                se2.printStackTrace();
-                System.out.println(se2);
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
             catch(Exception ex) {
                 registererror.setText("ERROR");

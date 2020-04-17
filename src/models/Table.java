@@ -3,9 +3,14 @@ package models;
 import java.sql.*;
 import java.util.ArrayList;
 
+/**
+ * This represents a table structure
+ * @author Sam James,
+ */
+
 public class Table {
-    private int id;
-    private int capacity;
+    private final int id;
+    private final int capacity;
 
     private Table(int id, int capacity) {
         this.id = id;
@@ -39,7 +44,7 @@ public class Table {
         return "Table: " + id +", Capacity: " + capacity;
     }
 
-    public static ArrayList<Table> getAllTables(Connection conn) throws SQLException {
+    private static ArrayList<Table> getAllTables(Connection conn) throws SQLException {
         PreparedStatement st = conn.prepareStatement("SELECT * FROM CafeTables");
         ResultSet rs = st.executeQuery();
         ArrayList<Table> tables = new ArrayList<>();
@@ -53,24 +58,22 @@ public class Table {
     }
 
     public static ArrayList<Table> getAvailableTables(Connection conn, Date day, int startHour, int duration, int capacity) throws SQLException {
-        String sqlStatement = String.format(
-                "SELECT *\n" +
+        StringBuilder sqlStatement = new StringBuilder("SELECT *\n" +
                 "FROM Bookings b, CafeTables t\n" +
                 "WHERE b.TableId = t.TableId AND\n" +
                 "b.BookingDate = ? AND\n" +
-                "("
-        );
+                "(");
 
         for(int i = startHour; i < startHour + duration; i++) {
-            sqlStatement += "b.BookingHour = " + i;
+            sqlStatement.append("b.BookingHour = ").append(i);
             if(i < startHour + duration - 1) {
-                sqlStatement += " || ";
+                sqlStatement.append(" || ");
             } else {
-                sqlStatement += ")";
+                sqlStatement.append(")");
             }
         }
 
-        PreparedStatement st = conn.prepareStatement(sqlStatement);
+        PreparedStatement st = conn.prepareStatement(sqlStatement.toString());
         st.setDate(1, day);
         ResultSet rs = st.executeQuery();
         ArrayList<Table> unavailableTables = new ArrayList<>();

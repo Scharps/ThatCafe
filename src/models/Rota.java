@@ -5,15 +5,19 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * This is the data structure that contains all of a staffmembers' start and finishing hours.
+ * @author Sam James
+ */
 public class Rota {
-    private int rotaId;
-    private Shift mondayShift;
-    private Shift tuesdayShift;
-    private Shift wednesdayShift;
-    private Shift thursdayShift;
-    private Shift fridayShift;
-    private Shift saturdayShift;
-    private Shift sundayShift;
+    private final int rotaId;
+    private final Shift mondayShift;
+    private final Shift tuesdayShift;
+    private final Shift wednesdayShift;
+    private final Shift thursdayShift;
+    private final Shift fridayShift;
+    private final Shift saturdayShift;
+    private final Shift sundayShift;
 
     private Rota(int rotaId, Shift mondayShift, Shift tuesdayShift, Shift wednesdayShift, Shift thursdayShift, Shift fridayShift, Shift saturdayShift, Shift sundayShift) {
         this.rotaId = rotaId;

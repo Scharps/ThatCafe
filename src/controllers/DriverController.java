@@ -25,8 +25,12 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
 
+/**
+ * Responsible for carrying out the functionality of the Driver user interface.
+ * @author Ashley Forster, Sam James
+ */
 public class DriverController implements Initializable {
-    AppState appState = AppState.getAppState();
+    private final AppState appState = AppState.getAppState();
     @FXML private ListView availableList;
     @FXML private ListView assignedList;
 

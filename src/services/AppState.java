@@ -1,9 +1,12 @@
 package services;
 
 import models.StaffMember;
-import models.User;
 import models.Customer;
 
+/**
+ * A singleton class structure to keep track of application state.
+ * @author Ashley Forster, Sam James
+ */
 public final class AppState {
 
     private static AppState appState_;

@@ -3,14 +3,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import models.StaffMember;
-import models.StaffPosition;
-import services.DatabaseService;
-
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.SQLException;
-import java.time.LocalDateTime;
 
 public class Main extends Application {
 

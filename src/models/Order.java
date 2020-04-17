@@ -1,16 +1,21 @@
 package models;
 
+import javax.swing.*;
 import java.sql.*;
 
+/**
+ * This is the datastructure for an Order.
+ * @author Ashley Forster
+ */
 public class Order {
-    private int orderId;
-    private Timestamp orderDate;
-    private int customerId;
-    private boolean cooked;
-    private double orderTotal;
-    private OrderType orderType;
+    private final int orderId;
+    private final Timestamp orderDate;
+    private final int customerId;
+    private final boolean cooked;
+    private final double orderTotal;
+    private final OrderType orderType;
 
-    protected Order(int orderId, Timestamp orderDate, int customerId, boolean cooked, double orderTotal, OrderType orderType) {
+    Order(int orderId, Timestamp orderDate, int customerId, boolean cooked, double orderTotal, OrderType orderType) {
         this.orderId = orderId;
         this.orderDate = orderDate;
         this.customerId = customerId;
@@ -32,7 +37,7 @@ public class Order {
             st.setString(4, orderType.toString());
             st.executeUpdate();
         } catch (SQLException se){
-
+            JOptionPane.showMessageDialog(null, se.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -63,7 +68,7 @@ public class Order {
             st.setInt(1, this.orderId);
             st.executeUpdate();
         } catch (SQLException se){
-
+            JOptionPane.showMessageDialog(null, se.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 

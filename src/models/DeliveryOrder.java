@@ -1,18 +1,21 @@
 package models;
 
+import javax.swing.*;
 import java.sql.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 
+/**
+ * This represents a delivery order which is made by a customer.
+ * @author Ashley Forster
+ */
 public class DeliveryOrder extends Order {
-    private Timestamp estimatedDeliveryTime;
-    private boolean confirmed;
+    private final Timestamp estimatedDeliveryTime;
     private boolean delivered;
     private int driverID;
 
-    private DeliveryOrder(int orderId, Timestamp orderDate, int customerId, boolean cooked, double orderTotal, OrderType orderType, boolean confirmed, Timestamp estimatedDeliveryTime, int driverID, boolean delivered) {
-        super(orderId, orderDate, customerId, cooked, orderTotal, orderType);
-        this.confirmed = confirmed;
+    private DeliveryOrder(int orderId, Timestamp orderDate, int customerId, boolean cooked, double orderTotal, boolean confirmed, Timestamp estimatedDeliveryTime, int driverID, boolean delivered) {
+        super(orderId, orderDate, customerId, cooked, orderTotal, OrderType.Delivery);
+        boolean confirmed1 = confirmed;
         this.estimatedDeliveryTime = estimatedDeliveryTime;
         this.driverID = driverID;
         this.delivered = delivered;
@@ -30,17 +33,15 @@ public class DeliveryOrder extends Order {
             st.setTimestamp(2, estimatedDeliveryTime);
             st.executeUpdate();
         } catch (SQLException se){
+            JOptionPane.showMessageDialog(null, se.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
-    public static boolean isApproved(Connection conn, int orderId) throws SQLException{
+    public static boolean isApproved(Connection conn, int orderId) throws SQLException {
         PreparedStatement st = conn.prepareStatement("SELECT Approved FROM DeliveryOrders WHERE OrderId = ?");
         st.setInt(1, orderId);
         ResultSet rs = st.executeQuery();
-        if(rs.next()){
-            return rs.getBoolean(1);
-        }
-        else return false;
+        return rs.next() && rs.getBoolean(1);
     }
 
     public static ResultSet getUndelivered(Connection conn) throws SQLException {
@@ -56,7 +57,7 @@ public class DeliveryOrder extends Order {
     }
 
     public static DeliveryOrder orderFromRS(ResultSet rs) throws SQLException{
-        return new DeliveryOrder(rs.getInt(1), rs.getTimestamp(2), rs.getInt(3), rs.getBoolean(4), rs.getDouble(5), OrderType.Delivery, rs.getBoolean(6), rs.getTimestamp(7), rs.getInt(8), rs.getBoolean(9));
+        return new DeliveryOrder(rs.getInt(1), rs.getTimestamp(2), rs.getInt(3), rs.getBoolean(4), rs.getDouble(5), rs.getBoolean(6), rs.getTimestamp(7), rs.getInt(8), rs.getBoolean(9));
     }
 
     public void approveDelivery(Connection conn) throws SQLException{
