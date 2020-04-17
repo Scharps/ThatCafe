@@ -39,7 +39,6 @@ public class ManagerController implements Initializable {
     private TextField surnameTextField;
     @FXML
     private PasswordField passwordField;
-
     @FXML
     private ComboBox staffMemberCombo;
     @FXML
@@ -417,10 +416,10 @@ public class ManagerController implements Initializable {
 
     public void createStaffMember() {
         if (
-                !nameTextField.getText().isEmpty() ||
-                        !surnameTextField.getText().isEmpty() ||
-                        !passwordField.getText().isEmpty()
-                ) {
+            !nameTextField.getText().isEmpty() ||
+            !surnameTextField.getText().isEmpty() ||
+            !passwordField.getText().isEmpty()
+        ) {
             try {
                 staffMembersListView.getItems().add(
                         StaffMember.createStaffMember(

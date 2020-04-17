@@ -14,7 +14,7 @@ public class Booking {
     private int customerId;
     private int numberOfGuests;
     private boolean isApproved;
-    public static final int OPENING_TIME = 17;
+    public static final int OPENING_TIME = 6;
     public static final int CLOSING_TIME = 23;
 
     private Booking(int id, int tableId, int hourOfBooking, Date dateOfBooking, int customerId, int numberOfGuests, boolean approved) {

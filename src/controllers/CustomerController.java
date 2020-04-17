@@ -480,7 +480,15 @@ public class CustomerController implements Initializable {
 
 
     public void viewAvailableSlots() {
-        int startTime = Integer.parseInt(timeCombo.getValue().toString().substring(0, 2));
+        String stringInt = timeCombo.getValue().toString();
+        int count = 0;
+        char c = stringInt.charAt(count);
+        while(c!=':') {
+            count++;
+            c = stringInt.charAt(count);
+        }
+        int startTime = Integer.parseInt(timeCombo.getValue().toString().substring(0, count));
+
         hourChosen = startTime;
         dateChosen = dateSelector.getValue();
         guestCount = (Integer) guestNumberSpinner.getValue();

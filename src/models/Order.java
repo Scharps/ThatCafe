@@ -29,7 +29,7 @@ public class Order {
             st.setTimestamp(1, orderDate);
             st.setInt(2, customerId);
             st.setDouble(3, orderTotal);
-            st.setString(4, String.valueOf(orderType));
+            st.setString(4, orderType.toString());
             st.executeUpdate();
         } catch (SQLException se){
 

@@ -203,7 +203,7 @@ public class ChefController implements Initializable {
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(
                     null,
-                    "Error in initilizing my rota. " + e.getMessage(),
+                    "Error in initializing my rota. " + e.getMessage(),
                     "Error", JOptionPane.ERROR_MESSAGE
             );
         }
