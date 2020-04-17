@@ -18,12 +18,11 @@ import models.MenuItem;
 import services.AppState;
 import services.DatabaseService;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.net.URL;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
+import java.sql.*;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
 
 public class ChefController implements Initializable {
@@ -60,6 +59,41 @@ public class ChefController implements Initializable {
     private final ObservableList<MenuItem> fooditems = FXCollections.observableArrayList();
     private final ObservableList<MenuItem> specialitems = FXCollections.observableArrayList();
     private final ObservableList<MenuItem> drinksitems = FXCollections.observableArrayList();
+
+    @FXML
+    private Label monStartLabel;
+    @FXML
+    private Label monEndLabel;
+    @FXML
+    private Label tueStartLabel;
+    @FXML
+    private Label tueEndLabel;
+    @FXML
+    private Label wedStartLabel;
+    @FXML
+    private Label wedEndLabel;
+    @FXML
+    private Label thuStartLabel;
+    @FXML
+    private Label thuEndLabel;
+    @FXML
+    private Label friStartLabel;
+    @FXML
+    private Label friEndLabel;
+    @FXML
+    private Label satStartLabel;
+    @FXML
+    private Label satEndLabel;
+    @FXML
+    private Label sunStartLabel;
+    @FXML
+    private Label sunEndLabel;
+    @FXML
+    private DatePicker workedHoursDatePicker;
+    @FXML
+    private Spinner hoursWorkedSpinner;
+    @FXML
+    private Button saveButton;
 
     public void logoutPushed(ActionEvent event) throws IOException {
         Parent loginParent = FXMLLoader.load(getClass().getResource("/gui/StaffProfiles.fxml"));
@@ -166,11 +200,45 @@ public class ChefController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         initialiseCurrentOrders();
         initialiseMenu();
+        try {
+            initializeMyRota();
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(
+                    null,
+                    "Error in initilizing my rota. " + e.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE
+            );
+        }
         newTypeList.add(String.valueOf(MenuItemType.Food));
         newTypeList.add(String.valueOf(MenuItemType.Drink));
         newItemType.setItems(newTypeList);
 
 
+    }
+
+    public void saveWorkedHours() {
+        if(!workedHoursDatePicker.getValue().isAfter(LocalDate.now())) {
+            try {
+                AppState.getAppState().getStaff().setHoursWorked(
+                        DatabaseService.getConnection(),
+                        Date.valueOf(workedHoursDatePicker.getValue()),
+                        (Integer) hoursWorkedSpinner.getValue()
+                );
+                saveButton.setText("Saved!");
+            } catch(SQLException e) {
+                JOptionPane.showMessageDialog(
+                        null,
+                        "Error in updating worked hours. " + e.getMessage(),
+                        "Error", JOptionPane.ERROR_MESSAGE
+                );
+            }
+        } else {
+            JOptionPane.showMessageDialog(
+                    null,
+                    "You can't set hours for the future!",
+                    "Error", JOptionPane.ERROR_MESSAGE
+            );
+        }
     }
 
     public void initialiseCurrentOrders(){
@@ -195,6 +263,28 @@ public class ChefController implements Initializable {
         }catch (SQLException se){
         }
 
+    }
+
+    public void initializeMyRota() throws SQLException {
+        Rota myRota = Rota.getRota(
+                DatabaseService.getConnection(),
+                AppState.getAppState().getStaff().getRota().getRotaId()
+        );
+        monStartLabel.setText(myRota.getMondayShift().getStartTime());
+        monEndLabel.setText(myRota.getMondayShift().getFinishTime());
+        tueStartLabel.setText(myRota.getTuesdayShift().getStartTime());
+        tueEndLabel.setText(myRota.getTuesdayShift().getFinishTime());
+        wedStartLabel.setText(myRota.getWednesdayShift().getStartTime());
+        wedEndLabel.setText(myRota.getWednesdayShift().getFinishTime());
+        thuStartLabel.setText(myRota.getThursdayShift().getStartTime());
+        thuEndLabel.setText(myRota.getThursdayShift().getFinishTime());
+        friStartLabel.setText(myRota.getFridayShift().getStartTime());
+        friEndLabel.setText(myRota.getFridayShift().getFinishTime());
+        satStartLabel.setText(myRota.getSaturdayShift().getStartTime());
+        satEndLabel.setText(myRota.getSaturdayShift().getFinishTime());
+        sunStartLabel.setText(myRota.getSundayShift().getStartTime());
+        sunEndLabel.setText(myRota.getSundayShift().getFinishTime());
+        workedHoursDatePicker.getChronology().dateNow();
     }
 
     public void initialiseMenu(){

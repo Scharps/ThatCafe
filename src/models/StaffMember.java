@@ -54,7 +54,7 @@ public class StaffMember extends User {
     }
 
     public static Pair<StaffMember, Integer> getTopStaffMemberPast7Days(Connection conn) throws SQLException {
-        PreparedStatement st = conn.prepareStatement("SELECT StaffId, WorkedHours\n" +
+        PreparedStatement st = conn.prepareStatement("SELECT StaffId, SUM(WorkedHours) WorkedHours\n" +
                 "FROM HoursWorked\n" +
                 "WHERE DateWorked >= ?\n" +
                 "GROUP BY StaffId\n" +

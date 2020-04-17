@@ -262,6 +262,28 @@ public class ManagerController implements Initializable {
         }
     }
 
+    public void initializeMyRota() throws SQLException {
+        Rota myRota = Rota.getRota(
+            DatabaseService.getConnection(),
+            AppState.getAppState().getStaff().getRota().getRotaId()
+        );
+        monStartLabel.setText(myRota.getMondayShift().getStartTime());
+        monEndLabel.setText(myRota.getMondayShift().getFinishTime());
+        tueStartLabel.setText(myRota.getTuesdayShift().getStartTime());
+        tueEndLabel.setText(myRota.getTuesdayShift().getFinishTime());
+        wedStartLabel.setText(myRota.getWednesdayShift().getStartTime());
+        wedEndLabel.setText(myRota.getWednesdayShift().getFinishTime());
+        thuStartLabel.setText(myRota.getThursdayShift().getStartTime());
+        thuEndLabel.setText(myRota.getThursdayShift().getFinishTime());
+        friStartLabel.setText(myRota.getFridayShift().getStartTime());
+        friEndLabel.setText(myRota.getFridayShift().getFinishTime());
+        satStartLabel.setText(myRota.getSaturdayShift().getStartTime());
+        satEndLabel.setText(myRota.getSaturdayShift().getFinishTime());
+        sunStartLabel.setText(myRota.getSundayShift().getStartTime());
+        sunEndLabel.setText(myRota.getSundayShift().getFinishTime());
+        workedHoursDatePicker.getChronology().dateNow();
+    }
+
     public void saveHours() {
         StaffMember staffMember = (StaffMember) staffMemberCombo.getSelectionModel().getSelectedItem();
         try {
@@ -406,27 +428,6 @@ public class ManagerController implements Initializable {
         }
     }
 
-    public void initializeMyRota() throws SQLException {
-        Rota myRota = Rota.getRota(
-            DatabaseService.getConnection(),
-            AppState.getAppState().getStaff().getRota().getRotaId()
-        );
-        monStartLabel.setText(myRota.getMondayShift().getStartTime());
-        monEndLabel.setText(myRota.getMondayShift().getFinishTime());
-        tueStartLabel.setText(myRota.getTuesdayShift().getStartTime());
-        tueEndLabel.setText(myRota.getTuesdayShift().getFinishTime());
-        wedStartLabel.setText(myRota.getWednesdayShift().getStartTime());
-        wedEndLabel.setText(myRota.getWednesdayShift().getFinishTime());
-        thuStartLabel.setText(myRota.getThursdayShift().getStartTime());
-        thuEndLabel.setText(myRota.getThursdayShift().getFinishTime());
-        friStartLabel.setText(myRota.getFridayShift().getStartTime());
-        friEndLabel.setText(myRota.getFridayShift().getFinishTime());
-        satStartLabel.setText(myRota.getSaturdayShift().getStartTime());
-        satEndLabel.setText(myRota.getSaturdayShift().getFinishTime());
-        sunStartLabel.setText(myRota.getSundayShift().getStartTime());
-        sunEndLabel.setText(myRota.getSundayShift().getFinishTime());
-        workedHoursDatePicker.getChronology().dateNow();
-    }
 
     private void initializeStats() throws SQLException {
         Customer mostActive = Customer.getMostActive(DatabaseService.getConnection());
