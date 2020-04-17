@@ -7,7 +7,8 @@ import models.Customer;
 public final class AppState {
 
     private static AppState appState_;
-    private AppState(){};
+    private AppState(){}
+
     private Customer customer_;
     private StaffMember staff_;
 

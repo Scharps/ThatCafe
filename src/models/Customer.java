@@ -35,15 +35,11 @@ public class Customer extends User {
         st = conn.prepareStatement("SELECT * FROM Customers\n" +
                 "WHERE CustomerId = (SELECT MAX(CustomerId) FROM Customers)");
         ResultSet rs = st.executeQuery();
-        rs.next();
-        Customer customer = new Customer(
-                rs.getInt("CustomerId"),
-                rs.getString("Username"),
-                rs.getString("FName"),
-                rs.getString("FName"),
-                Address.getAddress(DatabaseService.getConnection(), rs.getInt("AddressId"))
-        );
-        return customer;
+        if(rs.next()){
+            return customerFromResultSet(rs);
+        } else {
+            return null;
+        }
     }
 
     public int getAddressId(Connection conn){
@@ -69,13 +65,7 @@ public class Customer extends User {
         st.setString(2, password);
         ResultSet rs = st.executeQuery();
         if(rs.next()) {
-            return new Customer(
-                rs.getInt("CustomerId"),
-                rs.getString("Username"),
-                rs.getString("FName"),
-                rs.getString("LName"),
-                Address.getAddress(DatabaseService.getConnection(), rs.getInt("AddressId"))
-            );
+            return customerFromResultSet(rs);
         } else {
             return null;
         }
@@ -86,13 +76,7 @@ public class Customer extends User {
         st.setInt(1, id);
         ResultSet rs = st.executeQuery();
         if(rs.next()) {
-            return new Customer(
-                    rs.getInt("CustomerId"),
-                    rs.getString("Username"),
-                    rs.getString("FName"),
-                    rs.getString("LName"),
-                    Address.getAddress(conn, rs.getInt("AddressId"))
-            );
+            return customerFromResultSet(rs);
         } else {
             return null;
         }

@@ -56,14 +56,6 @@ public class Booking {
         return this.hourOfBooking;
     }
 
-    public int getCustomerId() {
-        return this.customerId;
-    }
-
-    public int getNumberOfGuests() {
-        return this.numberOfGuests;
-    }
-
     public boolean isApproved() {
         return isApproved;
     }
@@ -146,60 +138,6 @@ public class Booking {
         PreparedStatement st = conn.prepareStatement("DELETE FROM Bookings WHERE BookingId = ?");
         st.setInt(1, id);
         st.executeUpdate();
-    }
-
-    public static void updateBooking(Connection conn, int id, int tableId, Timestamp dateOfBooking, int customerId, int numberOfGuests) throws SQLException {
-        PreparedStatement st = conn.prepareStatement("UPDATE Staff\n" +
-                "SET TableId = ?, CustomerId = ?, BookingDate = ?, GuestQuantity = ?\n" +
-                "WHERE BookingId = ?");
-        st.setInt(1,tableId);
-        st.setInt(2, customerId);
-        st.setTimestamp(3, dateOfBooking);
-        st.setInt(4, numberOfGuests);
-        st.setInt(5, id);
-        st.executeUpdate();
-    }
-
-    public static ArrayList<Booking> getBookingsForTable(Connection conn, int tableId) throws SQLException {
-        ArrayList<Booking> bookings = new ArrayList<>();
-        PreparedStatement st = conn.prepareStatement("SELECT * FROM Bookings WHERE TableId = ?");
-        st.setInt(1, tableId);
-        ResultSet rs = st.executeQuery();
-        while(rs.next()) {
-            bookings.add(bookingFromResultSet(rs));
-        }
-        return bookings;
-    }
-
-    public static ArrayList<Booking> getAllBookings(Connection conn) throws SQLException {
-        ArrayList<Booking> bookings = new ArrayList<>();
-        PreparedStatement st = conn.prepareStatement("SELECT * FROM Bookings");
-        ResultSet rs = st.executeQuery();
-        while(rs.next()) {
-            bookings.add(bookingFromResultSet(rs));
-        }
-        return bookings;
-    }
-
-    public static ArrayList<Integer> availableTimesForTable(Connection conn, int tableId, Date day) throws SQLException {
-        PreparedStatement st = conn.prepareStatement("SELECT BookingHour FROM Bookings\n" +
-                "WHERE TableId = ? AND BookingDate >= ?");
-        st.setInt(1, tableId);
-        st.setDate(2, day);
-        ArrayList<Integer> bookedTimes = new ArrayList<>();
-        ResultSet rs = st.executeQuery();
-        while(rs.next()) {
-            bookedTimes.add(rs.getInt("BookingHour"));
-        }
-        ArrayList<Integer> availableTimes = new ArrayList<>();
-        for(int i = OPENING_TIME; i < CLOSING_TIME; i++) {
-            availableTimes.add(i);
-        }
-        for (int i: bookedTimes) {
-            availableTimes.removeIf(t -> t == i);
-        }
-
-        return availableTimes;
     }
 
     public static ArrayList<Booking> getBookingsForCustomer(Connection conn, int customerId) throws SQLException {

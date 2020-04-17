@@ -82,7 +82,7 @@ public class DeliveryOrder extends Order {
     }
 
     public void assignDriver(Connection conn, int driverId) throws SQLException {
-        PreparedStatement st = conn.prepareStatement("UPDATE DeliveryOrders\n" +
+        PreparedStatement st = conn.prepareStatement("UPDATE DeliveryOrder\n" +
                 "SET DriverId = ?\n" +
                 "WHERE OrderId = ?"
         );
@@ -91,19 +91,18 @@ public class DeliveryOrder extends Order {
         st.executeUpdate();
         this.driverID = driverId;
     }
-
+    
     public void unassign(Connection conn) throws SQLException {
-        PreparedStatement st = conn.prepareStatement("UPDATE DeliveryOrders\n" +
+        PreparedStatement st = conn.prepareStatement("UPDATE DeliveryOrder\n" +
                 "SET DriverId = NULL\n" +
                 "WHERE OrderId = ?"
         );
         st.setInt(1, this.getOrderId());
         st.executeUpdate();
-        this.driverID = -1;
     }
 
     public void markDelivered(Connection conn) throws SQLException {
-        PreparedStatement st = conn.prepareStatement("UPDATE DeliveryOrders\n" +
+        PreparedStatement st = conn.prepareStatement("UPDATE DeliveryOrder\n" +
                 "SET Delivered = TRUE\n" +
                 "WHERE OrderId = ?");
         st.setInt(1, this.getOrderId());

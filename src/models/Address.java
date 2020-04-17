@@ -1,7 +1,5 @@
 package models;
 
-import javax.xml.transform.Result;
-import java.lang.UnsupportedOperationException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -19,7 +17,7 @@ public class Address {
         this.firstLine = firstLine;
         this.city = city;
         this.postCode = postCode;
-    };
+    }
 
     public int getId() {
         return this.id;
@@ -55,7 +53,6 @@ public class Address {
                 rs.getString("PostCode")
         );
         return address;
-        //throw new UnsupportedOperationException("createAddress() is not yet implemented");
     }
 
     public static Address getAddress(Connection conn, int id) throws SQLException {
@@ -71,12 +68,6 @@ public class Address {
             );
         }
         return null;
-    }
-
-    public static void deleteAddress(Connection conn, int id) throws SQLException {
-        PreparedStatement st = conn.prepareStatement("DELETE FROM Address WHERE AddressId = ?");
-        st.setInt(1, id);
-        st.executeUpdate();
     }
 
     public static void updateAddress(Connection conn, int id, String firstLine, String city, String postCode) throws SQLException {

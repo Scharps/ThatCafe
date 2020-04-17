@@ -42,11 +42,7 @@ public class DatabaseService {
             st.setString(1, password);
             st.setInt(2, customerId);
             ResultSet rs = st.executeQuery();
-            if(rs.next()){
-                return true;
-            } else {
-                return false;
-            }
+            return rs.next();
         }catch (SQLException se){
             return false;
         }

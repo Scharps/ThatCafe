@@ -32,8 +32,6 @@ import java.util.Calendar;
 import java.util.ResourceBundle;
 
 public class WaiterController implements Initializable {
-    private AppState appState = AppState.getAppState();
-    private StaffMember currentStaff = appState.getStaff();
     @FXML private TableView<MenuItem> foodTable;
     @FXML private TableColumn<MenuItem, String> foodName;
     @FXML private TableColumn<MenuItem, Double> foodPrice;
@@ -180,7 +178,7 @@ public class WaiterController implements Initializable {
         LocalDateTime orderTime = LocalDateTime.now();
         LocalDate bookingDate = LocalDate.now();
         int bookingHour = LocalDateTime.now().getHour();
-        int tableId = (Integer) tableno.getValue();
+        int tableId = tableno.getValue();
         Timestamp sqlordertime = Timestamp.valueOf(orderTime);
         Date sqlbookingDate = Date.valueOf(bookingDate);
         double orderTotal = 0.0;
@@ -412,7 +410,7 @@ public class WaiterController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        namelabel.setText(currentStaff.getFirstName());
+        namelabel.setText(AppState.getAppState().getStaff().getFirstName());
 
         tableno.setItems(tables);
         initialiseMenu();

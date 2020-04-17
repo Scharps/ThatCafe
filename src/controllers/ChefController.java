@@ -26,8 +26,6 @@ import java.time.LocalDate;
 import java.util.ResourceBundle;
 
 public class ChefController implements Initializable {
-    private AppState appState = AppState.getAppState();
-    private StaffMember currentStaff = appState.getStaff();
 
     @FXML private TableView<Order> currentOrderTable;
     @FXML private TableColumn<Order, Integer> currentOrderNo;

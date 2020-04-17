@@ -1,11 +1,6 @@
 package models;
 
-import javafx.animation.ScaleTransition;
-import javafx.collections.ObservableList;
-import javafx.scene.control.ComboBox;
-
 import java.sql.*;
-import java.util.ArrayList;
 
 public class Order {
     private int orderId;
@@ -84,7 +79,6 @@ public class Order {
     public Timestamp getOrderDate() {
         return this.orderDate;
     }
-
 
     public double getOrderTotal() {
         return orderTotal;
