@@ -85,8 +85,9 @@ public class Table {
         }
         ArrayList<Table> availableTables = getAllTables(conn);
         for(Table t : unavailableTables) {
-            availableTables.removeIf(table -> table.id == t.id || table.capacity < capacity);
+            availableTables.removeIf(table -> (table.id == t.id));
         }
+        availableTables.removeIf(table -> table.capacity < capacity);
         return availableTables;
     }
 }

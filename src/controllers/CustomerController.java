@@ -434,9 +434,7 @@ public class CustomerController implements Initializable {
                     guestCount
             );
             availableSlotsList.getItems().clear();
-            for(Table t : availableTables) {
-                availableSlotsList.getItems().add(t);
-            }
+            availableSlotsList.getItems().addAll(availableTables);
         } catch(SQLException err) {
             JOptionPane.showMessageDialog(null, err.getMessage(),"Error", JOptionPane.ERROR_MESSAGE);
         }
