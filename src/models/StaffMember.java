@@ -114,6 +114,16 @@ public class StaffMember extends User {
         return staffMembers;
     }
 
+    public void setHoursWorked(Connection conn, Date date, int hours) throws SQLException {
+        PreparedStatement st = conn.prepareStatement("INSERT INTO HoursWorked(StaffId, DateWorked, WorkedHours)\n" +
+                "VALUES(?, ?, ?)"
+        );
+        st.setInt(1, getId());
+        st.setDate(2, date);
+        st.setInt(3, hours);
+        st.executeUpdate();
+    }
+
     private static StaffMember staffMemberFromResultSet(ResultSet rs) throws SQLException {
         return new StaffMember(
                 rs.getInt("StaffId"),

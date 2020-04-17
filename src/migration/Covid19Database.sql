@@ -136,7 +136,7 @@ create table DeliveryOrders(
 );
 
 CREATE TABLE HoursWorked (
-	HoursWorkedId INTEGER,
+	HoursWorkedId INTEGER AUTO_INCREMENT,
     StaffId INTEGER NOT NULL,
     DateWorked DATE NOT NULL,
     WorkedHours INTEGER NOT NULL DEFAULT 0,
