@@ -115,6 +115,12 @@ public class ManagerController implements Initializable {
     private Spinner hoursWorkedSpinner;
     @FXML
     private Button saveButton;
+    @FXML
+    private TextField firstNameField;
+    @FXML
+    private TextField lastNameField;
+    @FXML
+    private ComboBox positionCombo2;
 
     private final static String[] TIMES = {
             "None",
@@ -141,17 +147,59 @@ public class ManagerController implements Initializable {
         try {
             staffMembersListView.getItems().clear();
             positionCombo.getItems().clear();
+            positionCombo2.getItems().clear();
             staffMembersListView.getItems().addAll(
                     StaffMember.getAllStaffMembers(DatabaseService.getConnection())
             );
             positionCombo.getItems().addAll(StaffPosition.values());
+            positionCombo2.getItems().addAll(StaffPosition.values());
             positionCombo.getSelectionModel().selectFirst();
+            positionCombo2.getSelectionModel().selectFirst();
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(
                     null,
                     "Error in getting staff members.\n" + e.getMessage(),
                     "Error",
                     JOptionPane.ERROR_MESSAGE
+            );
+        }
+    }
+
+    public void updateDetails() {
+        if(staffMembersListView.getSelectionModel().getSelectedItem() != null) {
+            StaffMember sm = (StaffMember) staffMembersListView.getSelectionModel().getSelectedItem();
+            firstNameField.setText(sm.getFirstName());
+            lastNameField.setText(sm.getLastName());
+            positionCombo2.getSelectionModel().select(sm.getPosition());
+        }
+    }
+
+    public void saveDetails() {
+        if(staffMembersListView.getSelectionModel().getSelectedItem() != null) {
+            StaffMember sm = (StaffMember) staffMembersListView.getSelectionModel().getSelectedItem();
+            try {
+                StaffMember.updateStaffMember(
+                        DatabaseService.getConnection(),
+                        sm.getId(),
+                        firstNameField.getText(),
+                        lastNameField.getText(),
+                        (StaffPosition) positionCombo2.getSelectionModel().getSelectedItem()
+                );
+                initializeStaffMembersTab();
+            }catch(SQLException e) {
+                JOptionPane.showMessageDialog(
+                        null,
+                        "Error in updating staffmember.\n" + e.getMessage(),
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE
+                );
+            }
+        } else {
+            JOptionPane.showMessageDialog(
+                    null,
+                    "No staffmember selected.",
+                    "Info",
+                    JOptionPane.INFORMATION_MESSAGE
             );
         }
     }

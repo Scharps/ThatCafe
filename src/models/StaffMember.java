@@ -90,17 +90,15 @@ public class StaffMember extends User {
         st.executeUpdate();
     }
 
-    public static void updateStaffMember(Connection conn, int id, String password, String firstName,
-                                            String lastName, StaffPosition position, int rotaId) throws SQLException  {
+    public static void updateStaffMember(Connection conn, int id,  String firstName,
+                                            String lastName, StaffPosition position) throws SQLException  {
         PreparedStatement st = conn.prepareStatement("UPDATE Staff " +
-                "SET Password = ?, FName = ?, LName = ?, StaffPos = ?, rotaId = ?" +
+                "SET FName = ?, LName = ?, StaffPos = ?" +
                 "WHERE StaffId = ?");
-        st.setString(1, password);
-        st.setString(2, firstName);
-        st.setString(3, lastName);
-        st.setString(4, position.toString());
-        st.setInt(5, rotaId);
-        st.setInt(6, id);
+        st.setString(1, firstName);
+        st.setString(2, lastName);
+        st.setString(3, position.toString());
+        st.setInt(4, id);
         st.executeUpdate();
     }
 
